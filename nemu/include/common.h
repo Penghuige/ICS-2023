@@ -16,6 +16,7 @@
 #ifndef __COMMON_H__
 #define __COMMON_H__
 
+/* 系统自带库 */
 #include <stdint.h>
 #include <inttypes.h>
 #include <stdbool.h>

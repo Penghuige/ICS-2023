@@ -1,5 +1,5 @@
-STUID = 221220000
-STUNAME = 张三
+STUID = Penguhi
+STUNAME = 蓬灰
 
 # DO NOT modify the following code!!!
 

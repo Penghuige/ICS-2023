@@ -3,7 +3,7 @@ STUNAME = 蓬灰
 
 # DO NOT modify the following code!!!
 
-GITFLAGS = -q --author='tracer-ics2023 <tracer@njuics.org>' --no-verify --allow-empty
+GITFLAGS = -q --author='tracer-ics2023 <Penghui@Linux>' --no-verify --allow-empty
 
 # prototype: git_commit(msg)
 define git_commit

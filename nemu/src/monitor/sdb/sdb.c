@@ -77,7 +77,7 @@ static struct {
   { "help", "Display information about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-  { "si", "here need supple", cmd_si },
+  { "si", "Let the propram execute step N and then suspend execution", cmd_si },
   { "info", "print the state and info", cmd_info },
   { "x", "output the expression value" , cmd_x}
 

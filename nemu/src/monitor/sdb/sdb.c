@@ -43,7 +43,7 @@ static char* rl_gets() {
 }
 
 static int cmd_c(char *args) {
-  cpu_exec(1);
+  cpu_exec(-1);
   return 0;
 }
 
@@ -110,12 +110,10 @@ static int cmd_help(char *args) {
 static int cmd_si(char *args) {
   // here need to supple
 	char * arg = strtok(NULL, " ");
-	int i;
 	
 	if (arg == NULL) {
 	/* no argument given, it usaul execute one step*/
-		for (i = 0; i < NR_CMD; i++)
-			printf(" ");
+		cpu_exec(1);
 	}
 
   return 0;

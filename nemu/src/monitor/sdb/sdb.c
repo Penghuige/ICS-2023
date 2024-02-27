@@ -110,13 +110,19 @@ static int cmd_help(char *args) {
 static int cmd_si(char *args) {
   // here need to supple
 	char * arg = strtok(NULL, " ");
+	int num;
 	
 	if (arg == NULL) {
 	/* no argument given, it usaul execute one step*/
 		cpu_exec(1);
 	}
-
-  return 0;
+	else {
+		num = atoi(arg);
+		if (num == 0)
+			printf("augument error!\n");
+		else cpu_exec(num); 
+	}
+	return 0;
 }
 
 void sdb_set_batch_mode() {

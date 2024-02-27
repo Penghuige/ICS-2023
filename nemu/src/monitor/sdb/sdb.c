@@ -43,7 +43,7 @@ static char* rl_gets() {
 }
 
 static int cmd_c(char *args) {
-  cpu_exec(10000);
+  cpu_exec(20);
   return 0;
 }
 

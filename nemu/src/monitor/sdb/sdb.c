@@ -116,7 +116,7 @@ static int cmd_si(char *args) {
 	else {
 		num = atoi(arg);
 		if (num == 0)
-			printf("augument error!\n");
+			printf("Parameter error!\n");
 		else cpu_exec(num); 
 	}
 	return 0;
@@ -124,7 +124,23 @@ static int cmd_si(char *args) {
 
 static int cmd_info(char * args)
 {
-//	char *arg = strtok(NULL, " ");
+	char *arg = strtok(NULL, " ");
+	if ( sizeof(arg)/arg[0] != 2 )
+	{
+		printf("Parameter error!\n");
+		return 0;
+	}	
+  switch (arg[0])
+	{
+		case 'r':
+			isa_reg_display();
+			break;
+		case 'w':
+			break;
+		default:
+			printf("Invalid parameter!\n");
+			break;	
+	}
 	return 0;
 }
 

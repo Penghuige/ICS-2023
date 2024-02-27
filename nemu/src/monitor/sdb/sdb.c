@@ -54,10 +54,7 @@ static int cmd_q(char *args) {
 
 static int cmd_si(char *args) ;
 
-static int cmd_info(char *args)
-{
-  return 0;
-}
+static int cmd_info(char *args);
 
 static int cmd_x(char *args)
 {
@@ -122,6 +119,12 @@ static int cmd_si(char *args) {
 			printf("augument error!\n");
 		else cpu_exec(num); 
 	}
+	return 0;
+}
+
+static int cmd_info(char * args)
+{
+//	char *arg = strtok(NULL, " ");
 	return 0;
 }
 

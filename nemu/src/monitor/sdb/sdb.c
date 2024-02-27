@@ -129,8 +129,9 @@ static int cmd_info(char * args)
 		printf("Need for argument!\n");
 		return 0;
 	}
-	if ( sizeof(arg)/arg[0] != 2 )
+	if ( (int)(sizeof(arg)/arg[0]) != 2 )
 	{
+		printf("%d\n", (int)(sizeof(arg)/arg[0]));
 		printf("Parameter error!\n");
 		return 0;
 	}	

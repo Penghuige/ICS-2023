@@ -105,7 +105,6 @@ static int cmd_help(char *args) {
 }
 
 static int cmd_si(char *args) {
-  // here need to supple
 	char * arg = strtok(NULL, " ");
 	int num;
 	
@@ -119,12 +118,11 @@ static int cmd_si(char *args) {
 			printf("Parameter error!\n");
 		else cpu_exec(num); 
 	}
-	return 0;
-}
 
-static int cmd_info(char * args)
-{
-	char *arg = strtok(NULL, " ");
+		return 0;
+}
+static int cmd_info(char * args) {
+	char * arg = strtok(args, " ");
 	if(arg == NULL) {
 		printf("Need for argument!\n");
 		return 0;

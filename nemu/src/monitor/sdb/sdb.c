@@ -122,11 +122,12 @@ static int cmd_si(char *args) {
 		return 0;
 }
 static int cmd_info(char * args) {
-	char * arg = strtok(args, " ");
+	char * arg = strtok(NULL, " ");
 	if(arg == NULL) {
 		printf("Need for argument!\n");
 		return 0;
 	}
+	printf("%s\n", arg);
 	if ( (int)(sizeof(arg)/arg[0]) != 2 )
 	{
 		printf("%d\n", (int)(sizeof(arg)/arg[0]));

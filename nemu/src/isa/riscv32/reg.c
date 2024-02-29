@@ -31,6 +31,7 @@ void isa_reg_display() {
 	for (i = R_EAX; i <= R_EDI; i++)
 	{
 		printf("$%s\t0x%08x\n", regs[i], gpr(i));
+		printf("%s\n", reg_name(i));
 	}
 }
 

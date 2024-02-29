@@ -30,4 +30,6 @@ static inline const char* reg_name(int idx) {
   return regs[check_reg_idx(idx)];
 }
 
+enum { R_EAX, R_ECX, R_EDX, R_EBX, R_ESP, E_RBP, R_ESI, R_EDI };
+
 #endif

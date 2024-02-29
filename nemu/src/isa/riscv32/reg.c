@@ -25,14 +25,13 @@ const char *regs[] = {
 
 #define REG_NUM ARRLEN(regs)
 
+// gpr is the register of NEMU, it located /nemu/src/isa/riscv32/include/isa-def.h
 void isa_reg_display() {
 	int i;	
-	for (i = 0; i < REG_NUM; i++)
+	for (i = R_EAX; i <= R_EDI; i++)
 	{
-		if(i % (REG_NUM / 4) == 0) printf("\n");
-		printf("%s ", regs[i]);
+		printf("$%s\t0x%08x\n", regs[i], gpr(i));
 	}
-	printf("\n");
 }
 
 

@@ -134,16 +134,8 @@ static int cmd_info(char * args) {
 //		printf("Parameter error!\n");
 //		return 0;
 //	}	
-  switch (arg[0])
-	{
-		case 'r':
-			isa_reg_display();
-			break;
-		case 'w':
-			break;
-		default:
-			printf("Invalid parameter!\n");
-			break;	
+	if(strcmp(arg, "r") == 0) {
+		isa_reg_display();
 	}
 	return 0;
 }

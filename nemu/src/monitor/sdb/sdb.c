@@ -56,10 +56,7 @@ static int cmd_si(char *args) ;
 
 static int cmd_info(char *args);
 
-static int cmd_x(char *args)
-{
-  return 0;
-}
+static int cmd_x(char *args);
 
 static int cmd_help(char *args);
 
@@ -137,6 +134,11 @@ static int cmd_info(char * args) {
 	if(strcmp(arg, "r") == 0) {
 		isa_reg_display();
 	}
+	return 0;
+}
+
+static int cmd_x(char *args)
+{
 	return 0;
 }
 

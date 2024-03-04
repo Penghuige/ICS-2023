@@ -155,7 +155,7 @@ static int cmd_x(char *args)
  	paddr_t addr = (paddr_t)strtol(arg+2, NULL, 16);
 	// printf("%s\t\t%s\t\t%s\n", "addr", "16", "10");
 	for (int i = 1; i <= 10; i++) {
-		printf("%d\n", isa_mmu_translate(addr, 4, 16));
+		printf("%d\n", isa_mmu_translate(addr + i, 4, 16));
   }
 
 	return 0;

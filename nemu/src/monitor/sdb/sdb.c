@@ -141,6 +141,7 @@ static int cmd_x(char *args)
 {
 	char* arg = strtok(NULL, " ");
 	int n = atoi(arg);
+	printf("N is %d\n", n);
 	if(n == 0) 
 	{
 		printf("Parameter Error!\n");
@@ -153,7 +154,8 @@ static int cmd_x(char *args)
 		return 0;
 	}
  	paddr_t addr = (paddr_t)strtol(arg+2, NULL, 16);
-	// printf("%s\t\t%s\t\t%s\n", "addr", "16", "10");
+	printf("addr is %d", addr);	
+// printf("%s\t\t%s\t\t%s\n", "addr", "16", "10");
 	for (int i = 1; i <= 10; i++) {
 		printf("%d\n", isa_mmu_translate(addr + i, 4, 16));
   }

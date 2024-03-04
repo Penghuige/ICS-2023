@@ -156,7 +156,7 @@ static int cmd_x(char *args)
 	}
  	paddr_t addr = (paddr_t)strtol(arg+2, NULL, 16);
 	printf("addr is %d", addr);	
-	for (int i = 1; i <= 10; i++) {
+	for (int i = 0; i < n; i++) {
 		//printf("%d\n", isa_mmu_translate(addr + i, 4, 16));
 		paddr_read(addr + i, 16);  
 	}

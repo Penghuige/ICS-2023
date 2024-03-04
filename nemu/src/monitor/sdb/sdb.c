@@ -155,11 +155,11 @@ static int cmd_x(char *args)
 		return 0;
 	}
  	paddr_t addr = (paddr_t)strtol(arg+2, NULL, 16);
-	printf("%s\t\t%s\t\t%s\n", "addr","hex","dec");
+	printf("%s\t\t%-34s%-32s\n", "addr","hex","dec");
 	//printf("addr is %d\n", addr);	
 	for (int i = 0; i < n; i++) {
 		//printf("%d\n", isa_mmu_translate(addr + i, 4, 16));
-		printf("%d\t\t%08x\t\t%d\n", addr+i, paddr_read(addr + i, 1), paddr_read(addr + i, 1));  
+		printf("%d\t\t%-4x\t%-4d\n", addr+i, paddr_read(addr + i, 1), paddr_read(addr + i, 1));  
 	}
 
 

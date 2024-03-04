@@ -159,7 +159,7 @@ static int cmd_x(char *args)
 	//printf("addr is %d\n", addr);	
 	for (int i = 0; i < n; i++) {
 		//printf("%d\n", isa_mmu_translate(addr + i, 4, 16));
-		printf("%d\t\t%-4x\t%-4d\n", addr+i, paddr_read(addr + i, 1), paddr_read(addr + i, 1));  
+		printf("%d\t\t0x%-4x\t\t%-4d\n", addr+i, paddr_read(addr + i, 1), paddr_read(addr + i, 1));  
 	}
 
 

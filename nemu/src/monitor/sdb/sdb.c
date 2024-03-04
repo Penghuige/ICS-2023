@@ -139,6 +139,25 @@ static int cmd_info(char * args) {
 
 static int cmd_x(char *args)
 {
+	char* arg = strtok(NULL, " ");
+	int n = atoi(arg);
+	if(n == 0) 
+	{
+		printf("Parameter Error!\n");
+		return 0;
+	}
+	arg = strtok(NULL, " ");
+	if( strlen(arg) <= 2)
+	{
+		printf("Invalid parameter!\n");
+		return 0;
+	}
+ 	paddr_t addr = (paddr_t)strtol(arg+2, NULL, 16);
+	// printf("%s\t\t%s\t\t%s\n", "addr", "16", "10");
+	for (int i = 1; i <= n; i++) {
+		printf("%d", isa_mmu_translate(addr, 4, 16));
+  }
+
 	return 0;
 }
 

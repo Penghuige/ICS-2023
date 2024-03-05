@@ -155,7 +155,7 @@ static int cmd_x(char *args)
 		return 0;
 	}
  	paddr_t addr = (paddr_t)strtol(arg+2, NULL, 16);
-	printf("%s\t\t\t%s\t\t\t\t%s\n", "addr","hex","dec");
+	printf("%s\t\t%s\t\t\t%s\n", "addr","hex","dec");
 	//printf("addr is %d\n", addr);	
 	int i;
 	for (i = 0; i < n; i++) {
@@ -168,6 +168,7 @@ static int cmd_x(char *args)
 			//output 4 steps, in order to output a 8 bytes address
 			printf("0x%x\t", paddr_read(addr+4*i + j, 1));  
 		}
+		printf("\t");
 		for(j = 0; j < 4; j++)
 		{	
 			printf("%d\t", paddr_read(addr+4*i  + j, 1));

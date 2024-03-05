@@ -155,7 +155,7 @@ static int cmd_x(char *args)
 		return 0;
 	}
  	paddr_t addr = (paddr_t)strtol(arg+2, NULL, 16);
-	printf("%s\t\t%-34s%-32s\n", "addr","hex","dec");
+	printf("%s\t\t\t%s\t\t\t\t%s\n", "addr","hex","dec");
 	//printf("addr is %d\n", addr);	
 	int i;
 	for (i = 0; i < n; i++) {
@@ -170,7 +170,7 @@ static int cmd_x(char *args)
 		}
 		for(j = 0; j < 4; j++)
 		{	
-			printf("%d", paddr_read(addr+4*i  + j, 1));
+			printf("%d\t", paddr_read(addr+4*i  + j, 1));
 		}
 		printf("\n");
 	}

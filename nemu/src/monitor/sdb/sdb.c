@@ -166,7 +166,7 @@ static int cmd_x(char *args)
 		for(j = 0; j < 4; j++)
 		{
 			//output 4 steps, in order to output a 8 bytes address
-			printf("0x%-4x\t\t", paddr_read(addr+4*i + j, 1));  
+			printf("0x%x ", paddr_read(addr+4*i + j, 1));  
 		}
 		for(j = 0; j < 4; j++)
 		{	

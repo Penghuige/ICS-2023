@@ -161,15 +161,18 @@ static int cmd_x(char *args)
 	for (i = 0; i < n; i++) {
 		//printf("%d\n", isa_mmu_translate(addr + i, 4, 16));
 		int j;
+		printf("%x\t", addr+4*i);
+		
 		for(j = 0; j < 4; j++)
 		{
 			//output 4 steps, in order to output a 8 bytes address
-			printf("%x\t\t0x%-4x\t\t%-4d ", addr+4*i+j, paddr_read(addr+4*i + j, 1), paddr_read(addr+4*i+j, 1));  
+			printf("0x%-4x\t\t", paddr_read(addr+4*i + j, 1));  
 		}
-		printf("\n");
+		for(j = 0; j < 4; j++)
+		{	
+			printf("%d", paddr_read(addr+4*i  + j, 1));
+		}
 	}
-
-
 	return 0;
 }
 

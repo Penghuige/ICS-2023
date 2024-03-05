@@ -157,9 +157,15 @@ static int cmd_x(char *args)
  	paddr_t addr = (paddr_t)strtol(arg+2, NULL, 16);
 	printf("%s\t\t%-34s%-32s\n", "addr","hex","dec");
 	//printf("addr is %d\n", addr);	
-	for (int i = 0; i < n; i++) {
+	int i;
+	for (i = 0; i < n; i++) {
 		//printf("%d\n", isa_mmu_translate(addr + i, 4, 16));
-		printf("%d\t\t0x%-4x\t\t%-4d\n", addr+i, paddr_read(addr + i, 1), paddr_read(addr + i, 1));  
+		int j;
+		for(j = 0; j < 4; j++)
+		{
+			//output 4 steps, in order to output a 8 bytes address
+			printf("%x\t\t0x%-4x\t\t%-4d\n", addr+4*i+j, paddr_read(addr+4*i + j, 1), paddr_read(addr+4*i+j, 1));  
+		}
 	}
 
 

@@ -172,8 +172,8 @@ static int cmd_x(char *args)
 		{	
 			printf("%d", paddr_read(addr+4*i  + j, 1));
 		}
+		printf("\n");
 	}
-	printf("\n");
 	return 0;
 }
 

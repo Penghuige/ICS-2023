@@ -44,7 +44,7 @@ static struct rule {
 
   {" ", TK_NOTYPE},    	// spaces
   {"\\b==\\b", TK_EQ},        // equal
-  {"\\b+\\b", TK_ADD},        // plus
+  {"\\+\\", TK_ADD},        // plus
 	{"\\b-\\b", TK_SUB},				// subtract
 	{"\\b*\\b", TK_MUL},				// multitute
 	{"\\b/\\b", TK_DIV},				// divide

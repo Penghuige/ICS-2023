@@ -22,7 +22,10 @@
 
 enum {
   TK_NOTYPE = 256, TK_EQ,
-
+	TK_ADD = '+',
+	TK_SUB = '-',
+	TK_MUL = '*',
+	TK_DIV = '/',
   /* TODO: Add more token types */
 
 };

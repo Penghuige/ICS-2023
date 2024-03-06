@@ -46,11 +46,11 @@ static struct rule {
   {"\\b==\\b", TK_EQ},        // equal
   {"\\+\\", TK_ADD},        // plus
 	{"\\b-\\b", TK_SUB},				// subtract
-	{"\\b*\\b", TK_MUL},				// multitute
+	{"\\*\\", TK_MUL},				// multitute
 	{"\\b/\\b", TK_DIV},				// divide
 	//{"0", TK_NUM}, 	// number
 	{"\\b[0-9]+\\b", TK_NUM}, 	// number
-	{"\\b(\\b", TK_QUOL},				// left quote
+	{"\\(\\", TK_QUOL},				// left quote
 	{"\\b)\\b", TK_QUOR},				// right quote
 };
 

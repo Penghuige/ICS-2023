@@ -43,13 +43,13 @@ static struct rule {
    */
 
   {" ", TK_NOTYPE},    	// spaces
+  {"==", TK_EQ},        // equal
   {"+", TK_ADD},        // plus
 	{"-", TK_SUB},				// subtract
 	{"*", TK_MUL},				// multitute
 	{"/", TK_DIV},				// divide
-  {"==", TK_EQ},        // equal
-	{"0", TK_NUM}, 	// number
-	//{"\\b[0-9]+\\b", TK_NUM}, 	// number
+	//{"0", TK_NUM}, 	// number
+	{"\\b[0-9]+\\b", TK_NUM}, 	// number
 	{"(", TK_QUOL},				// left quote
 	{")", TK_QUOR},				// right quote
 };

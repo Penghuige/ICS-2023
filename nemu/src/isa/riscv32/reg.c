@@ -31,7 +31,7 @@ void isa_reg_display() {
 	printf("%u\n", cpu.pc);
 	for (i = 0; i < REG_NUM; i++)
 	{
-		printf("$%s\t0x%08d\n", regs[i], cpu.gpr[i]);
+		printf("$%s\t0x%08x\n", regs[i], cpu.gpr[i]);
 		// printf("%s\n", reg_name(i));
 	}
 }

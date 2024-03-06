@@ -43,15 +43,15 @@ static struct rule {
    */
 
   {" ", TK_NOTYPE},    	// spaces
-  {"==", TK_EQ},        // equal
-  {"\\+", TK_ADD},        // plus
-	{"-", TK_SUB},				// subtract
-	{"\\*", TK_MUL},				// multitute
-	{"/", TK_DIV},				// divide
+  {"\\b==\\b", TK_EQ},        // equal
+  {"\\b+\\b", TK_ADD},        // plus
+	{"\\b-\\b", TK_SUB},				// subtract
+	{"\\b*\\b", TK_MUL},				// multitute
+	{"\\b/\\b", TK_DIV},				// divide
 	//{"0", TK_NUM}, 	// number
 	{"\\b[0-9]+\\b", TK_NUM}, 	// number
-	{"\\(", TK_QUOL},				// left quote
-	{")", TK_QUOR},				// right quote
+	{"\\b(\\b", TK_QUOL},				// left quote
+	{"\\b)\\b", TK_QUOR},				// right quote
 };
 
 #define NR_REGEX ARRLEN(rules)

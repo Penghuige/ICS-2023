@@ -26,6 +26,7 @@ enum {
 	TK_SUB = '-',
 	TK_MUL = '*',
 	TK_DIV = '/',
+	TK_NUM,
   /* TODO: Add more token types */
 
 };
@@ -45,7 +46,7 @@ static struct rule {
 	{"*", TK_MUL},				// multitute
 	{"/", TK_DIV},				// divide
   {"==", TK_EQ},        // equal
-	//{"\\b[0-9]+\\b", TK_NUM}, 	// number
+	{"\\b[0-9]+\\b", TK_NUM}, 	// number
 };
 
 #define NR_REGEX ARRLEN(rules)

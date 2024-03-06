@@ -48,8 +48,8 @@ static struct rule {
 	{"-", TK_SUB},				// subtract
 	{"\\*", TK_MUL},				// multitute
 	{"/", TK_DIV},				// divide
-	{"0", TK_NUM}, 	// number
-	//{"\\b[0-9]+\\b", TK_NUM}, 	// number
+	//{"0", TK_NUM}, 	// number
+	{"\\b[0-9]+\\b", TK_NUM}, 	// number
 	{"\\(", TK_QUOL},				// left quote
 	{")", TK_QUOR},				// right quote
 };

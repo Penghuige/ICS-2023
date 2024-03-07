@@ -108,19 +108,18 @@ static bool make_token(char *e) {
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
-				//Token t;	
         switch (rules[i].token_type) {
 					case TK_NOTYPE:
 						break;
 					case TK_EQ:
-						
 					case TK_ADD:
 					case TK_MUL:
 					case TK_DIV:
           case TK_NUM:
 					case TK_QUOL:
 					case TK_QUOR:
-					default: TODO();
+					default:
+						strncpy(tokens[nr_token].str, substr_start, substr_len); 
         }
 
         break;

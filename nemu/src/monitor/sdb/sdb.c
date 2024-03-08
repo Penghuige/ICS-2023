@@ -59,6 +59,8 @@ static int cmd_info(char *args);
 
 static int cmd_x(char *args);
 
+static int cmd_p(char *args);
+
 static int cmd_help(char *args);
 
 static struct {
@@ -71,7 +73,8 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
   { "si", "Let the propram execute step N and then suspend execution", cmd_si },
   { "info", "print the state and info", cmd_info },
-  { "x", "output the expression value" , cmd_x}
+  { "x", "output the expression value" , cmd_x},
+	{ "p", "eval the expression value", cmd_p}
 
   /* TODO: Add more commands */
 
@@ -175,6 +178,27 @@ static int cmd_x(char *args)
 		}
 		printf("\n");
 	}
+	return 0;
+}
+
+static int cmd_p(char * args)
+{
+	char* arg = strtok(NULL, " ");
+	if(arg == NULL)
+	{
+		printf("Need for parameter!\n");
+		return 0;
+	}
+	bool sign = true;
+	word_t to = expr(arg, &sign);
+	if(sign == false)
+	{
+		printf("invalid parameter!\n");
+	}
+	
+	uint32_t res = eval(0, to);
+	printf("\"%s\":%d", arg, res);
+
 	return 0;
 }
 

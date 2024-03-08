@@ -20,4 +20,10 @@
 
 word_t expr(char *e, bool *success);
 
+bool make_token(char *e);
+
+bool check_parentheses(int p, int q);
+
+uint32_t eval(int p, int q);
+
 #endif

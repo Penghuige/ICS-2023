@@ -27,8 +27,8 @@ enum {
 	TK_MUL = '*',
 	TK_DIV = '/',
 	TK_NUM,
-	TK_QUOL = '(',
-	TK_QUOR = ')',
+	TK_BRAL = '(',
+	TK_BRAR = ')',
   /* TODO: Add more token types */
 
 };
@@ -50,8 +50,8 @@ static struct rule {
 	{"\\b/\\b", TK_DIV},				// divide
 	//{"0", TK_NUM}, 	// number
 	{"\\b[0-9]+\\b", TK_NUM}, 	// number
-	{"\\(", TK_QUOL},				// left quote
-	{"\\b)\\b", TK_QUOR},				// right quote
+	{"\\(", TK_BRAL},				// left quote
+	{"\\b)\\b", TK_BRAR},				// right quote
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -116,10 +116,12 @@ static bool make_token(char *e) {
 					case TK_MUL:
 					case TK_DIV:
           case TK_NUM:
-					case TK_QUOL:
-					case TK_QUOR:
+					case TK_BRAL:
+					case TK_BRAR:
 					default:
+						tokens[nr_token].type = rules[i].token_type;
 						strncpy(tokens[nr_token].str, substr_start, substr_len); 
+						nr_token++;
         }
 
         break;
@@ -141,9 +143,89 @@ word_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
-
-  /* TODO: Insert codes to evaluate the expression. */
-  TODO();
-
-  return 0;
+	else return nr_token;
 }
+
+bool check_parentheses(int p, int q)
+{
+	// set a stack to store the quote
+	if(tokens[p].type != TK_BRAL || tokens[q].type != TK_BRAR)
+		return false;
+	int to = 0;
+	
+	int i;
+	for(i = p; i <= q; i++)
+	{
+		if(tokens[i].type == TK_BRAL)
+		{
+			to++;
+		}
+		else if(tokens[i].type == TK_BRAR)
+		{
+			to--;
+			if(i != q && to == 0) return false;
+			if(to < 0) return false;
+		}
+	}
+	if(to != 0) return false;
+	else return true;
+}
+  /* TODO: Insert codes to evaluate the expression. */
+uint32_t eval(uint32_t p, uint32_t q) {
+  if (p > q) {
+    /* Bad expression */
+		printf("Bad expresion!\n");
+		assert(0);
+  }
+  else if (p == q) {
+    /* Single token.
+     */
+		return atoi(tokens[p].str);
+  }
+  else if (check_parentheses(p, q) == true) {
+    /* The expression is surrounded by a matched pair of parentheses.
+     * If that is the case, just throw away the parentheses.
+     */
+    return eval(p + 1, q - 1);
+  }
+  else {
+    int op = -1; // = the position of 主运算符 in the token expression;
+		int i;
+		int sign = 1;
+		// int ju = 0;
+		for( i = p; i <= q; i++)
+		{
+			//if(tokens[i].type == TK_QUOL)
+			//{
+			//	ju = 1;
+			//	continue;
+			//}
+			//else if (tokens[i].type == TK_QUOR)
+			//{
+			//	ju = 0; 
+			//	continue;
+			//}
+			//if(ju) continue;
+			if(tokens[i].type == TK_ADD || tokens[i].type == TK_SUB)
+			{
+				op = i;
+				sign = 0;
+			}
+			if(sign == 1 && (tokens[i].type == TK_MUL || tokens[i].type == TK_DIV))
+			{
+				op = i;
+			}
+		}
+		assert(op != -1);
+    uint32_t val1 = eval(p, op - 1);
+    uint32_t val2 = eval(op + 1, q);
+
+    switch (tokens[op].type) {
+      case '+': return val1 + val2;
+      case '-': return val1 - val2;
+      case '*': return val1 * val2;
+      case '/': return val1 / val2;
+      default: assert(0);
+    }
+  }
+}	

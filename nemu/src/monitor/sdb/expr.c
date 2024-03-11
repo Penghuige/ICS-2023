@@ -113,6 +113,7 @@ static bool make_token(char *e) {
 						break;
 					case TK_EQ:
 					case TK_ADD:
+					case TK_SUB:
 					case TK_MUL:
 					case TK_DIV:
           case TK_NUM:
@@ -176,7 +177,7 @@ bool check_parentheses(int p, int q)
 uint32_t eval(uint32_t p, uint32_t q) {
   if (p > q) {
     /* Bad expression */
-		printf("Bad expresion!\n");
+		printf("Bad expression!\n");
 		assert(0);
   }
   else if (p == q) {

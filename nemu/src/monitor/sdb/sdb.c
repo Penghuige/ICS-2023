@@ -197,7 +197,7 @@ static int cmd_p(char * args)
 	}
 	
 	uint32_t res = eval(0, to-1);
-	printf("\"%s\":%d", arg, res);
+	printf("\"%s\" = \"%d\"\n", arg, res);
 
 	return 0;
 }

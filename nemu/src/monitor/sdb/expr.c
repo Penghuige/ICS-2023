@@ -195,6 +195,7 @@ uint32_t eval(uint32_t p, uint32_t q) {
 		int i;
 		int sign = 1;
 		// int ju = 0;
+		printf("p:%d, q:%d \n", p, q);
 		for( i = p; i <= q; i++)
 		{
 			//if(tokens[i].type == TK_QUOL)

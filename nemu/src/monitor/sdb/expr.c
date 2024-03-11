@@ -51,7 +51,7 @@ static struct rule {
 	//{"0", TK_NUM}, 	// number
 	{"\\b[0-9]+\\b", TK_NUM}, 	// number
 	{"\\(", TK_BRAL},				// left quote
-	{"\\b)\\b", TK_BRAR},				// right quote
+	{"\\)", TK_BRAR},				// right quote
 };
 
 #define NR_REGEX ARRLEN(rules)

@@ -196,7 +196,7 @@ static int cmd_p(char * args)
 		printf("invalid parameter!\n");
 	}
 	
-	uint32_t res = eval(0, to);
+	uint32_t res = eval(0, to-1);
 	printf("\"%s\":%d", arg, res);
 
 	return 0;

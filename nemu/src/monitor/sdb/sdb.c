@@ -194,6 +194,8 @@ static int cmd_p(char * args)
 		printf("Need for parameter!\n");
 		return 0;
 	}
+	// need to input with space !!!
+	printf("%s\n", arg);
 	bool sign = true;
 	word_t to = expr(arg, &sign);
 	if(sign == false)

@@ -144,6 +144,11 @@ static int cmd_info(char * args) {
 static int cmd_x(char *args)
 {
 	char* arg = strtok(NULL, " ");
+	if(arg == NULL) 
+	{
+		printf("Need For Parameter!\n");
+		return 0;
+	}
 	int n = atoi(arg);
 	//printf("N is %d\n", n);
 	if(n == 0) 

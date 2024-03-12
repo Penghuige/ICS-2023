@@ -188,24 +188,17 @@ static int cmd_x(char *args)
 
 static int cmd_p(char * args)
 {
-	printf("%s\n", args);
-	char* arg = strtok(NULL, " ");
-	if(arg == NULL)
-	{
-		printf("Need for parameter!\n");
-		return 0;
-	}
+	// it already be a right string.
 	// need to input with space !!!
-	printf("%s\n", arg);
 	bool sign = true;
-	word_t to = expr(arg, &sign);
+	word_t to = expr(args, &sign);
 	if(sign == false)
 	{
 		printf("invalid parameter!\n");
 	}
 	
 	uint32_t res = eval(0, to-1);
-	printf("\"%s\" = \"%d\"\n", arg, res);
+	printf("\"%s\" = \"%d\"\n", args, res);
 
 	return 0;
 }

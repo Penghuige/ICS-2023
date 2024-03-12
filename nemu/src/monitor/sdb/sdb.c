@@ -188,6 +188,7 @@ static int cmd_x(char *args)
 
 static int cmd_p(char * args)
 {
+	printf("%s\n", args);
 	char* arg = strtok(NULL, " ");
 	if(arg == NULL)
 	{

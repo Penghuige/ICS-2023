@@ -167,10 +167,18 @@ bool check_parentheses(int p, int q)
 		{
 			to--;
 			if(i != q && to == 0) return false;
-			if(to < 0) return false;
+			if(to < 0) 
+			{		
+				printf("Bad expression!\n");
+				assert(0);
+			}
 		}
 	}
-	if(to != 0) return false;
+	if(to != 0)
+	{
+		printf("Bad expression!\n");
+		assert(0);
+	}
 	else return true;
 }
   /* TODO: Insert codes to evaluate the expression. */

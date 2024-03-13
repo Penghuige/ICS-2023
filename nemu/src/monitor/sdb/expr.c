@@ -133,6 +133,7 @@ static bool make_token(char *e) {
 					case TK_BRAL:
 					case TK_BRAR:
 					default:
+						tokens[nr_token].type = rules[i].token_type;
 						if(sign == 1)
 						{
 							// it is negative symbol
@@ -144,7 +145,6 @@ static bool make_token(char *e) {
 								substr_len++;
 							}
 						}
-						tokens[nr_token].type = rules[i].token_type;
 						strncpy(tokens[nr_token].str, substr_start, substr_len); 
 						nr_token++;
         }

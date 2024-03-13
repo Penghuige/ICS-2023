@@ -190,7 +190,8 @@ static int cmd_p(char * args)
 {
 	// it already be a right string.
 	// need to input with space !!!
-	printf("%s\n", args);
+	// to sure the input is right
+	//printf("%s\n", args);
 	bool sign = true;
 	word_t to = expr(args, &sign);
 	if(sign == false)
@@ -199,6 +200,7 @@ static int cmd_p(char * args)
 	}
 	
 	uint32_t res = eval(0, to-1);
+	clear_exp();
 	printf("\"%s\" = \"%d\"\n", args, res);
 
 	return 0;

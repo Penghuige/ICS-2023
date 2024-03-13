@@ -265,3 +265,9 @@ uint32_t eval(uint32_t p, uint32_t q) {
     }
   }
 }	
+
+void clear_exp()
+{
+	memset(tokens, 0, sizeof(Token));
+	nr_token = 0;
+}

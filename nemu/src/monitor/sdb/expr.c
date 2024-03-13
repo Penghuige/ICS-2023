@@ -115,7 +115,15 @@ static bool make_token(char *e) {
 						break;
 					case TK_SUB:
 						// consider the num may be a negative
-						sign ^= 1;
+						if(tokens[nr_token-1].type != TK_NUM) 
+						{						
+							sign ^= 1;
+							break;
+						}
+						// if the sym is real sub
+						tokens[nr_token].type = rules[i].token_type;
+						strncpy(tokens[nr_token].str, substr_start, substr_len); 
+						nr_token++;
 						break;
 					case TK_EQ:
 					case TK_ADD:
@@ -125,6 +133,16 @@ static bool make_token(char *e) {
 					case TK_BRAL:
 					case TK_BRAR:
 					default:
+						if(sign == 1)
+						{
+							// it is negative symbol
+							sign = 0;
+							if(rules[i].token_type == TK_NUM)
+							{
+								//num = -num;
+								substr_start--;	
+							}
+						}
 						tokens[nr_token].type = rules[i].token_type;
 						strncpy(tokens[nr_token].str, substr_start, substr_len); 
 						nr_token++;

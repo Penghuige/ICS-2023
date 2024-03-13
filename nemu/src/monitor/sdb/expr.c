@@ -92,6 +92,8 @@ static bool make_token(char *e) {
 
   nr_token = 0;
 
+	// sign about the num is negative
+	int sign = 0;
   while (e[position] != '\0') {
     /* Try all rules one by one. */
     for (i = 0; i < NR_REGEX; i ++) {
@@ -111,9 +113,12 @@ static bool make_token(char *e) {
         switch (rules[i].token_type) {
 					case TK_NOTYPE:
 						break;
+					case TK_SUB:
+						// consider the num may be a negative
+						sign ^= 1;
+						break;
 					case TK_EQ:
 					case TK_ADD:
-					case TK_SUB:
 					case TK_MUL:
 					case TK_DIV:
           case TK_NUM:

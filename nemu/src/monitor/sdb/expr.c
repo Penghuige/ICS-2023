@@ -203,21 +203,21 @@ uint32_t eval(uint32_t p, uint32_t q) {
     int op = -1; // = the position of 主运算符 in the token expression;
 		int i;
 		int sign = 1;
-		// int ju = 0;
+	 	int ju = 0;
 		printf("p:%d, q:%d \n", p, q);
 		for( i = p; i <= q; i++)
 		{
-			//if(tokens[i].type == TK_QUOL)
-			//{
-			//	ju = 1;
-			//	continue;
-			//}
-			//else if (tokens[i].type == TK_QUOR)
-			//{
-			//	ju = 0; 
-			//	continue;
-			//}
-			//if(ju) continue;
+			if(tokens[i].type == TK_BRAL)
+			{
+				ju = 1;
+				continue;
+			}
+			else if (tokens[i].type == TK_BRAR)
+			{
+				ju = 0; 
+				continue;
+			}
+			if(ju) continue;
 			if(tokens[i].type == TK_ADD || tokens[i].type == TK_SUB)
 			{
 				op = i;

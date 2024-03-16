@@ -216,7 +216,7 @@ void sdb_mainloop() {
     return;
   }
 
-	FILE *fp = fopen("../../tools/gen-expr/build/input", "r");
+	FILE *fp = fopen("../../../tools/gen-expr/build/input", "r");
 	assert(fp != NULL);
 
 	ssize_t nread;

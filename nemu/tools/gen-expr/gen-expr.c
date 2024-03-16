@@ -32,26 +32,60 @@ static char *code_format =
 "}";
 
 static int temp;
+static int times;
+
+uint32_t choose(uint32_t n)
+{
+	return rand()%n;
+}
 
 static void gen(char a)
 {
+	//buf[temp++] = '\\';
 	buf[temp++] = a;
 }
 
 static void gen_num()
 {
-	buf[temp++] = choose(10);	
+	switch(choose(2))
+	{
+		case 0: gen(' ');
+		default: 
+	}
+	buf[temp++] = choose(9) + '1';
+	switch(choose(2))
+	{
+		case 0: gen(' ');
+		default: 
+	}
 }
 
 static void gen_rand_op()
 {
-	// this function is used to make rand seed	
-  int seed = time(0);
-  srand(seed);
+	// this function is used to make operator 
+	char a;
+	switch (choose(4)) {
+		case 0:
+			a = '+';
+			break;
+		case 1:
+			a = '-';
+			break;
+		case 2:
+			a = '*';
+			break;
+		case 3:
+			a = '/';
+			break;
+		default:
+	}
+	buf[temp++] = a;
 }
 
 // output the result to buf in code_format
 static void gen_rand_expr() {
+	// to any exrpression, there will make not more than 3 character.
+	if(++times > 6000 / 3) return;
   switch (choose(3)) {
     case 0: gen_num(); break;
     case 1: gen('('); gen_rand_expr(); gen(')'); break;
@@ -68,7 +102,11 @@ int main(int argc, char *argv[]) {
   }
   int i;
   for (i = 0; i < loop; i ++) {
+		// to calculate how much does expression have
+		times = 0;
+		temp = 0;
     gen_rand_expr();
+		buf[temp++] = '\0';
 
     sprintf(code_buf, code_format, buf);
 
@@ -77,7 +115,7 @@ int main(int argc, char *argv[]) {
     fputs(code_buf, fp);
     fclose(fp);
 
-    int ret = system("gcc /tmp/.code.c -o /tmp/.expr");
+    int ret = system("gcc /tmp/.code.c -Wall -Werror -o /tmp/.expr");
     if (ret != 0) continue;
 
     fp = popen("/tmp/.expr", "r");

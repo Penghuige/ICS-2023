@@ -216,6 +216,21 @@ void sdb_mainloop() {
     return;
   }
 
+	FILE *fp = fopen("../../tools/gen-expr/build/input", "r");
+	assert(fp != NULL);
+
+	ssize_t nread;
+	size_t len = 0;
+	char *test;
+
+	while((nread = getline(&test, &len, fp)) != -1)
+	{
+		// test is the test case
+		cmd_p(test);
+	}
+	fclose(fp);
+	if(1) return;
+
   for (char *str; (str = rl_gets()) != NULL; ) {
     char *str_end = str + strlen(str);
 

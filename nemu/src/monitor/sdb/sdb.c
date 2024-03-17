@@ -216,7 +216,6 @@ void sdb_mainloop() {
     return;
   }
 
-	/*
 	FILE *fp = fopen("/home/penghui/ics2023/nemu/tools/gen-expr/build/input", "r");
 	assert(fp != NULL);
 
@@ -228,14 +227,12 @@ void sdb_mainloop() {
 	{
 		// test is the test case
 		printf("hello?\n");
-		
-		cmd_p(test+2);
+		char* t2 = strtok(test, " ");	
+		cmd_p(t2);
 	}
 	fclose(fp);
 	if(1) return;
 
-	*/
-	
   for (char *str; (str = rl_gets()) != NULL; ) {
     char *str_end = str + strlen(str);
 

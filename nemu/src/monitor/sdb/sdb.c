@@ -230,7 +230,7 @@ void sdb_mainloop() {
 		// printf("hello?\n");
 		char* res = strtok(test, " ");
 		uint32_t resNum = atoi(res);
-		char* t2 = strtok(NULL, " ");	
+		char* t2 = strtok(res, " ");	
 		cmd_p(t2);
 		if(resNum == -1) return;
 	}

@@ -220,7 +220,7 @@ void sdb_mainloop() {
 	assert(fp != NULL);
 
 	ssize_t nread;
-	size_t len = 32;
+	size_t len = 65536;
 	char *test = (char*)malloc(len*sizeof(char));
 
 	printf("hello?\n");

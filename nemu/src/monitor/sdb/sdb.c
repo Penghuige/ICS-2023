@@ -223,8 +223,10 @@ void sdb_mainloop() {
 	size_t len = 10;
 	char *test;
 
+	printf("hello?\n");
 	while((nread = getline(&test, &len, fp)) != -1)
 	{
+		printf("hello?\n");
 		// test is the test case
 		printf("hello?\n");
 		cmd_p(test);

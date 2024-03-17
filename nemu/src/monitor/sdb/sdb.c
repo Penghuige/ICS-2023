@@ -216,7 +216,7 @@ void sdb_mainloop() {
     return;
   }
 
-	FILE *fp = fopen("/home/penghui/ics2023/nemu/tools/gen-expr/input", "r");
+	FILE *fp = fopen("/home/penghui/ics2023/nemu/tools/gen-expr/bulid/input", "r");
 	assert(fp != NULL);
 
 	ssize_t nread;

@@ -227,8 +227,8 @@ void sdb_mainloop() {
 	{
 		// test is the test case
 		char* res = strtok(test, " ");	
-		char* exp = strtok(NULL, " ");	
-		exp = strtok(NULL, "\n");	
+		char* exp = strtok(NULL, "\n");	
+		//char* exp = strtok(NULL, "\n");	
 		uint32_t resNum = atoi(res);
 		printf("%s\n", exp);
 		cmd_p(exp + 1);

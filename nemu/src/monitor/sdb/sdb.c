@@ -231,7 +231,7 @@ void sdb_mainloop() {
 		//char* exp = strtok(NULL, "\n");	
 		uint32_t resNum = atoi(res);
 		printf("%s\n", exp);
-		cmd_p(exp + 1);
+		cmd_p(exp);
 		if(resNum == -123) return;
 	}
 	fclose(fp);

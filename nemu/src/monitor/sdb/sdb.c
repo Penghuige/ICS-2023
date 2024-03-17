@@ -201,8 +201,7 @@ static int cmd_p(char * args)
 	
 	uint32_t res = eval(0, to-1);
 	clear_exp();
-	printf("%d\n", res);	
-// printf("\"%s\" = \"%d\"\n", args, res);
+	printf("\"%s\" = \"%d\"\n", args, res);
 
 	return 0;
 }
@@ -227,7 +226,7 @@ void sdb_mainloop() {
 	while((nread = getline(&test, &len, fp)) != -1)
 	{
 		// test is the test case
-		// printf("hello?\n");
+		printf("hello?\n");
 		char* t2 = strtok(test, " ");	
 		cmd_p(t2);
 	}

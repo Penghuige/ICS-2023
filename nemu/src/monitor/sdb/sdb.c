@@ -228,7 +228,7 @@ void sdb_mainloop() {
 	{
 		// test is the test case
 		printf("hello?\n");
-		char *exp = strtok("NULL", test);
+		char *exp = strtok(" ", test);
 		cmd_p(exp);
 	}
 	fclose(fp);

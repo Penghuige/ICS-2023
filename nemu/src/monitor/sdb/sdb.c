@@ -240,7 +240,7 @@ void sdb_mainloop() {
     /* extract the first token as the command */
     char *ans = strtok(str, " ");
 		uint32_t ansNum = atoi(ans);
-    char *cmd = strtok(str, " ");
+    char *cmd = strtok(NULL, " ");
     if (cmd == NULL) { continue; }
 		if(ansNum == -1) return;
 

@@ -215,6 +215,7 @@ void sdb_mainloop() {
     cmd_c(NULL);
     return;
   }
+/*
 
 	FILE *fp = fopen("/home/penghui/ics2023/nemu/tools/gen-expr/build/input", "r");
 	assert(fp != NULL);
@@ -236,6 +237,7 @@ void sdb_mainloop() {
 	}
 	fclose(fp);
 	if(1) return;
+*/
 
   for (char *str; (str = rl_gets()) != NULL; ) {
     char *str_end = str + strlen(str);

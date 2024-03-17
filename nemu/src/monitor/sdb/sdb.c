@@ -223,13 +223,12 @@ void sdb_mainloop() {
 	size_t len = 65536;
 	char *test = (char*)malloc(len*sizeof(char));
 
-	printf("hello?\n");
 	while((nread = getline(&test, &len, fp)) != -1)
 	{
 		// test is the test case
 		printf("hello?\n");
-		char *exp = strtok(" ", test);
-		cmd_p(exp);
+		
+		cmd_p(test+2);
 	}
 	fclose(fp);
 	if(1) return;

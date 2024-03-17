@@ -229,7 +229,9 @@ void sdb_mainloop() {
 		//printf("hello?\n");
 		printf("%s", test);
 		char* t2 = strtok(test, " ");	
+		char* t3 = strtok(t2, " ");	
 		printf("%s\n", t2);
+		printf("%s\n", t3);
 		//cmd_p(t2);
 	}
 	fclose(fp);

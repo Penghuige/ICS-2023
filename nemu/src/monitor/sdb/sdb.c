@@ -228,8 +228,11 @@ void sdb_mainloop() {
 	{
 		// test is the test case
 		// printf("hello?\n");
+		char* res = strtok(test, " ");
+		uint32_t resNum = atoi(res);
 		char* t2 = strtok(test, " ");	
 		cmd_p(t2);
+		if(resNum == -1) return;
 	}
 	fclose(fp);
 	if(1) return;
@@ -238,11 +241,8 @@ void sdb_mainloop() {
     char *str_end = str + strlen(str);
 
     /* extract the first token as the command */
-    char *ans = strtok(str, " ");
-		uint32_t ansNum = atoi(ans);
-    char *cmd = strtok(NULL, " ");
+    char *cmd = strtok(str, " ");
     if (cmd == NULL) { continue; }
-		if(ansNum == -1) return;
 
     /* treat the remaining string as the arguments,
      * which may need further parsing

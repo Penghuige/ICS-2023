@@ -193,14 +193,14 @@ bool check_parentheses(int p, int q)
 			if(i != q && to == 0) return false;
 			if(to < 0) 
 			{		
-				printf("Bad expression!\n");
+				printf("Bad expression 1!\n");
 				assert(0);
 			}
 		}
 	}
 	if(to != 0)
 	{
-		printf("Bad expression!\n");
+		printf("Bad expression 2!\n");
 		assert(0);
 	}
 	else return true;

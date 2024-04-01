@@ -56,6 +56,10 @@ static struct rule {
 	{"\\b[0-9]+\\b", TK_NUM}, 	// number
 	{"\\(", TK_BRAL},				// left quote
 	{"\\)", TK_BRAR},				// right quote
+	{"\\b!=\\b", TK_NEQ},
+	{"\\b&&\\b", TK_AND},
+	{"\\0x", TK_HEX},
+	{"\\$", TK_REG},
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -121,7 +125,7 @@ static bool make_token(char *e) {
 						// consider the num may be a negative
 						if(tokens[nr_token-1].type != TK_NUM) 
 						{						
-							sign ^= 1;
+							sign = 1;
 							break;
 						}
 						// if the sym is real sub
@@ -132,6 +136,13 @@ static bool make_token(char *e) {
 					case TK_EQ:
 					case TK_ADD:
 					case TK_MUL:
+						if(tokens[nr_token-1].type != TK_NUM) 
+						{						
+							tokens[nr_token].type = TK_DER;
+							strncpy(tokens[nr_token].str, substr_start, substr_len); 
+							nr_token++;
+							break;
+						}
 					case TK_DIV:
           case TK_NUM:
 					case TK_BRAL:

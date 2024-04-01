@@ -30,6 +30,11 @@ enum {
 	TK_BRAL = '(',
 	TK_BRAR = ')',
   /* TODO: Add more token types */
+	TK_NEQ,
+	TK_AND,
+	TK_HEX,
+	TK_REG = '$',
+	TK_DER,
 
 };
 
@@ -48,7 +53,6 @@ static struct rule {
 	{"\\-", TK_SUB},				// subtract
 	{"\\*", TK_MUL},				// multitute
 	{"\\/", TK_DIV},				// divide
-	//{"0", TK_NUM}, 	// number
 	{"\\b[0-9]+\\b", TK_NUM}, 	// number
 	{"\\(", TK_BRAL},				// left quote
 	{"\\)", TK_BRAR},				// right quote

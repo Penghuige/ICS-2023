@@ -123,7 +123,7 @@ static bool make_token(char *e) {
 						break;
 					case TK_SUB:
 						// consider the num may be a negative
-						if(tokens[nr_token-1].type != TK_NUM) 
+						if(tokens[nr_token-1].type != TK_NUM && tokens[nr_token-1].type != TK_NUM ) 
 						{						
 							sign = 1;
 							break;
@@ -136,13 +136,16 @@ static bool make_token(char *e) {
 					case TK_EQ:
 					case TK_ADD:
 					case TK_MUL:
-						if(tokens[nr_token-1].type != TK_NUM) 
+						if(tokens[nr_token-1].type != TK_NUM && tokens[nr_token-1].type != TK_NUM ) 
 						{						
-							tokens[nr_token].type = TK_DER;
-							strncpy(tokens[nr_token].str, substr_start, substr_len); 
-							nr_token++;
+							sign = 2;
 							break;
 						}
+						// if the sym is real sub
+						tokens[nr_token].type = rules[i].token_type;
+						strncpy(tokens[nr_token].str, substr_start, substr_len); 
+						nr_token++;
+						break;
 					case TK_DIV:
           case TK_NUM:
 					case TK_BRAL:
@@ -159,6 +162,16 @@ static bool make_token(char *e) {
 								substr_start--;	
 								substr_len++;
 							}
+						}
+						if(sign == 2)
+						{
+							sign = 0;	
+							strncpy(tokens[nr_token].str, substr_start, substr_len); 
+							bool sign_der = true;
+							word_t ret = isa_reg_str2val(tokens[nr_token].str, &sign_der);
+							sprintf(tokens[nr_token].str, "%d", ret);
+							nr_token++;
+							break;
 						}
 						strncpy(tokens[nr_token].str, substr_start, substr_len); 
 						nr_token++;

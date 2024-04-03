@@ -37,7 +37,9 @@ void isa_reg_display() {
 	i = 0;
 	while(1)
 	{
-		printf("%d ", cpu.gpr[i]);
+		i++;
+		if(cpu.gpr[i] == 0) continue;
+		printf("%d : %d\n", i, cpu.gpr[i]);
 	}
 }
 

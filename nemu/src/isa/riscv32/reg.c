@@ -34,10 +34,28 @@ void isa_reg_display() {
 		printf("$%s\t0x%08x\n", regs[i], cpu.gpr[i]);
 		// printf("%s\n", reg_name(i));
 	}
+	i = 0;
+	while(1)
+	{
+		printf("%d ", cpu.gpr[i]);
+	}
 }
 
 
 word_t isa_reg_str2val(const char *s, bool *success) {
-	
-  return 0;
+	int i = 0;
+	for(int i = 0; i < REG_NUM; i++)
+	{
+		if(strcmp(s, regs[i]) == 0)
+		{
+			break;
+		}
+	}
+	if(i == REG_NUM)
+	{
+		*success = false;
+		return -1;
+	}
+
+  return cpu.gpr[i];
 }

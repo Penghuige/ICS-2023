@@ -59,7 +59,7 @@ static struct rule {
 	{"\\b!=\\b", TK_NEQ},
 	{"\\b&&\\b", TK_AND},
 	{"\\0x", TK_HEX},
-	{"\\$", TK_REG},
+	{"\\$[a-zA-Z]", TK_REG},
 };
 
 #define NR_REGEX ARRLEN(rules)

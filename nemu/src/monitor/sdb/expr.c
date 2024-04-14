@@ -171,6 +171,7 @@ static bool make_token(char *e) {
 							bool sign_der = true;
 							printf("\n%s go to rederference.\n", tokens[nr_token].str);
 							word_t ret = isa_reg_str2val(tokens[nr_token].str, &sign_der);
+							printf("%d", sign_der);
 							if(sign_der == false)
 							{
 								printf("Can't find the register!\n");

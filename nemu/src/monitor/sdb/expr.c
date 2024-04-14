@@ -139,6 +139,7 @@ static bool make_token(char *e) {
 						if(tokens[nr_token-1].type != TK_NUM && tokens[nr_token-1].type != TK_NUM ) 
 						{						
 							sign = 2;
+							printf("test1\n");
 							break;
 						}
 						// if the sym is real sub
@@ -169,6 +170,11 @@ static bool make_token(char *e) {
 							strncpy(tokens[nr_token].str, substr_start, substr_len); 
 							bool sign_der = true;
 							word_t ret = isa_reg_str2val(tokens[nr_token].str, &sign_der);
+							if(sign_der == false)
+							{
+								printf("Can't find the register!\n");
+								assert(0);
+							}
 							sprintf(tokens[nr_token].str, "%d", ret);
 							nr_token++;
 							break;

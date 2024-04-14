@@ -34,13 +34,13 @@ void isa_reg_display() {
 		printf("$%s\t0x%08x\n", regs[i], cpu.gpr[i]);
 		// printf("%s\n", reg_name(i));
 	}
-	i = 0;
-	while(1)
-	{
-		i++;
-		getchar();
-		printf("%d : %08x\n", i, cpu.gpr[i]);
-	}
+	//i = 0;
+	//while(1)
+	//{
+	//	i++;
+	//	getchar();
+	//	printf("%d : %08x\n", i, cpu.gpr[i]);
+	//}
 }
 
 

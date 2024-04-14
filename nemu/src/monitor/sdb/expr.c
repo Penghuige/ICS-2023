@@ -139,7 +139,7 @@ static bool make_token(char *e) {
 						if(tokens[nr_token-1].type != TK_NUM && tokens[nr_token-1].type != TK_NUM ) 
 						{						
 							sign = 2;
-							printf("test1\n");
+							//printf("test1\n");
 							break;
 						}
 						// if the sym is real sub

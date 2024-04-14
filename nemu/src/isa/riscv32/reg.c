@@ -55,6 +55,7 @@ word_t isa_reg_str2val(const char *s, bool *success) {
 			break;
 		}
 	}
+	printf("the i is %d\n", i);
 	if(i == REG_NUM)
 	{
 		*success = false;

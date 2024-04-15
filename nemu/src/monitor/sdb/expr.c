@@ -317,7 +317,7 @@ uint32_t eval(uint32_t p, uint32_t q) {
 			//	op = i;
 			//}
 		}
-		for( i = p; i <= q; i++) {printf("%d:%d:%s",tokens[i].type, p, tokens[i].str);}
+		for( i = p; i <= q; i++) {printf("%d:%s\n", p, tokens[i].str);}
 		assert(op != -1);
 		// to ensure what kind of the symbol is
 		//if(tokens[op].type)

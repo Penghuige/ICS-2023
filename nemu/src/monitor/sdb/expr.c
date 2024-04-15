@@ -35,7 +35,7 @@ enum {
 	TK_HEX,
 	TK_REG = '$',
 	TK_DER,
-	TK_MOR = '>',
+	TK_MOR,
 	TK_LOW = '<',
 	TK_MOE,
 	TK_LOE,
@@ -66,7 +66,7 @@ static struct rule {
 	{">", TK_MOR},
 	{"<", TK_LOW},
 	{">=", TK_MOE},
-	{"<=oo", TK_LOE},
+	{"<=", TK_LOE},
 
 };
 

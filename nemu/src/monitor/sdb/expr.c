@@ -125,8 +125,8 @@ static bool make_token(char *e) {
 
   nr_token = 0;
 
-	// sign about the num is negative
-	int sign = 0;
+	// sign about the num is negative // it has been out
+	//int sign = 0;
   while (e[position] != '\0') {
     /* Try all rules one by one. */
     for (i = 0; i < NR_REGEX; i ++) {
@@ -149,24 +149,22 @@ static bool make_token(char *e) {
 					case TK_SUB:
 						// consider the num may be a negative
 						if(tokens[nr_token-1].type != TK_NUM && tokens[nr_token-1].type != TK_NUM ) 
-						{						
-							sign = 1;
-							break;
+						{	
+						  tokens[nr_token].type = TK_NEG;
 						}
+						else tokens[nr_token].type = TK_SUB;
 						// if the sym is real sub
-						tokens[nr_token].type = rules[i].token_type;
 						strncpy(tokens[nr_token].str, substr_start, substr_len); 
 						nr_token++;
 						break;
 					case TK_MUL:
 						if(tokens[nr_token-1].type != TK_NUM && tokens[nr_token-1].type != TK_NUM ) 
 						{						
-							sign = 2;
+						  tokens[nr_token].type = TK_DER;
 							//printf("test1\n");
-							break;
 						}
+						else tokens[nr_token].type = TK_MUL;
 						// if the sym is real sub
-						tokens[nr_token].type = rules[i].token_type;
 						strncpy(tokens[nr_token].str, substr_start, substr_len); 
 						nr_token++;
 						break;
@@ -181,35 +179,36 @@ static bool make_token(char *e) {
 					case TK_BRAL:
 					case TK_BRAR:
 					default:
+						//if(sign == 1)
+						//{
+						//	// it is negative symbol
+						//	tokens[nr_token].type = rules[i].token_type;
+						//	sign = 0;
+						//	if(rules[i].token_type == TK_NUM)
+						//	{
+						//		//num = -num;
+						//		substr_start--;	
+						//		substr_len++;
+						//	}
+						//}
+						//if(sign == 2)
+						//{
+						//	sign = 0;	
+						//	strncpy(tokens[nr_token].str, substr_start, substr_len); 
+						//	bool sign_der = true;
+						//	// printf("\n%s go to rederference.\n", tokens[nr_token].str);
+						//	word_t ret = isa_reg_str2val(tokens[nr_token].str, &sign_der);
+						//	//printf("%d", sign_der);
+						//	if(sign_der == false)
+						//	{
+						//		printf("Can't find the register!\n");
+						//		assert(0);
+						//	}
+						//	sprintf(tokens[nr_token].str, "%d", ret);
+						//	nr_token++;
+						//	break;
+						//}
 						tokens[nr_token].type = rules[i].token_type;
-						if(sign == 1)
-						{
-							// it is negative symbol
-							sign = 0;
-							if(rules[i].token_type == TK_NUM)
-							{
-								//num = -num;
-								substr_start--;	
-								substr_len++;
-							}
-						}
-						if(sign == 2)
-						{
-							sign = 0;	
-							strncpy(tokens[nr_token].str, substr_start, substr_len); 
-							bool sign_der = true;
-							// printf("\n%s go to rederference.\n", tokens[nr_token].str);
-							word_t ret = isa_reg_str2val(tokens[nr_token].str, &sign_der);
-							//printf("%d", sign_der);
-							if(sign_der == false)
-							{
-								printf("Can't find the register!\n");
-								assert(0);
-							}
-							sprintf(tokens[nr_token].str, "%d", ret);
-							nr_token++;
-							break;
-						}
 						strncpy(tokens[nr_token].str, substr_start, substr_len); 
 						nr_token++;
         }
@@ -295,7 +294,7 @@ uint32_t eval(uint32_t p, uint32_t q) {
 		//int sign = 1;
 	 	int ju = 0;
 		int Min = 1e9;
-		printf("p:%d, q:%d \n", p, q);
+		//printf("p:%d, q:%d \n", p, q);
 		for( i = p; i <= q; i++)
 		{
 			if(tokens[i].type == TK_BRAL)
@@ -319,8 +318,8 @@ uint32_t eval(uint32_t p, uint32_t q) {
 			//	op = i;
 			//}
 		}
-		printf("op:%d\n", op);
-		for( i = p; i <= q; i++) {printf("%d:%s\n", i, tokens[i].str);}
+		//printf("op:%d\n", op);
+		//for( i = p; i <= q; i++) {printf("%d:%s\n", i, tokens[i].str);}
 		assert(op != -1);
 		// to ensure what kind of the symbol is
 		//if(tokens[op].type)
@@ -336,7 +335,7 @@ uint32_t eval(uint32_t p, uint32_t q) {
 			case TK_NEQ: return val1 != val2;
 			case TK_AND: return val1 && val2;
       default: 
-				printf("tokens[op].str is %s\n", tokens[op].str);
+				//printf("tokens[op].str is %s\n", tokens[op].str);
 				assert(0);
 
     }

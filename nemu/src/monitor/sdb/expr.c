@@ -337,6 +337,7 @@ uint32_t eval(uint32_t p, uint32_t q) {
 		if(tokens[op].type == TK_NEG || tokens[op].type == TK_POS )
 		{
 			// one parameter symbol
+			printf("ok!\n");
 			val2 = eval(op + 1, q);
 		}
 		else

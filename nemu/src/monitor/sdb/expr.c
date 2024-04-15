@@ -40,6 +40,7 @@ enum {
 	TK_MOE,
 	TK_LOE,
 	TK_NEG,
+	TK_OPT,
 };
 
 static struct rule {
@@ -75,7 +76,7 @@ static struct rule {
 
 static regex_t re[NR_REGEX] = {};
 
-int pri[256] = {};
+int pri[512] = {};
 
 /* Rules are used for many times.
  * Therefore we compile them only once before any usage.
@@ -87,7 +88,13 @@ void init_regex() {
 
 	// initial priority
 	pri[TK_BRAR] = pri[TK_BRAL] = 1;
-	pri[TK_NEG] = 2;
+	pri[TK_NEG] = pri[TK_OPT] = 2;
+	pri[TK_MUL] = pri[TK_DIV] = 3;
+	pri[TK_ADD] = pri[TK_SUB] = 4;
+	pri[TK_MOR] = pri[TK_LOW] = pri[TK_MOE] = pri[TK_LOE] = 6;
+	pri[TK_EQ] = pri[TK_NEQ] = 7;
+	pri[TK_AND] = 11;
+	//pri[TK_]
 
 	//printf("\nTK_MOR is %d , and TK_LOE is %d\n", TK_MOR, TK_LOE);
 

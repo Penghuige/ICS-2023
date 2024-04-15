@@ -39,6 +39,7 @@ enum {
 	TK_LOW = '<',
 	TK_MOE,
 	TK_LOE,
+	TK_NEG,
 };
 
 static struct rule {
@@ -86,6 +87,7 @@ void init_regex() {
 
 	// initial priority
 	pri[TK_BRAR] = pri[TK_BRAL] = 1;
+	pri[TK_NEG] = 2;
 
 	//printf("\nTK_MOR is %d , and TK_LOE is %d\n", TK_MOR, TK_LOE);
 

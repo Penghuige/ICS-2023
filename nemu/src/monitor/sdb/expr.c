@@ -337,8 +337,18 @@ uint32_t eval(uint32_t p, uint32_t q) {
 		if(tokens[op].type == TK_NEG || tokens[op].type == TK_POS || tokens[op].type == TK_DER)
 		{
 			// one parameter symbol
+			if(tokens[op].type == TK_DER)
+			{
+				bool sign = 1;
+				val2 = isa_reg_str2val(tokens[op+1].str, &sign);
+				if(!sign)
+				{
+					printf("Can't find the register!\n");
+					assert(0);
+				}
+			}
 			//printf("ok!\n");
-			val2 = eval(op + 1, q);
+			else val2 = eval(op + 1, q);
 		}
 		else
 		{

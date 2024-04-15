@@ -59,8 +59,8 @@ static struct rule {
 	{"\\b[0-9]+\\b", TK_NUM}, 	// number
 	{"\\(", TK_BRAL},				// left quote
 	{"\\)", TK_BRAR},				// right quote
-	{"\\b!=\\b", TK_NEQ},
-	{"\\b&&\\b", TK_AND},
+	{"!=", TK_NEQ},
+	{"&&", TK_AND},
 	{"\\0x", TK_HEX},
 	{"\\$[a-zA-Z]*", TK_REG},
 	{">", TK_MOR},

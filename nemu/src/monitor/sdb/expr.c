@@ -63,7 +63,7 @@ static struct rule {
 	{"\\)", TK_BRAR},				// right quote
 	{"!=", TK_NEQ},
 	{"&&", TK_AND},
-	{"\\0x", TK_HEX},
+	{"\\0x[0-9]*", TK_HEX},
 	{"\\$[a-zA-Z]*", TK_REG},
 	{">", TK_MOR},
 	{"<", TK_LOW},
@@ -88,13 +88,13 @@ void init_regex() {
 
 	// initial priority
 	pri[TK_BRAR] = pri[TK_BRAL] = 1;
-	pri[TK_NEG] = pri[TK_POS] = 2;
+	pri[TK_NEG] = pri[TK_POS] = pri[TK_DER] = 2;
 	pri[TK_MUL] = pri[TK_DIV] = 3;
 	pri[TK_ADD] = pri[TK_SUB] = 4;
 	pri[TK_MOR] = pri[TK_LOW] = pri[TK_MOE] = pri[TK_LOE] = 6;
 	pri[TK_EQ] = pri[TK_NEQ] = 7;
 	pri[TK_AND] = 11;
-	pri[TK_NUM] = pri[TK_REG] = 0;
+	pri[TK_NUM] = pri[TK_REG] = pri[TK_HEX] = 0;
 	//pri[TK_]
 
 	//printf("\nTK_MOR is %d , and TK_LOE is %d\n", TK_MOR, TK_LOE);
@@ -179,6 +179,14 @@ static bool make_token(char *e) {
 						strncpy(tokens[nr_token].str, substr_start, substr_len); 
 						nr_token++;
 						break;
+					case TK_REG:
+						for(int i = 0; i <= substr_len; i++ )
+						{
+							if(*(substr_start+i) >= 'A' && *(substr_start+i) <= 'Z')
+							{
+								*(substr_start+i) -= 'A' + 'a';
+							}
+						}
 					case TK_MOR:
 					case TK_LOW:
 					case TK_MOE:

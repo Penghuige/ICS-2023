@@ -154,7 +154,7 @@ static bool make_token(char *e) {
 						strncpy(tokens[nr_token].str, substr_start, substr_len); 
 						nr_token++;
 						break;
-					//case TK_MOR:
+					case TK_MOR:
 					case TK_LOW:
 					case TK_MOE:
 					case TK_LOE:

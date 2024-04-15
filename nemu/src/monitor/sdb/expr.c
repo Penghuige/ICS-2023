@@ -51,7 +51,7 @@ static struct rule {
    */
 
   {" ", TK_NOTYPE},    	// spaces
-  {"\\b==\\b", TK_EQ},        // equal
+  {"==", TK_EQ},        // equal
   {"\\+", TK_ADD},        // plus
 	{"\\-", TK_SUB},				// subtract
 	{"\\*", TK_MUL},				// multitute

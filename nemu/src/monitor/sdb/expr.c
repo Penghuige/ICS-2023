@@ -63,10 +63,10 @@ static struct rule {
 	{"\\b&&\\b", TK_AND},
 	{"\\0x", TK_HEX},
 	{"\\$[a-zA-Z]*", TK_REG},
-	{"\\>\\", TK_MOR},
-	{"\\<\\", TK_LOW},
-	{"\\>=\\", TK_MOE},
-	{"\\<=\\", TK_LOE},
+	{">", TK_MOR},
+	{"<", TK_LOW},
+	{">=", TK_MOE},
+	{"<=", TK_LOE},
 
 };
 

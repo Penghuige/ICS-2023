@@ -335,7 +335,7 @@ uint32_t eval(uint32_t p, uint32_t q) {
 			if(ju) continue;
 			if(pri[tokens[i].type] >= Max)
 			{
-				printf("%d::%d:%d:%s\n",pri[tokens[i].type], i, tokens[i].type, tokens[i].str);
+				//printf("%d::%d:%d:%s\n",pri[tokens[i].type], i, tokens[i].type, tokens[i].str);
 				op = i;
 				Max = pri[tokens[i].type];
 			}

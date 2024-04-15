@@ -303,7 +303,7 @@ uint32_t eval(uint32_t p, uint32_t q) {
 		int i;
 		//int sign = 1;
 	 	int ju = 0;
-		int Min = 1e9;
+		int Max = 0;
 		//printf("p:%d, q:%d \n", p, q);
 		for( i = p; i <= q; i++)
 		{
@@ -318,10 +318,10 @@ uint32_t eval(uint32_t p, uint32_t q) {
 				continue;
 			}
 			if(ju) continue;
-			if(pri[tokens[i].type] <= Min)
+			if(pri[tokens[i].type] >= Max)
 			{
 				op = i;
-				Min = pri[tokens[i].type];
+				Max = pri[tokens[i].type];
 			}
 			//if(sign == 1 && (tokens[i].type == TK_MUL || tokens[i].type == TK_DIV))
 			//{

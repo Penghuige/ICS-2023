@@ -81,6 +81,7 @@ void init_regex() {
   int i;
   char error_msg[128];
   int ret;
+	printf("\nTK_MOR is %d , and TK_LOE is %d\n", TK_MOR, TK_LOE);
 
   for (i = 0; i < NR_REGEX; i ++) {
     ret = regcomp(&re[i], rules[i].regex, REG_EXTENDED);
@@ -153,10 +154,10 @@ static bool make_token(char *e) {
 						strncpy(tokens[nr_token].str, substr_start, substr_len); 
 						nr_token++;
 						break;
-					case TK_MOR:
+					//case TK_MOR:
 					case TK_LOW:
 					case TK_MOE:
-					//case TK_LOE:
+					case TK_LOE:
 					case TK_EQ:
 					case TK_ADD:
 					case TK_DIV:

@@ -74,6 +74,8 @@ static struct rule {
 
 static regex_t re[NR_REGEX] = {};
 
+int pri[256] = {};
+
 /* Rules are used for many times.
  * Therefore we compile them only once before any usage.
  */
@@ -81,7 +83,11 @@ void init_regex() {
   int i;
   char error_msg[128];
   int ret;
-	printf("\nTK_MOR is %d , and TK_LOE is %d\n", TK_MOR, TK_LOE);
+
+	// initial priority
+	pri[TK_BRAR] = pri[TK_BRAL] = 1;
+
+	//printf("\nTK_MOR is %d , and TK_LOE is %d\n", TK_MOR, TK_LOE);
 
   for (i = 0; i < NR_REGEX; i ++) {
     ret = regcomp(&re[i], rules[i].regex, REG_EXTENDED);

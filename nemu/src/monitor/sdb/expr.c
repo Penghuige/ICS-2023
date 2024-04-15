@@ -169,7 +169,7 @@ static bool make_token(char *e) {
 							sign = 0;	
 							strncpy(tokens[nr_token].str, substr_start, substr_len); 
 							bool sign_der = true;
-							printf("\n%s go to rederference.\n", tokens[nr_token].str);
+							// printf("\n%s go to rederference.\n", tokens[nr_token].str);
 							word_t ret = isa_reg_str2val(tokens[nr_token].str, &sign_der);
 							//printf("%d", sign_der);
 							if(sign_der == false)

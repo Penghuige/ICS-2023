@@ -334,7 +334,7 @@ uint32_t eval(uint32_t p, uint32_t q) {
 		// to ensure what kind of the symbol is
     uint32_t val1 = 0;
     uint32_t val2 = 0; 
-		if(tokens[op].type == TK_NEG || tokens[op].type == TK_POS )
+		if(tokens[op].type == TK_NEG || tokens[op].type == TK_POS || tokens[op].type == TK_DER)
 		{
 			// one parameter symbol
 			//printf("ok!\n");

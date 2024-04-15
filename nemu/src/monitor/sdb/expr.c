@@ -22,21 +22,21 @@
 
 enum {
   TK_NOTYPE = 256, TK_EQ,
-	TK_ADD = '+',
-	TK_SUB = '-',
-	TK_MUL = '*',
-	TK_DIV = '/',
+	TK_ADD,
+	TK_SUB,
+	TK_MUL,
+	TK_DIV,
 	TK_NUM,
-	TK_BRAL = '(',
-	TK_BRAR = ')',
+	TK_BRAL,
+	TK_BRAR,
   /* TODO: Add more token types */
 	TK_NEQ,
 	TK_AND,
 	TK_HEX,
-	TK_REG = '$',
+	TK_REG,
 	TK_DER,
 	TK_MOR,
-	TK_LOW = '<',
+	TK_LOW,
 	TK_MOE,
 	TK_LOE,
 	TK_NEG,
@@ -318,6 +318,8 @@ uint32_t eval(uint32_t p, uint32_t q) {
 			//}
 		}
 		assert(op != -1);
+		// to ensure what kind of the symbol is
+		//if(tokens[op].type)
     uint32_t val1 = eval(p, op - 1);
     uint32_t val2 = eval(op + 1, q);
 
@@ -327,6 +329,8 @@ uint32_t eval(uint32_t p, uint32_t q) {
       case '*': return val1 * val2;
       case '/': return val1 / val2;
 			case TK_EQ: return val1 == val2; 
+			case TK_NEQ: return val1 != val2;
+			case TK_AND: return val1 && val2;
       default: assert(0);
     }
   }

@@ -40,7 +40,7 @@ enum {
 	TK_MOE,
 	TK_LOE,
 	TK_NEG,
-	TK_OPT,
+	TK_POS,
 };
 
 static struct rule {
@@ -88,7 +88,7 @@ void init_regex() {
 
 	// initial priority
 	pri[TK_BRAR] = pri[TK_BRAL] = 1;
-	pri[TK_NEG] = pri[TK_OPT] = 2;
+	pri[TK_NEG] = pri[TK_POS] = 2;
 	pri[TK_MUL] = pri[TK_DIV] = 3;
 	pri[TK_ADD] = pri[TK_SUB] = 4;
 	pri[TK_MOR] = pri[TK_LOW] = pri[TK_MOE] = pri[TK_LOE] = 6;
@@ -168,12 +168,22 @@ static bool make_token(char *e) {
 						strncpy(tokens[nr_token].str, substr_start, substr_len); 
 						nr_token++;
 						break;
+					case TK_ADD:
+						if(tokens[nr_token-1].type != TK_NUM && tokens[nr_token-1].type != TK_NUM ) 
+						{						
+						  tokens[nr_token].type = TK_POS;
+							//printf("test1\n");
+						}
+						else tokens[nr_token].type = TK_ADD;
+						// if the sym is real sub
+						strncpy(tokens[nr_token].str, substr_start, substr_len); 
+						nr_token++;
+						break;
 					case TK_MOR:
 					case TK_LOW:
 					case TK_MOE:
 					case TK_LOE:
 					case TK_EQ:
-					case TK_ADD:
 					case TK_DIV:
           case TK_NUM:
 					case TK_BRAL:
@@ -322,9 +332,18 @@ uint32_t eval(uint32_t p, uint32_t q) {
 		//for( i = p; i <= q; i++) {printf("%d:%s\n", i, tokens[i].str);}
 		assert(op != -1);
 		// to ensure what kind of the symbol is
-		//if(tokens[op].type)
-    uint32_t val1 = eval(p, op - 1);
-    uint32_t val2 = eval(op + 1, q);
+    uint32_t val1 = 0;
+    uint32_t val2 = 0; 
+		if(tokens[op].type == TK_NEG || tokens[op].type == TK_POS )
+		{
+			// one parameter symbol
+			val2 = eval(op + 1, q);
+		}
+		else
+		{
+    	val1 = eval(p, op - 1);
+    	val2 = eval(op + 1, q);
+		}
 
     switch (tokens[op].type) {
       case TK_ADD: return val1 + val2;
@@ -334,6 +353,8 @@ uint32_t eval(uint32_t p, uint32_t q) {
 			case TK_EQ: return val1 == val2; 
 			case TK_NEQ: return val1 != val2;
 			case TK_AND: return val1 && val2;
+			case TK_NEG: return val1 - val2;
+			case TK_POS: return val1 + val2;
       default: 
 				//printf("tokens[op].str is %s\n", tokens[op].str);
 				assert(0);

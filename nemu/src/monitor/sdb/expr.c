@@ -328,10 +328,10 @@ uint32_t eval(uint32_t p, uint32_t q) {
     uint32_t val2 = eval(op + 1, q);
 
     switch (tokens[op].type) {
-      case '+': return val1 + val2;
-      case '-': return val1 - val2;
-      case '*': return val1 * val2;
-      case '/': return val1 / val2;
+      case TK_ADD: return val1 + val2;
+      case TK_SUB: return val1 - val2;
+      case TK_MUL: return val1 * val2;
+      case TK_DIV: return val1 / val2;
 			case TK_EQ: return val1 == val2; 
 			case TK_NEQ: return val1 != val2;
 			case TK_AND: return val1 && val2;

@@ -94,6 +94,7 @@ void init_regex() {
 	pri[TK_MOR] = pri[TK_LOW] = pri[TK_MOE] = pri[TK_LOE] = 6;
 	pri[TK_EQ] = pri[TK_NEQ] = 7;
 	pri[TK_AND] = 11;
+	pri[TK_NUM] = 15;
 	//pri[TK_]
 
 	//printf("\nTK_MOR is %d , and TK_LOE is %d\n", TK_MOR, TK_LOE);

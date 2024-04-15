@@ -141,8 +141,6 @@ static bool make_token(char *e) {
 						strncpy(tokens[nr_token].str, substr_start, substr_len); 
 						nr_token++;
 						break;
-					case TK_EQ:
-					case TK_ADD:
 					case TK_MUL:
 						if(tokens[nr_token-1].type != TK_NUM && tokens[nr_token-1].type != TK_NUM ) 
 						{						
@@ -156,17 +154,15 @@ static bool make_token(char *e) {
 						nr_token++;
 						break;
 					case TK_DIV:
+					case TK_EQ:
+					case TK_ADD:
           case TK_NUM:
 					case TK_BRAL:
 					case TK_BRAR:
 					//case TK_MOR:
-						break;
 					case TK_LOW:
-						break;
 					case TK_MOE:
-						break;
 					case TK_LOE:
-						break;
 					default:
 						tokens[nr_token].type = rules[i].token_type;
 						if(sign == 1)

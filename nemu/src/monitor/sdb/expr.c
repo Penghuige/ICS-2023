@@ -375,6 +375,7 @@ uint32_t eval(uint32_t p, uint32_t q) {
 			case TK_AND: return val1 && val2;
 			case TK_NEG: return val1 - val2;
 			case TK_POS: return val1 + val2;
+			case TK_DER: return val1 + val2;
       default: 
 				//printf("tokens[op].str is %s\n", tokens[op].str);
 				assert(0);

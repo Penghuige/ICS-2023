@@ -247,6 +247,7 @@ bool check_parentheses(int p, int q)
 	int i;
 	for(i = p; i <= q; i++)
 	{
+		if(tokens[i].type == TK_NUM) continue;
 		if(tokens[i].type == TK_BRAL)
 		{
 			to++;

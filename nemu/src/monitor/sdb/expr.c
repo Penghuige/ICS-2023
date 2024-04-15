@@ -63,7 +63,7 @@ static struct rule {
 	{"\\)", TK_BRAR},				// right quote
 	{"!=", TK_NEQ},
 	{"&&", TK_AND},
-	{"\\0x[0-9]*", TK_HEX},
+	{"\\0x[0-9a-e]*", TK_HEX},
 	{"\\$[a-zA-Z]*", TK_REG},
 	{">", TK_MOR},
 	{"<", TK_LOW},

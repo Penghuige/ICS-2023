@@ -298,6 +298,13 @@ uint32_t eval(uint32_t p, uint32_t q) {
   else if (p == q) {
     /* Single token.
      */
+		if(tokens[p].type == TK_HEX)
+		{
+		 	// turn to hecimal
+
+		 	uint32_t ret = strtol(tokens[p].str, NULL, 16);
+			return ret;
+		}
 		return atoi(tokens[p].str);
   }
   else if (check_parentheses(p, q) == true) {

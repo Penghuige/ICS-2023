@@ -290,8 +290,9 @@ uint32_t eval(uint32_t p, uint32_t q) {
   else {
     int op = -1; // = the position of 主运算符 in the token expression;
 		int i;
-		int sign = 1;
+		//int sign = 1;
 	 	int ju = 0;
+		int Min = 1e9;
 		printf("p:%d, q:%d \n", p, q);
 		for( i = p; i <= q; i++)
 		{
@@ -306,15 +307,15 @@ uint32_t eval(uint32_t p, uint32_t q) {
 				continue;
 			}
 			if(ju) continue;
-			if(tokens[i].type == TK_ADD || tokens[i].type == TK_SUB)
+			if(pri[tokens[i].type] <= Min)
 			{
 				op = i;
-				sign = 0;
+				Min = pri[tokens[i].type];
 			}
-			if(sign == 1 && (tokens[i].type == TK_MUL || tokens[i].type == TK_DIV))
-			{
-				op = i;
-			}
+			//if(sign == 1 && (tokens[i].type == TK_MUL || tokens[i].type == TK_DIV))
+			//{
+			//	op = i;
+			//}
 		}
 		assert(op != -1);
     uint32_t val1 = eval(p, op - 1);

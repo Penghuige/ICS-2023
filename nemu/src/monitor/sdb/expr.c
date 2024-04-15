@@ -35,7 +35,10 @@ enum {
 	TK_HEX,
 	TK_REG = '$',
 	TK_DER,
-
+	TK_MOR = '>',
+	TK_LOW = '<',
+	TK_MOE,
+	TK_LOE,
 };
 
 static struct rule {
@@ -60,6 +63,11 @@ static struct rule {
 	{"\\b&&\\b", TK_AND},
 	{"\\0x", TK_HEX},
 	{"\\$[a-zA-Z]*", TK_REG},
+	{"\\>\\", TK_MOR},
+	{"\\<\\", TK_LOW},
+	{"\\>=\\", TK_MOE},
+	{"\\<=\\", TK_LOE},
+
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -151,6 +159,14 @@ static bool make_token(char *e) {
           case TK_NUM:
 					case TK_BRAL:
 					case TK_BRAR:
+					//case TK_MOR:
+						break;
+					case TK_LOW:
+						break;
+					case TK_MOE:
+						break;
+					case TK_LOE:
+						break;
 					default:
 						tokens[nr_token].type = rules[i].token_type;
 						if(sign == 1)

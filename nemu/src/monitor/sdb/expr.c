@@ -304,6 +304,18 @@ uint32_t eval(uint32_t p, uint32_t q) {
 		 	uint32_t ret = strtol(tokens[p].str, NULL, 16);
 			return ret;
 		}
+		else if(tokens[p].type == TK_REG)
+		{
+			bool sign = 1;
+			uint32_t val = isa_reg_str2val(tokens[p].str, &sign);
+			if(!sign)
+			{
+				printf("Can't find the register!\n");
+				assert(0);
+			}
+			return val;
+		}
+
 		return atoi(tokens[p].str);
   }
   else if (check_parentheses(p, q) == true) {
@@ -354,13 +366,7 @@ uint32_t eval(uint32_t p, uint32_t q) {
 			// one parameter symbol
 			if(tokens[op].type == TK_DER)
 			{
-				bool sign = 1;
-				val2 = isa_reg_str2val(tokens[op+1].str, &sign);
-				if(!sign)
-				{
-					printf("Can't find the register!\n");
-					assert(0);
-				}
+				
 			}
 			//printf("ok!\n");
 			else val2 = eval(op + 1, q);

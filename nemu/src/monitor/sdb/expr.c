@@ -66,7 +66,7 @@ static struct rule {
 	{">", TK_MOR},
 	{"<", TK_LOW},
 	{">=", TK_MOE},
-	{"<=", TK_LOE},
+	{"<=oo", TK_LOE},
 
 };
 

@@ -363,13 +363,13 @@ uint32_t eval(uint32_t p, uint32_t q) {
     uint32_t val2 = 0; 
 		if(tokens[op].type == TK_NEG || tokens[op].type == TK_POS || tokens[op].type == TK_DER)
 		{
+			val2 = eval(op + 1, q);
 			// one parameter symbol
 			if(tokens[op].type == TK_DER)
 			{
-				
+				//val2 = 
 			}
 			//printf("ok!\n");
-			else val2 = eval(op + 1, q);
 		}
 		else
 		{

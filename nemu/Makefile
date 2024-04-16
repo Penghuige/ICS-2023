@@ -61,6 +61,6 @@ include $(NEMU_HOME)/scripts/native.mk
 endif
 
 # Add Watchpoint check
-ifeq ($(NEMU_CONFIG_WATCHPOINT),y)
+ifeq ($(CONFIG_CONFIG_WATCHPOINT),y)
     CFLAGS += -DCONFIG_WATCHPOINT
 endif

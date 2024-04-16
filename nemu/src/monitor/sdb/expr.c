@@ -65,7 +65,7 @@ static struct rule {
 	{"!=", TK_NEQ},
 	{"&&", TK_AND},
 	{"\\0x[0-9a-e]*", TK_HEX},
-	{"\\$[a-zA-Z]*", TK_REG},
+	{"\\$[a-zA-Z0-9]*", TK_REG},
 	{">=", TK_MOE},
 	{"<=", TK_LOE},
 	{">", TK_MOR},

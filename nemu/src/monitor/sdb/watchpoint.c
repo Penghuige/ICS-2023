@@ -53,7 +53,7 @@ void new_wp(char* exp)
 		assert(0);
 	}
 	WP* des = free_->next;
-	strcpy(exp, free_->exp);
+	strcpy(free_->exp, exp);
 	bool sign = true;
 
 	word_t to = expr(exp, &sign);

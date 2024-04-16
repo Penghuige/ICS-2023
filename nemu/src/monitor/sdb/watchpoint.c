@@ -53,7 +53,7 @@ void new_wp(char* exp)
 		assert(0);
 	}
 	WP* des = free_->next;
-	free_->exp = exp;
+	strcpy(exp, free_->exp);
 	bool sign = true;
 
 	word_t to = expr(exp, &sign);
@@ -116,7 +116,7 @@ void wp_display()
 		printf("%d\t%d\t%s\t\n", temp->NO, temp->val, temp->exp);
 		temp = temp->next;
 	}
-	printf("I am ok!\n");
+	//printf("I am ok!\n");
 }
 
 int check_wp()

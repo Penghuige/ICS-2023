@@ -65,6 +65,12 @@ void new_wp(paddr_t addr)
 void free_wp(int n)
 {
 	WP* temp = head;
+	if(temp->NO == n)
+	{
+		free_->next = temp;
+		head = NULL;
+		return;
+	}
 	WP* bef = head;
 	while(temp != NULL && temp->NO != n)
 	{
@@ -80,6 +86,7 @@ void free_wp(int n)
 	{
 		bef->next = temp->next;
 		temp->next = free_->next;
-		free_->next = temp;
+		if(free_ != NULL) free_->next = temp;
+		else free_ = temp;
 	}
 }

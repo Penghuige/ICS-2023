@@ -135,6 +135,7 @@ int check_wp()
 		uint32_t res = eval(0, to-1);
 		if(res != temp->val)
 		{
+			temp->val = res;
 			return temp->NO;
 		}
 		temp = temp->next;

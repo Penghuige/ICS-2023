@@ -157,12 +157,19 @@ static int cmd_x(char *args)
 		return 0;
 	}
 	arg = strtok(NULL, " ");
-	if( strlen(arg) <= 2)
+	paddr_t addr;
+	//if( strlen(arg) <= 2)
+	if(arg[1] != 'x')
 	{
-		printf("Invalid parameter!\n");
-		return 0;
+		addr = (paddr_t)atoi(arg);
+		//printf("Invalid parameter!\n");
+		//return 0;
 	}
- 	paddr_t addr = (paddr_t)strtol(arg+2, NULL, 16);
+	else
+	{
+  	addr = (paddr_t)strtol(arg+2, NULL, 16);
+	}
+	
 	printf("%s\t\t%s\t\t\t\t\t%s\n", "addr","hex","dec");
 	//printf("addr is %d\n", addr);	
 	int i;

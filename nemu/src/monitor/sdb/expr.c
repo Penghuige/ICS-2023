@@ -19,6 +19,7 @@
  * Type 'man regex' for more information about POSIX regex functions.
  */
 #include <regex.h>
+#include <memory/paddr.h>
 
 enum {
   TK_NOTYPE = 256, TK_EQ,
@@ -365,10 +366,10 @@ uint32_t eval(uint32_t p, uint32_t q) {
 		{
 			val2 = eval(op + 1, q);
 			// one parameter symbol
-			if(tokens[op].type == TK_DER)
-			{
-				//val2 = 
-			}
+			//if(tokens[op].type == TK_DER)
+			//{
+			//	val2 = eval
+			//}
 			//printf("ok!\n");
 		}
 		else
@@ -387,7 +388,7 @@ uint32_t eval(uint32_t p, uint32_t q) {
 			case TK_AND: return val1 && val2;
 			case TK_NEG: return val1 - val2;
 			case TK_POS: return val1 + val2;
-			case TK_DER: return val1 + val2;
+			case TK_DER: return val1 + paddr_read(val2, 1);
 			case TK_MOE: return val1 >= val2;
 			case TK_LOE: return val1 <= val2;
 			case TK_MOR: return val1 > val2;

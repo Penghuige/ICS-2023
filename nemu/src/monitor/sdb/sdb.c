@@ -24,6 +24,7 @@ static int is_batch_mode = false;
 
 void init_regex();
 void init_wp_pool();
+void wp_display();
 
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
@@ -143,6 +144,9 @@ static int cmd_info(char * args) {
 //	}	
 	if(strcmp(arg, "r") == 0) {
 		isa_reg_display();
+	}
+	else if(strcmp(arg, "w") == 0) {
+	 	wp_display();
 	}
 	return 0;
 }

@@ -67,6 +67,7 @@ void new_wp(char* exp)
 	if(head == NULL) 
 	{
 		head = free_;
+		head->next = NULL;
 	}
 	else 
 	{

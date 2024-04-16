@@ -59,3 +59,7 @@ else
 # Include rules to build NEMU
 include $(NEMU_HOME)/scripts/native.mk
 endif
+# Add Watchpoint check
+ifeq ($(CONFIG_NEMU_ENABLE_WATCHPOINT),y)
+    CFLAGS += -DENABLE_WATCHPOINT
+endif

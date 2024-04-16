@@ -214,4 +214,13 @@ config RT_CHECK
   bool "Enable runtime checking"
   default y
 
+config NEMU_ENABLE_WATCHPOINT
+    bool "Enable Watchpoint Support"
+		default y
+		help
+		  Enable watchpoint support in NEMU.
+			Watchpoints allow you to monitor specific memory locations
+			or variables for changes.
+		  This can be useful for debugging or performance profiling.
+
 endmenu

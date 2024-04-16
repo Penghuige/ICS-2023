@@ -100,7 +100,7 @@ void free_wp(int n)
 	}
 	else
 	{
-		printf("bef is %d, temp is %d\n", bef->NO, temp->NO);
+		//printf("bef is %d, temp is %d\n", bef->NO, temp->NO);
 		bef->next = temp->next;
 		temp->next = free_->next;
 		if(free_ != NULL) free_->next = temp;

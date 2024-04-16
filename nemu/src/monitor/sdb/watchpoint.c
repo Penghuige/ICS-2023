@@ -52,6 +52,7 @@ void new_wp(char* exp)
 		printf("The wp pool is full!\n");
 		assert(0);
 	}
+	WP* des = free_->next;
 	free_->exp = exp;
 	bool sign = true;
 
@@ -73,7 +74,7 @@ void new_wp(char* exp)
 		free_->next = head->next;
 		head->next = free_;
 	}
-	free_ = free_->next;
+	free_ = des;
 }
 
 void free_wp(int n)

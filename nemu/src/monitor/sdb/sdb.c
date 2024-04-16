@@ -26,6 +26,7 @@ void init_regex();
 void init_wp_pool();
 void wp_display();
 void new_wp(char* exp);
+void free_wp(int n);
 
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
@@ -236,6 +237,8 @@ static int cmd_w(char * args)
 }
 static int cmd_d(char * args)
 {
+	int a = atoi(args);
+	free_wp(a);
 	return 0;
 }
 

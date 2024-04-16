@@ -63,13 +63,18 @@ void new_wp(char* exp)
 	free_->to = to;
 	free_->val = eval(0, to-1); 
 	clear_exp();
-	if(head == NULL) head = free_;
+	if(head == NULL) 
+	{
+		head = free_;
+		head->next = NULL;
+	}
 	else 
 	{
+		// head insert
 		free_->next = head->next;
 		head->next = free_;
 	}
-	free_  = free_->next;
+	free_ = free_->next;
 }
 
 void free_wp(int n)

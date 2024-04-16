@@ -62,5 +62,5 @@ endif
 
 # Add Watchpoint check
 ifeq ($(CONFIG_WATCHPOINT),y)
-    CFLAGS += -DENABLE_WATCHPOINT
+    CFLAGS += -DCONFIG_WATCHPOINT
 endif

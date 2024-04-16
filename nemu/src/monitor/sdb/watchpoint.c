@@ -113,6 +113,7 @@ void wp_display()
 	while(temp != NULL)
 	{
 		printf("%d\t%d\t%s\t\n", temp->NO, temp->val, temp->exp);
+		temp = temp->next;
 	}
 }
 
@@ -133,6 +134,7 @@ int check_wp()
 		{
 			return temp->NO;
 		}
+		temp = temp->next;
 	}
 	return 0;
 }

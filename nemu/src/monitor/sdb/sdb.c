@@ -63,6 +63,10 @@ static int cmd_p(char *args);
 
 static int cmd_help(char *args);
 
+static int cmd_w(char *args);
+
+static int cmd_d(char *args);
+
 static struct {
   const char *name;
   const char *description;
@@ -74,7 +78,9 @@ static struct {
   { "si", "Let the propram execute step N and then suspend execution", cmd_si },
   { "info", "print the state and info", cmd_info },
   { "x", "output the expression value" , cmd_x},
-	{ "p", "eval the expression value", cmd_p}
+	{ "p", "eval the expression value", cmd_p},
+	{ "w", "if the watching value changes, procedure will be halt", cmd_w},
+	{ "d", "delete a watchpoint", cmd_d},
 
   /* TODO: Add more commands */
 
@@ -210,6 +216,16 @@ static int cmd_p(char * args)
 	clear_exp();
 	printf("\"%s\" = \"%d\"\n", args, res);
 
+	return 0;
+}
+
+static int cmd_w(char * args)
+{
+	
+	return 0;
+}
+static int cmd_d(char * args)
+{
 	return 0;
 }
 

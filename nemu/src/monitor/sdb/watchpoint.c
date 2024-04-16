@@ -14,6 +14,7 @@
 ***************************************************************************************/
 
 #include "sdb.h"
+#include <memory/paddr.h>
 
 #define NR_WP 32
 
@@ -22,7 +23,8 @@ typedef struct watchpoint {
   struct watchpoint *next;
 
   /* TODO: Add more members if necessary */
-
+	word_t val;
+	paddr_t addr;
 } WP;
 
 static WP wp_pool[NR_WP] = {};
@@ -41,3 +43,43 @@ void init_wp_pool() {
 
 /* TODO: Implement the functionality of watchpoint */
 
+// int count_wp = 0;
+void new_wp(paddr_t addr)
+{
+	if(free_ == NULL)
+	{
+		printf("The wp pool is full!\n");
+		assert(0);
+	}
+	free_->addr = addr;
+	free_->val = paddr_read(addr, 1);
+	if(head == NULL) head = free_;
+	else 
+	{
+		free_->next = head->next;
+		head->next = free_;
+	}
+	free_  = free_->next;
+}
+
+void free_wp(int n)
+{
+	WP* temp = head;
+	WP* bef = head;
+	while(temp != NULL && temp->NO != n)
+	{
+		bef = temp;
+		temp = temp->next;
+	}
+	if(temp == NULL)
+	{
+		printf("Can't find the watch point!\n");
+		assert(0);
+	}
+	else
+	{
+		bef->next = temp->next;
+		temp->next = free_->next;
+		free_->next = temp;
+	}
+}

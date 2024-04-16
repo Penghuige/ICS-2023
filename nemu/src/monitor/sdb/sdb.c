@@ -214,7 +214,7 @@ static int cmd_p(char * args)
 	
 	uint32_t res = eval(0, to-1);
 	clear_exp();
-	printf("\"%s\" = \"%d\"\n", args, res);
+	printf("%s = %d\n", args, res);
 
 	return 0;
 }

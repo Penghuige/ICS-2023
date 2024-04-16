@@ -23,8 +23,9 @@ typedef struct watchpoint {
   struct watchpoint *next;
 
   /* TODO: Add more members if necessary */
-	word_t val;
+	uint32_t val;
 	paddr_t addr;
+	char* exp;
 } WP;
 
 static WP wp_pool[NR_WP] = {};
@@ -44,15 +45,23 @@ void init_wp_pool() {
 /* TODO: Implement the functionality of watchpoint */
 
 // int count_wp = 0;
-void new_wp(paddr_t addr)
+void new_wp(char* exp)
 {
 	if(free_ == NULL)
 	{
 		printf("The wp pool is full!\n");
 		assert(0);
 	}
-	free_->addr = addr;
-	free_->val = paddr_read(addr, 1);
+	free_->exp = exp;
+	bool sign = true;
+
+	word_t to = expr(exp, &sign);
+	if(sign == false)
+	{
+		printf("invalid parameter!\n");
+	}
+	free_->val = eval(0, to-1); 
+	clear_exp();
 	if(head == NULL) head = free_;
 	else 
 	{

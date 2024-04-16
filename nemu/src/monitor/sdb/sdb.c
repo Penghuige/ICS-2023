@@ -213,6 +213,7 @@ static int cmd_p(char * args)
 	if(args == NULL)
 	{
 		printf("Need for parameter!\n");
+		return 0;
 	}
 	bool sign = true;
 	word_t to = expr(args, &sign);

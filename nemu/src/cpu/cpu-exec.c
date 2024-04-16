@@ -40,6 +40,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
 #ifdef CONFIG_WATCHPOINT
 	int num = wp_check();
+	printf("hello!\n");;
 	if(num != 0)
 	{
 		printf("The %d watchpoint has been changed!\n");

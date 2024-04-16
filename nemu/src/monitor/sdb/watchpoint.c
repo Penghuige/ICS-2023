@@ -109,7 +109,7 @@ void wp_display()
 {
 	WP* temp = head;
 	printf("NUM\tVAL\tEXP\t\n");
-	while(temp != NULL)
+	while(temp->exp != NULL)
 	{
 		printf("%d\t%d\t%s\t\n", temp->NO, temp->val, temp->exp);
 		temp = temp->next;
@@ -119,7 +119,7 @@ void wp_display()
 int check_wp()
 {
 	WP* temp = head;
-	while(temp != NULL)
+	while(temp->exp != NULL)
 	{
 		bool sign = true;
 		word_t to = expr(temp->exp, &sign);

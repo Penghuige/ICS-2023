@@ -111,7 +111,7 @@ void wp_display()
 {
 	WP* temp = head;
 	printf("NUM\tVAL\tEXP\t\n");
-	while(temp->exp != NULL)
+	while(temp != NULL)
 	{
 		printf("%d\t%d\t%s\t\n", temp->NO, temp->val, temp->exp);
 		temp = temp->next;

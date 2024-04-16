@@ -214,7 +214,7 @@ config RT_CHECK
   bool "Enable runtime checking"
   default y
 
-config CONFIG_WATCHPOINT
+config NEMU_CONFIG_WATCHPOINT
     bool "Enable Watchpoint Support"
 		default y
 		help

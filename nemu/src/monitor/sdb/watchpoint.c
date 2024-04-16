@@ -84,7 +84,7 @@ void free_wp(int n)
 	if(temp->NO == n)
 	{
 		free_->next = temp;
-		head = NULL;
+		head = head->next;
 		return;
 	}
 	WP* bef = head;

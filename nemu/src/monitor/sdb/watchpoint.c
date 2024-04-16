@@ -116,6 +116,7 @@ void wp_display()
 		printf("%d\t%d\t%s\t\n", temp->NO, temp->val, temp->exp);
 		temp = temp->next;
 	}
+	printf("I am ok!\n");
 }
 
 int check_wp()

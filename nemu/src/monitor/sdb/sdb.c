@@ -210,6 +210,10 @@ static int cmd_p(char * args)
 	// need to input with space !!!
 	// to sure the input is right
 	//printf("%s\n", args);
+	if(args == NULL)
+	{
+		printf("Need for parameter!\n");
+	}
 	bool sign = true;
 	word_t to = expr(args, &sign);
 	if(sign == false)

@@ -118,7 +118,7 @@ static int cmd_si(char *args) {
 	char * arg = strtok(NULL, " ");
 	int num;
 	#ifdef CONFIG_WATCHPOINT
-	printf("hello?\n");
+	//printf("hello?\n");
 	#endif
 	
 	if (arg == NULL) {

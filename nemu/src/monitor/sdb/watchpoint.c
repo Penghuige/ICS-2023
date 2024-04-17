@@ -133,6 +133,7 @@ int check_wp()
 			assert(0);
 		}
 		uint32_t res = eval(0, to-1);
+		printf("%x %x", res, temp->val);
 		if(res != temp->val)
 		{
 			temp->val = res;

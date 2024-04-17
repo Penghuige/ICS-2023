@@ -349,12 +349,12 @@ uint32_t eval(uint32_t p, uint32_t q) {
 			{
 				//printf("%d::%d:%d:%s\n",pri[tokens[i].type], i, tokens[i].type, tokens[i].str);
 				op = i;
-				for(int j = i; j >= p; j--)
-				{
-					if(pri[tokens[j].type] != pri[tokens[i].type]) break;
-					op = j;
-				}
-				Max = pri[tokens[i].type];
+				//for(int j = i; j >= p; j--)
+				//{
+				//	if(pri[tokens[j].type] != pri[tokens[i].type]) break;
+				//	op = j;
+				//}
+				//Max = pri[tokens[i].type];
 			}
 			//if(sign == 1 && (tokens[i].type == TK_MUL || tokens[i].type == TK_DIV))
 			//{

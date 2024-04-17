@@ -111,10 +111,10 @@ void free_wp(int n)
 void wp_display()
 {
 	WP* temp = head;
-	printf("NUM\tVAL\tEXP\t\n");
+	printf("NUM\t\tVAL\t\tEXP\t\t\n");
 	while(temp != NULL)
 	{
-		printf("%d\t%d\t%s\t\n", temp->NO, temp->val, temp->exp);
+		printf("%d\t\t%d\t\t%s\t\t\n", temp->NO, temp->val, temp->exp);
 		temp = temp->next;
 	}
 	//printf("I am ok!\n");

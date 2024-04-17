@@ -141,5 +141,5 @@ int check_wp()
 		}
 		temp = temp->next;
 	}
-	return 0;
+	return -1;
 }

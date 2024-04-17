@@ -348,7 +348,7 @@ uint32_t eval(uint32_t p, uint32_t q) {
 			{
 				//printf("%d::%d:%d:%s\n",pri[tokens[i].type], i, tokens[i].type, tokens[i].str);
 				op = i;
-				for(int j = i; j >= p; j--)
+				for(int j = i; j >= (int)p; j--)
 				{
 					printf("j : %d\n", j );
 					if(pri[tokens[j].type] != pri[tokens[i].type]) break;

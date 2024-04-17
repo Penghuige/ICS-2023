@@ -123,7 +123,7 @@ void wp_display()
 int check_wp()
 {
 	WP* temp = head;
-	while(temp->exp != NULL)
+	while(temp != NULL)
 	{
 		bool sign = true;
 		word_t to = expr(temp->exp, &sign);

@@ -169,7 +169,7 @@ static bool make_token(char *e) {
 						nr_token++;
 						break;
 					case TK_ADD:
-						if(tokens[nr_token-1].type != TK_NUM && tokens[nr_token-1].type != TK_BRAR ) 
+						if(nr_token == 0 || (tokens[nr_token-1].type != TK_NUM && tokens[nr_token-1].type != TK_BRAR) ) 
 						{						
 						  tokens[nr_token].type = TK_POS;
 							//printf("test1\n");
@@ -316,10 +316,9 @@ uint32_t eval(uint32_t p, uint32_t q) {
 			}
 			return val;
 		}
-
-		return atoi(tokens[p].str);
+		else return atoi(tokens[p].str);
   }
-  else if (check_parentheses(p, q) == true) {
+  else if (check_parentheses(p, q)) {
     /* The expression is surrounded by a matched pair of parentheses.
      * If that is the case, just throw away the parentheses.
      */

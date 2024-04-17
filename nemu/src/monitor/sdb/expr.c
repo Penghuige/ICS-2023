@@ -148,7 +148,7 @@ static bool make_token(char *e) {
 						break;
 					case TK_SUB:
 						// consider the num may be a negative
-						if(tokens[nr_token-1].type != TK_NUM && tokens[nr_token-1].type != TK_BRAR ) 
+						if(nr_token == 0 || (tokens[nr_token-1].type != TK_NUM && tokens[nr_token-1].type != TK_BRAR) ) 
 						{	
 						  tokens[nr_token].type = TK_NEG;
 						}
@@ -158,7 +158,7 @@ static bool make_token(char *e) {
 						nr_token++;
 						break;
 					case TK_MUL:
-						if(tokens[nr_token-1].type != TK_NUM && tokens[nr_token-1].type != TK_BRAR ) 
+						if(nr_token == 0 || (tokens[nr_token-1].type != TK_NUM && tokens[nr_token-1].type != TK_BRAR) ) 
 						{						
 						  tokens[nr_token].type = TK_DER;
 							//printf("test1\n");

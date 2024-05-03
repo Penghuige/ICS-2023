@@ -224,6 +224,7 @@ static int cmd_p(char * args)
 	if(sign == false)
 	{
 		printf("invalid parameter!\n");
+		return 0;
 	}
 	
 	uint32_t res = eval(0, to-1);

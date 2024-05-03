@@ -112,10 +112,10 @@ void free_wp(int n)
 void wp_display()
 {
 	WP* temp = head;
-	printf("NUM\t\tVAL\t\tEXP\t\t\n");
+	printf("NUM\t\tVAL\t\t\tEXP\t\t\n");
 	while(temp != NULL)
 	{
-		printf("%d\t\t%08x\t\t%s\t\t\n", temp->NO, temp->val, temp->exp);
+		printf("%d\t\t%08x\t\t\t%s\t\t\n", temp->NO, temp->val, temp->exp);
 		temp = temp->next;
 	}
 	//printf("I am ok!\n");
@@ -134,9 +134,9 @@ int check_wp()
 			assert(0);
 		}
 		uint32_t res = eval(0, to-1);
-		// printf("%x %x", res, temp->val);
 		if(res != temp->val)
 		{
+			printf("Previous:%x New:%x\n", res, temp->val);
 			temp->val = res;
 			return temp->NO;
 		}

@@ -60,6 +60,7 @@ void new_wp(char* exp)
 	if(sign == false)
 	{
 		printf("invalid parameter!\n");
+		return;
 	}
 	free_->to = to;
 	free_->val = eval(0, to-1); 

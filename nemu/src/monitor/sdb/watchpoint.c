@@ -136,7 +136,7 @@ int check_wp()
 		uint32_t res = eval(0, to-1);
 		if(res != temp->val)
 		{
-			printf("Previous:%x New:%x\n", res, temp->val);
+			printf("Previous:%x New:%x\n", temp->val, res);
 			temp->val = res;
 			return temp->NO;
 		}

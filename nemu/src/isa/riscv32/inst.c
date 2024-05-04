@@ -74,6 +74,7 @@ static int decode_exec(Decode *s) {
 	printf("\n\n\nhello?\n\n\n");
   INSTPAT_END();
 
+	printf("\n\n\nhello?\n\n\n");
   R(0) = 0; // reset $zero to 0
 
   return 0;

@@ -34,7 +34,7 @@ enum {
 #define immS() do { *imm = (SEXT(BITS(i, 31, 25), 7) << 5) | BITS(i, 11, 7); } while(0)
 #define immJ() do { *imm = (BITS(i, 30, 21) << 1 | BITS(i, 20, 19) << 11 | BITS(i, 19, 12) << 12 | SEXT(BITS(i, 31, 30), 12) << 20);} while(0)
 #define immR() do { } while(0)
-#define immB() do { *imm = (SEXT(BITS(i, 11, 8), 13) << 1 | BITS(i, 30, 25) << 5 | BITS(i, 8, 7) << 11 | SEXT(BITS(i, 31, 30), 12) << 12);} while(0) 
+#define immB() do { *imm = (SEXT(BITS(i, 31, 30), 13) << 12) | BITS(i, 8, 7) << 11 | BITS(i, 30, 25) << 5 | BITS(i, 11, 8) << 1;} while(0) 
 
 static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_t *imm, int type) {
   uint32_t i = s->isa.inst.val;

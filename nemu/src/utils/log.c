@@ -33,6 +33,7 @@ void init_log(const char *log_file) {
 bool log_enable() {
 	// here the g_nr is changing
 	// here maybe have a bug, 
+	// whatever it can  be output.
 	return true;
   //return MUXDEF(CONFIG_TRACE, (g_nr_guest_inst >= CONFIG_TRACE_START) &&
          //(g_nr_guest_inst <= CONFIG_TRACE_END), false);

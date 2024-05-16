@@ -31,6 +31,7 @@ void init_log(const char *log_file) {
 }
 
 bool log_enable() {
+	printf("the g_nr is %ld\n", g_nr_guest_inst);
   return MUXDEF(CONFIG_TRACE, (g_nr_guest_inst >= CONFIG_TRACE_START) &&
          (g_nr_guest_inst <= CONFIG_TRACE_END), false);
 }

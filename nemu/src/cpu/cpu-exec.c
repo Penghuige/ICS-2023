@@ -25,7 +25,7 @@
  * This is useful when you use the `si' command.
  * You can modify this value as you want.
  */
-#define MAX_INST_TO_PRINT 10
+#define MAX_INST_TO_PRINT 10000
 
 CPU_state cpu = {};
 uint64_t g_nr_guest_inst = 0;
@@ -62,12 +62,10 @@ static void exec_once(Decode *s, vaddr_t pc) {
 	//printf("\nhello?\n\n");
   char *p = s->logbuf;
   p += snprintf(p, sizeof(s->logbuf), FMT_WORD ":", s->pc);
-	printf("s->pc is 0x%08x", s->pc);
   int ilen = s->snpc - s->pc;
   int i;
   uint8_t *inst = (uint8_t *)&s->isa.inst.val;
   for (i = ilen - 1; i >= 0; i --) {
-		printf("\ninst[%d] is %02x \n", i, inst[i]);
     p += snprintf(p, 4, " %02x", inst[i]);
   }
   int ilen_max = MUXDEF(CONFIG_ISA_x86, 8, 4);

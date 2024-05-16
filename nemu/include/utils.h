@@ -60,8 +60,9 @@ uint64_t get_time();
   do { \
     extern FILE* log_fp; \
     extern bool log_enable(); \
+		printf("\nhere!\n"); \
     if (log_enable()) { \
-			printf("i am here"); \
+			printf("\ni am here\n"); \
       fprintf(log_fp, __VA_ARGS__); \
       fflush(log_fp); \
     } \

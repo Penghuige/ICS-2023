@@ -62,7 +62,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
 	//printf("\nhello?\n\n");
   char *p = s->logbuf;
   p += snprintf(p, sizeof(s->logbuf), FMT_WORD ":", s->pc);
-	printf("s->pc is 0x%08u", s->pc);
+	printf("s->pc is 0x%08x", s->pc);
   int ilen = s->snpc - s->pc;
   int i;
   uint8_t *inst = (uint8_t *)&s->isa.inst.val;

@@ -223,4 +223,14 @@ config WATCHPOINT
 			or variables for changes.
 		  This can be useful for debugging or performance profiling.
 
+config IRINGBUF
+  depends on TRACE && TARGET_NATIVE_ELF && ENGINE_INTERPRETER
+  bool "Enable itring buffer tracer"
+  default y
+
+config IRINGBUF_COND
+  depends on IRINGBUF
+  string "Only trace instructions when the condition is true"
+  default "true"
+
 endmenu

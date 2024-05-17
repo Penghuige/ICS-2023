@@ -26,11 +26,14 @@
  * You can modify this value as you want.
  */
 #define MAX_INST_TO_PRINT 10000
+#define MAX_RING_TO_STORE 20
 
 CPU_state cpu = {};
 uint64_t g_nr_guest_inst = 0;
 static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = false;
+static char ring_buffer[MAX_RING_TO_STORE][100] = {};
+static int ring_cnt = 0;
 
 void device_update();
 
@@ -38,6 +41,9 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #ifdef CONFIG_ITRACE_COND
 	// here will write to /ics2023/nemu/build/nemu-log.txt
   if (ITRACE_COND) { log_write("%s\n", _this->logbuf); }
+#endif
+#ifdef CONFIG_IRINGBUF_COND
+	if(CONFIG_IRINGBUF_COND) { strcpy(ring_buffer[(ring_cnt++) % MAX_RING_TO_STORE], _this->logbuf); }
 #endif
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
@@ -59,7 +65,6 @@ static void exec_once(Decode *s, vaddr_t pc) {
   isa_exec_once(s);
   cpu.pc = s->dnpc;
 #ifdef CONFIG_ITRACE
-	//printf("\nhello?\n\n");
   char *p = s->logbuf;
   p += snprintf(p, sizeof(s->logbuf), FMT_WORD ":", s->pc);
   int ilen = s->snpc - s->pc;

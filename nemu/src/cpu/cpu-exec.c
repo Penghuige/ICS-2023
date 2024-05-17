@@ -40,7 +40,7 @@ void device_update();
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #ifdef CONFIG_ITRACE_COND
 	// here will write to /ics2023/nemu/build/nemu-log.txt
-  if (ITRACE_COND) { log_write("%s\n", _this->logbuf); }
+  if (CONFIG_ITRACE_COND) { log_write("%s\n", _this->logbuf); }
 #endif
 #ifdef CONFIG_IRINGBUF_COND
 	if(CONFIG_IRINGBUF_COND) { strcpy(ring_buffer[(ring_cnt++) % MAX_RING_TO_STORE], _this->logbuf); }

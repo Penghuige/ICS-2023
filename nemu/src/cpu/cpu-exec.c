@@ -146,7 +146,7 @@ void cpu_exec(uint64_t n) {
 				{
 					strcpy(a, "==>");
 				}
-				Log("%s%s\n", a, ring_buffer[i]);
+				Log("%s%s", a, ring_buffer[i]);
 			}
       Log("nemu: %s at pc = " FMT_WORD,
           (nemu_state.state == NEMU_ABORT ? ANSI_FMT("ABORT", ANSI_FG_RED) :

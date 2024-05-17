@@ -142,7 +142,7 @@ void cpu_exec(uint64_t n) {
 			for(int i = 0; i < MAX_RING_TO_STORE; i++)
 			{
 				char a[4] = "   ";
-				if(i == ring_cnt)
+				if(i == ring_cnt - 1)
 				{
 					strcpy(a, "==>");
 				}

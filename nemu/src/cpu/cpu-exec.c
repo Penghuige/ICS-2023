@@ -96,8 +96,11 @@ static void execute(uint64_t n) {
     exec_once(&s, cpu.pc);
     g_nr_guest_inst ++;
     trace_and_difftest(&s, cpu.pc);
-    if (nemu_state.state != NEMU_RUNNING) break;
-    IFDEF(CONFIG_DEVICE, device_update());
+    if (nemu_state.state != NEMU_RUNNING) 
+		{
+			break;
+    }
+		IFDEF(CONFIG_DEVICE, device_update());
   }
 }
 
@@ -120,7 +123,16 @@ void cpu_exec(uint64_t n) {
   g_print_step = (n < MAX_INST_TO_PRINT);
   switch (nemu_state.state) {
     case NEMU_END: case NEMU_ABORT:
-      printf("Program execution has ended. To restart the program, exit NEMU and run again.\n");
+			for(int i = 0; i < MAX_RING_TO_STORE; i++)
+			{
+				char a[4] = "   ";
+				if(i == ring_cnt)
+				{
+					strcpy(a, "==>");
+				}
+				printf("%s%s\n", a, ring_buffer[i]);
+			}
+      Log("Program execution has ended. To restart the program, exit NEMU and run again.\n");
       return;
     default: nemu_state.state = NEMU_RUNNING;
   }

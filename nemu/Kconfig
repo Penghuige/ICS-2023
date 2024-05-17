@@ -238,5 +238,9 @@ config MTRACE
   bool "Enable mtring tracer"
   default y
 	
+config FTRACE
+  depends on TRACE && TARGET_NATIVE_ELF && ENGINE_INTERPRETER
+  bool "Enable ftring tracer"
+  default y
 
 endmenu

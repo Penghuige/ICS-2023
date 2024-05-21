@@ -326,7 +326,7 @@ uint32_t eval(uint32_t p, uint32_t q) {
   }
   else {
     int op = -1; // = the position of 主运算符 in the token expression;
-		int i;
+		uint32_t i;
 		//int sign = 1;
 	 	int ju = 0;
 		int Max = 0;

@@ -223,6 +223,10 @@ config WATCHPOINT
 			or variables for changes.
 		  This can be useful for debugging or performance profiling.
 
+config BATCHMODE
+    bool "start with batch mode"
+    default y
+
 config IRINGBUF
   depends on TRACE && TARGET_NATIVE_ELF && ENGINE_INTERPRETER
   bool "Enable itring buffer tracer"
@@ -242,5 +246,6 @@ config FTRACE
   depends on TRACE && TARGET_NATIVE_ELF && ENGINE_INTERPRETER
   bool "Enable ftring tracer"
   default y
+
 
 endmenu

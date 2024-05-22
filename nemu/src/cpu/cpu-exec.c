@@ -32,8 +32,10 @@ CPU_state cpu = {};
 uint64_t g_nr_guest_inst = 0;
 static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = false;
+#ifdef CONFIG_IRINGBUF
 static char ring_buffer[MAX_RING_TO_STORE][100] = {};
 static int ring_cnt = 0;
+#endif
 
 void device_update();
 
@@ -139,7 +141,7 @@ void cpu_exec(uint64_t n) {
     case NEMU_RUNNING: nemu_state.state = NEMU_STOP; break;
 
     case NEMU_END: case NEMU_ABORT:
-#ifdef CONFIG_ITRACE_COND
+#ifdef CONFIG_IRINGBUF
 			for(int i = 0; i < MAX_RING_TO_STORE; i++)
 			{
 				char a[4] = "   ";

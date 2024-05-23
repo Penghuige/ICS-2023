@@ -25,6 +25,9 @@ void init_sdb();
 void init_disasm(const char *triple);
 
 static void welcome() {
+#ifdef CONFIG_BATCHMODE
+    return;
+#endif
   Log("Trace: %s", MUXDEF(CONFIG_TRACE, ANSI_FMT("ON", ANSI_FG_GREEN), ANSI_FMT("OFF", ANSI_FG_RED)));
   IFDEF(CONFIG_TRACE, Log("If trace is enabled, a log file will be generated "
         "to record the trace. This may lead to a large log file. "

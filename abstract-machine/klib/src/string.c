@@ -35,7 +35,12 @@ char *strncpy(char *dst, const char *src, size_t n) {
 }
 
 char *strcat(char *dst, const char *src) {
-  panic("Not implemented");
+  size_t dest_len = strlen((const char*)src);
+  size_t i;
+  for(i = 0; src[i] != '\0'; i++)
+    dst[dest_len + i] = src[i];
+  dst[dest_len + i] = '\0';
+  return dst;
 }
 
 int strcmp(const char *s1, const char *s2) {

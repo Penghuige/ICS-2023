@@ -91,6 +91,7 @@ void init_difftest(char *ref_so_file, long img_size, int port) {
   ref_difftest_regcpy(&cpu, DIFFTEST_TO_REF);
 }
 
+// the function "isa_..." is defined at the $isa/dut.c, need for write
 static void checkregs(CPU_state *ref, vaddr_t pc) {
   if (!isa_difftest_checkregs(ref, pc)) {
     nemu_state.state = NEMU_ABORT;

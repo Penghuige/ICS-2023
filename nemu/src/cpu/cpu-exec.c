@@ -51,8 +51,6 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
 #ifdef CONFIG_WATCHPOINT
 	int num = check_wp();
-	//printf("num:%d\n", num);
-	//printf("hello!\n");;
 	if(num != -1)
 	{
 		nemu_state.state = NEMU_STOP;

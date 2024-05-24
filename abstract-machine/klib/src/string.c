@@ -53,11 +53,19 @@ int strcmp(const char *s1, const char *s2) {
 }
 
 int strncmp(const char *s1, const char *s2, size_t n) {
-  panic("Not implemented");
+  size_t i;
+  for(i = 0; (s1[i] != '\0' || s2[i] != '\0') && i < n; i++)
+    if(s1[i] != s2[i]) return s1[i] - s2[i];
+  if(i == n || (s1[i] == '\0' && s2[i] == '\0')) return 0;
+  else if(s1[i] == '\0') return ' ' - s2[i];
+  else return s1[i] - ' ';
 }
 
 void *memset(void *s, int c, size_t n) {
-  panic("Not implemented");
+  size_t i; char* s1 = (char*) s;
+  for(i = 0; i < n; i++)
+    s1[i] = c;
+  return s;
 }
 
 void *memmove(void *dst, const void *src, size_t n) {

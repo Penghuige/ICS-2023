@@ -44,7 +44,11 @@ char *strcat(char *dst, const char *src) {
 }
 
 int strcmp(const char *s1, const char *s2) {
-  panic("Not implemented");
+  size_t i;
+  for(i = 0; s1[i] != '\0' && s2[i] != '\0'; i++)
+    if(s1[i] < s2[i]) return (int)-i;
+    else if (s1[i] > s2[i]) return (int)i;
+  return 0;
 }
 
 int strncmp(const char *s1, const char *s2, size_t n) {

@@ -35,7 +35,7 @@ char *strncpy(char *dst, const char *src, size_t n) {
 }
 
 char *strcat(char *dst, const char *src) {
-  size_t dest_len = strlen((const char*)src);
+  size_t dest_len = strlen((const char*)dst);
   size_t i;
   for(i = 0; src[i] != '\0'; i++)
     dst[dest_len + i] = src[i];
@@ -95,4 +95,3 @@ int memcmp(const void *st1, const void *st2, size_t n) {
 }
 
 #endif
-

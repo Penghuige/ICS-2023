@@ -69,10 +69,17 @@ void *memset(void *s, int c, size_t n) {
 }
 
 void *memmove(void *dst, const void *src, size_t n) {
-  char* d1 = (char*) dst; char* s1 = (char*) src;
-  size_t i;
-  for(i = 0; i < n; i++)
-    d1[i] = s1[i];
+  unsigned char *d = dst;
+  const unsigned char *s = src;
+  if (d < s) {
+    for (size_t i = 0; i < n; i++) {
+      d[i] = s[i];
+    }
+  } else {
+    for (size_t i = n; i != 0; i--) {
+      d[i-1] = s[i-1];
+    }
+  }
   return dst;
 }
 

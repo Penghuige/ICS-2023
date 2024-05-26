@@ -46,9 +46,11 @@ int sprintf(char *out, const char *fmt, ...) {
           d = va_arg(ap, int);
           //itoa(d, buff, 10);
           t = 0;
+          size_t tmp = (d < 0) ? 1 : 0;
           if(d < 0)
           {
             buff[t++] = '-';
+            d = -d;
           }
           else if(d == 0)
           {
@@ -59,8 +61,7 @@ int sprintf(char *out, const char *fmt, ...) {
             buff[t++] = d % 10 + '0';
             d /= 10;
           }
-          size_t tmp = (d < 0) ? 1 : 0;
-          for(tmp = 0; tmp < t / 2; tmp++)
+          for( ; tmp < t / 2; tmp++)
           {
             char c = buff[t-tmp-1];
             buff[t-tmp-1] = buff[tmp];

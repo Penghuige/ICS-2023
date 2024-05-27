@@ -168,12 +168,12 @@ static void initial_table() {
         strtab = malloc(strtab_shdr->sh_size);
         read_section(fd, strtab_shdr->sh_offset, strtab_shdr->sh_size, strtab);
 
-        int num_symbols = symtab_shdr->sh_size / sizeof(Elf32_Sym);
-        for (int i = 0; i < num_symbols; i++) {
-            Elf32_Sym *sym = &symtab[i];
-            printf("Symbol: %s, Value: 0x%x, Size: %u\n",
-                   &strtab[sym->st_name], sym->st_value, sym->st_size);
-        }
+        //int num_symbols = symtab_shdr->sh_size / sizeof(Elf32_Sym);
+        //for (int i = 0; i < num_symbols; i++) {
+        //    Elf32_Sym *sym = &symtab[i];
+        //    printf("Symbol: %s, Value: 0x%x, Size: %u\n",
+        //           &strtab[sym->st_name], sym->st_value, sym->st_size);
+        //}
 
         //free(strtab);
         //free(symtab);
@@ -221,9 +221,9 @@ static int parse_args(int argc, char *argv[]) {
     switch (o) {
       case 'b': sdb_set_batch_mode(); break;
       case 'p': sscanf(optarg, "%d", &difftest_port); break;
-      case 'l': printf("hello?\n");log_file = optarg; break;
+      case 'l': log_file = optarg; break;
       case 'd': diff_so_file = optarg; break;
-      case 't': printf("hello?\n"); elf_file = optarg; initial_table(); break;
+      case 't': elf_file = optarg; initial_table(); break;
       case 1: img_file = optarg; return 0;
       default:
         printf("Usage: %s [OPTION...] IMAGE [args]\n\n", argv[0]);

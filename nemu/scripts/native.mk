@@ -29,6 +29,7 @@ override ARGS += $(ARGS_DIFF)
 
 ifneq ($(IMG),)
 override ARGS += -b
+override ARGS += -f=$(BUILD_DIR)/
 endif
 
 # Command to execute NEMU

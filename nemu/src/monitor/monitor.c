@@ -79,8 +79,8 @@ static int parse_args(int argc, char *argv[]) {
     {"log"      , required_argument, NULL, 'l'},
     {"diff"     , required_argument, NULL, 'd'},
     {"port"     , required_argument, NULL, 'p'},
-    {"help"     , no_argument      , NULL, 'h'},
     {"ftrace"   , required_argument, NULL, 'f'},
+    {"help"     , no_argument      , NULL, 'h'},
     {0          , 0                , NULL,  0 },
   };
   int o;

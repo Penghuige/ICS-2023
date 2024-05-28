@@ -17,6 +17,7 @@
 #include <cpu/cpu.h>
 #include <cpu/ifetch.h>
 #include <cpu/decode.h>
+#include <elf.h>
 
 #define R(i) gpr(i)
 #define Mr vaddr_read
@@ -45,16 +46,33 @@ static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_
     case TYPE_I: src1R();          immI(); break;
     case TYPE_U:                   immU(); break;
     case TYPE_S: src1R(); src2R(); immS(); break;
-	case TYPE_J:                   immJ(); break;
-	case TYPE_R: src1R(); src2R(); immR(); break;
-	case TYPE_B: src1R(); src2R(); immB(); break;
+	  case TYPE_J:                   immJ(); break;
+	  case TYPE_R: src1R(); src2R(); immR(); break;
+	  case TYPE_B: src1R(); src2R(); immB(); break;
   }
 }
 
-//static void ftrace_record(Decode *s)
-//{
-  
-//}
+//#ifdef CONFIG_FTRACE
+extern char* strtab;
+extern Elf32_Sym* symtab;
+extern int num_symbols;
+
+static void ftrace_record(Decode *s)
+{
+  // exec the dnpc
+  // check which func is the dnpc going.
+  for(int i = 0; i < num_symbols; i++)
+  {
+    Elf32_Sym *sym = &symtab[i];
+    if(sym->st_value == s->dnpc)
+    {
+      // record the function
+      printf("go!\n");
+    }
+  }
+  printf("%d\n", num_symbols);
+}
+//#endif
 
 static int decode_exec(Decode *s) {
   int rd = 0;
@@ -67,7 +85,7 @@ static int decode_exec(Decode *s) {
   __VA_ARGS__ ; \
 } 
 
-
+ftrace_record(s);
 INSTPAT_START();
   INSTPAT("??????? ????? ????? ??? ????? 00101 11", auipc  , U, R(rd) = s->pc + imm);
   INSTPAT("??????? ????? ????? 000 ????? 11000 11", beq    , B, if (src1 == src2) s->dnpc = imm + s->pc);

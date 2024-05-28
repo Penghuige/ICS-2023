@@ -82,7 +82,8 @@ static void initial_table() {
         assert(0);
     }
 
-    int is_64_bit = (e_ident[EI_CLASS] == ELFCLASS64);
+    int is_64_bit = 0;
+    //int is_64_bit = (e_ident[EI_CLASS] == ELFCLASS64);
     //int is_little_endian = (e_ident[EI_DATA] == ELFDATA2LSB);
 
     if (is_64_bit) {
@@ -171,8 +172,8 @@ static void initial_table() {
         int num_symbols = symtab_shdr->sh_size / sizeof(Elf32_Sym);
         for (int i = 0; i < num_symbols; i++) {
             Elf32_Sym *sym = &symtab[i];
-            printf("Symbol: %s, Value: 0x%x, Size: %u\n",
-                   &strtab[sym->st_name], sym->st_value, sym->st_size);
+            printf("Symbol: %s, Value: 0x%x, Size: %u\n, info: %c",
+                   &strtab[sym->st_name], sym->st_value, sym->st_size, sym->st_info);
         }
 
         //free(strtab);

@@ -52,7 +52,7 @@ static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_
   }
 }
 
-//#ifdef CONFIG_FTRACE
+#ifdef CONFIG_FTRACE
 extern char* strtab;
 extern Elf32_Sym* symtab;
 extern int num_symbols;
@@ -107,7 +107,12 @@ static void ftrace_record(Decode *s)
     }
   }
 }
-//#endif
+#else
+static void ftrace_record(Decode *s)
+{
+  return;
+}
+#endif
 
 static int decode_exec(Decode *s) {
   int rd = 0;

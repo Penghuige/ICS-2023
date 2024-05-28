@@ -79,8 +79,21 @@ static void ftrace_record(Decode *s)
           break;
         }
       }
-      //if(sym2->st_info != 18 || sym == sym2) return;
+      // not to save the loop
+      if(sym == sym2) return;
       // assert(sym2 != NULL);
+      if(sym2->st_info != 18)
+      {
+        // it is _start section
+        for(int j = 0; j < num_symbols; j++)
+        {
+          sym2 = &symtab[j];
+          if(sym2->st_info == 18 && sym2->st_size == 0) 
+          {
+            break;
+          }
+        }
+      }
       if(s->dnpc == sym->st_value) count ++;
       else count--;
       printf("%d", count);

@@ -67,7 +67,19 @@ static void ftrace_record(Decode *s)
     if(sym->st_value == s->dnpc - 4)
     {
       // record the function
-      printf("go!\n");
+      Elf32_Sym * sym2 = NULL;
+      for(int j = 0; j < num_symbols; j++)
+      {
+        sym2 = &symtab[j];
+        if(sym2->st_value + sym2->st_size >= s->pc)
+        {
+          break;
+        }
+      }
+      assert(sym2 != NULL);
+      printf("[0x%8x] From %s(0x%8x) to %s(0x%8x).", \
+          s->pc, &strtab[sym2->st_name], s->pc, &strtab[sym->st_name], sym->st_value);
+      break;
     }
   }
 }

@@ -66,7 +66,7 @@ static void ftrace_record(Decode *s)
   {
     Elf32_Sym *sym = &symtab[i];
     if(sym->st_info == 18 && \
-        sym->st_value +sym->st_size >= s->dnpc && s->dnpc >= sym->st_value)
+        sym->st_value +sym->st_size > s->dnpc && s->dnpc >= sym->st_value)
     {
       // record the function
       Elf32_Sym * sym2 = NULL;
@@ -74,7 +74,7 @@ static void ftrace_record(Decode *s)
       {
         sym2 = &symtab[j];
         if(sym2->st_info == 18 && \
-             sym2->st_value + sym2->st_size >= s->pc && s->pc >= sym2->st_value)
+             sym2->st_value + sym2->st_size > s->pc && s->pc >= sym2->st_value)
         {
           break;
         }

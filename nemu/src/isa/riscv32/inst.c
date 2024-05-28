@@ -64,7 +64,7 @@ static void ftrace_record(Decode *s)
   for(int i = 0; i < num_symbols; i++)
   {
     Elf32_Sym *sym = &symtab[i];
-    if(sym->st_info == 18 && sym->st_value == s->dnpc - 4)
+    if(sym->st_info == 18 && sym->st_value +sym->st_size >= s->dnpc - 4)
     {
       // record the function
       Elf32_Sym * sym2 = NULL;

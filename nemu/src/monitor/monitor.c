@@ -82,8 +82,7 @@ static void initial_table() {
         assert(0);
     }
 
-    int is_64_bit = 0;
-    //int is_64_bit = (e_ident[EI_CLASS] == ELFCLASS64);
+    int is_64_bit = (e_ident[EI_CLASS] == ELFCLASS64);
     //int is_little_endian = (e_ident[EI_DATA] == ELFDATA2LSB);
 
     if (is_64_bit) {

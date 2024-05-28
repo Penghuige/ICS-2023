@@ -72,7 +72,6 @@ static void ftrace_record(Decode *s)
       Elf32_Sym * sym2 = NULL;
       for(int j = 0; j < num_symbols; j++)
       {
-        if(i == j) continue;
         sym2 = &symtab[j];
         if(sym2->st_info == 18 && \
              sym2->st_value + sym2->st_size >= s->pc && s->pc >= sym2->st_value)
@@ -80,7 +79,7 @@ static void ftrace_record(Decode *s)
           break;
         }
       }
-      if(sym2->st_info != 18) return;
+      if(sym2->st_info != 18 || sym == sym2) return;
       // assert(sym2 != NULL);
       if(s->dnpc-4 == sym->st_value) count ++;
       else count--;

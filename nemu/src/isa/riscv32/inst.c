@@ -81,7 +81,7 @@ static void ftrace_record(Decode *s)
         }
       }
       assert(sym2 != NULL);
-      printf("[0x%8x] From %s(0x%8x) to %s(0x%8x).\n", \
+      printf("\033[0;31m[0x%8x] From %s(0x%8x) to %s(0x%8x).\033[0m\n", \
           s->pc, &strtab[sym2->st_name], s->pc, &strtab[sym->st_name], sym->st_value);
       break;
     }

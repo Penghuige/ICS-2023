@@ -56,6 +56,7 @@ static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_
 extern char* strtab;
 extern Elf32_Sym* symtab;
 extern int num_symbols;
+int count = 0;
 
 static void ftrace_record(Decode *s)
 {
@@ -65,17 +66,17 @@ static void ftrace_record(Decode *s)
   {
     Elf32_Sym *sym = &symtab[i];
     if(sym->st_info == 18 && \
-        sym->st_value +sym->st_size >= s->dnpc - 4 && \
-        s->dnpc - 4 >= sym->st_value)
+        sym->st_value +sym->st_size >= s->dnpc - 4 && s->dnpc - 4 >= sym->st_value)
     {
+      if(s->dnpc-4 == sym->st_value) count ++;
+      else count--;
       // record the function
       Elf32_Sym * sym2 = NULL;
       for(int j = 0; j < num_symbols; j++)
       {
         sym2 = &symtab[j];
         if(sym2->st_info == 18 && \
-             sym2->st_value + sym2->st_size >= s->pc && \
-             s->pc >= sym2->st_value)
+             sym2->st_value + sym2->st_size >= s->pc && s->pc >= sym2->st_value)
         {
           break;
         }

@@ -79,7 +79,7 @@ static void ftrace_record(Decode *s)
           break;
         }
       }
-      if(sym2->st_info != 18 || sym == sym2) return;
+      //if(sym2->st_info != 18 || sym == sym2) return;
       // assert(sym2 != NULL);
       if(s->dnpc-4 == sym->st_value) count ++;
       else count--;

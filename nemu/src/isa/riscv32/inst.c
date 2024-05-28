@@ -75,7 +75,7 @@ static void ftrace_record(Decode *s)
         sym2 = &symtab[j];
         if(sym2->st_info == 18 && \
              sym2->st_value + sym2->st_size >= s->pc && \
-             s->pc >= sym2->st_size)
+             s->pc >= sym2->st_value)
         {
           break;
         }

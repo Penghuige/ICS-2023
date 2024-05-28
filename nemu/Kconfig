@@ -239,12 +239,12 @@ config IRINGBUF_COND
 
 config MTRACE
   depends on TRACE && TARGET_NATIVE_ELF && ENGINE_INTERPRETER
-  bool "Enable mtring tracer"
+  bool "Enable mtracer"
   default y
 	
 config FTRACE
   depends on TRACE && TARGET_NATIVE_ELF && ENGINE_INTERPRETER
-  bool "Enable ftring tracer"
+  bool "Enable ftracer"
   default y
 
 

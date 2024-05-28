@@ -66,7 +66,7 @@ static void ftrace_record(Decode *s)
   {
     Elf32_Sym *sym = &symtab[i];
     if(sym->st_info == 18 && \
-        sym->st_value +sym->st_size >= s->dnpc - 4 && s->dnpc - 4 >= sym->st_value)
+        sym->st_value +sym->st_size >= s->dnpc && s->dnpc >= sym->st_value)
     {
       // record the function
       Elf32_Sym * sym2 = NULL;
@@ -81,7 +81,7 @@ static void ftrace_record(Decode *s)
       }
       //if(sym2->st_info != 18 || sym == sym2) return;
       // assert(sym2 != NULL);
-      if(s->dnpc-4 == sym->st_value) count ++;
+      if(s->dnpc == sym->st_value) count ++;
       else count--;
       printf("%d", count);
       printf("\033[0;31m[0x%8x] From %s(0x%8x) to %s(0x%8x).\033[0m\n", \

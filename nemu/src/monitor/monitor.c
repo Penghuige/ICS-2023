@@ -168,12 +168,12 @@ static void initial_table() {
         strtab = malloc(strtab_shdr->sh_size);
         read_section(fd, strtab_shdr->sh_offset, strtab_shdr->sh_size, strtab);
 
-        //int num_symbols = symtab_shdr->sh_size / sizeof(Elf32_Sym);
-        //for (int i = 0; i < num_symbols; i++) {
-        //    Elf32_Sym *sym = &symtab[i];
-        //    printf("Symbol: %s, Value: 0x%x, Size: %u\n",
-        //           &strtab[sym->st_name], sym->st_value, sym->st_size);
-        //}
+        int num_symbols = symtab_shdr->sh_size / sizeof(Elf32_Sym);
+        for (int i = 0; i < num_symbols; i++) {
+            Elf32_Sym *sym = &symtab[i];
+            printf("Symbol: %s, Value: 0x%x, Size: %u\n",
+                   &strtab[sym->st_name], sym->st_value, sym->st_size);
+        }
 
         //free(strtab);
         //free(symtab);

@@ -171,7 +171,7 @@ static void initial_table() {
         int num_symbols = symtab_shdr->sh_size / sizeof(Elf32_Sym);
         for (int i = 0; i < num_symbols; i++) {
             Elf32_Sym *sym = &symtab[i];
-            printf("Symbol: %s, Value: 0x%x, Size: %u\n, info: %c",
+            printf("Symbol: %s, Value: 0x%x, Size: %u, info: %d\n",
                    &strtab[sym->st_name], sym->st_value, sym->st_size, sym->st_info);
         }
 

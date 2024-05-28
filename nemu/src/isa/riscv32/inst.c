@@ -80,7 +80,8 @@ static void ftrace_record(Decode *s)
           break;
         }
       }
-      assert(sym2 != NULL);
+      if(sym2->st_info != 18) return;
+      // assert(sym2 != NULL);
       if(s->dnpc-4 == sym->st_value) count ++;
       else count--;
       printf("%d", count);

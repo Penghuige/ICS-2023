@@ -122,15 +122,9 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
       i++;
       switch (fmt[i])
       {
-        case '%':
-          out[j++] = '%';
-          break;
         case 's':
           s = va_arg(ap, char *);
-          for(t = 0; s[t] != '\0'; t++)
-          {
-            out[j++] = s[t];
-          }
+          putstr(s);
           break;
         case 'd':
           d = va_arg(ap, int);

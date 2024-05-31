@@ -153,10 +153,8 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
           }
           buff[t] = '\0';
 
-          for(t = 0; buff[t] != '\0'; t++)
-          {
-            out[j++] = buff[t];
-          }
+          putstr(buff);
+
           break;
       }
     }

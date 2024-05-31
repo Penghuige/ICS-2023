@@ -30,7 +30,6 @@ enum {
 	TK_NUM,
 	TK_BRAL,
 	TK_BRAR,
-  /* TODO: Add more token types */
 	TK_NEQ,
 	TK_AND,
 	TK_HEX,

@@ -148,7 +148,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
             buff[t++] = d % 10 + '0';
             d /= 10;
           }
-          for( ; tmp < t / 2; tmp++)
+          for( ; tmp <= t / 2; tmp++)
           {
             char c = buff[t-tmp-1];
             buff[t-tmp-1] = buff[tmp];

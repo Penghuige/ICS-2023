@@ -136,7 +136,6 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
           size_t tmp = (d < 0) ? 1 : 0;
           if(d < 0)
           {
-            buff[t++] = '-';
             d = -d;
           }
           else if(d == 0)
@@ -148,7 +147,8 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
             buff[t++] = d % 10 + '0';
             d /= 10;
           }
-          for( ; tmp <= t / 2; tmp++)
+          if(tmp == 1) buff[t++] = '-';
+          for( ; tmp < t / 2; tmp++)
           {
             char c = buff[t-tmp-1];
             buff[t-tmp-1] = buff[tmp];

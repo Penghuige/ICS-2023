@@ -154,7 +154,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
             buff[t-tmp-1] = buff[tmp];
             buff[tmp] = c;
           }
-          buff[t] = '\0';
+          buff[t++] = '\0';
 
           for(t = 0; buff[t] != '\0'; t++)
           {

@@ -105,8 +105,64 @@ int my_printf(const char *fmt, ...) {
   va_end(ap);
   return (int)j;
 }
-
 int vsprintf(char *out, const char *fmt, va_list ap) {
+    size_t i, j = 0;
+    char *s;
+    int d;
+    char buff[20];
+    size_t t;
+
+    for (i = 0; fmt[i] != '\0'; i++) {
+        if (fmt[i] == '%') {
+            i++;
+            switch (fmt[i]) {
+                case '%':
+                    out[j++] = '%';
+                    break;
+                case 's':
+                    s = va_arg(ap, char *);
+                    if (s) {
+                        for (t = 0; s[t] != '\0'; t++) {
+                            out[j++] = s[t];
+                        }
+                    }
+                    break;
+                case 'd':
+                    d = va_arg(ap, int);
+                    t = 0;
+                    if (d < 0) {
+                        buff[t++] = '-';
+                        d = -d;
+                    }
+                    else if (d == 0) {
+                        buff[t++] = '0';
+                    }
+                    size_t start = t;
+                    while (d != 0) {
+                        buff[t++] = (d % 10) + '0';
+                        d /= 10;
+                    }
+                    // Reverse the digits
+                    for (size_t k = start; k < t / 2 + start; k++) {
+                        char c = buff[k];
+                        buff[k] = buff[t - 1 - (k - start)];
+                        buff[t - 1 - (k - start)] = c;
+                    }
+                    buff[t] = '\0';
+                    for (t = 0; buff[t] != '\0'; t++) {
+                        out[j++] = buff[t];
+                    }
+                    break;
+            }
+        }
+        else {
+            out[j++] = fmt[i];
+        }
+    }
+    out[j] = '\0';
+    return j;
+}
+int my_vsprintf(char *out, const char *fmt, va_list ap) {
   size_t i;
   size_t j = 0;
 

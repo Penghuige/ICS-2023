@@ -124,7 +124,10 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
       {
         case 's':
           s = va_arg(ap, char *);
-          putstr(s);
+          for(t = 0; s[t] != '\0'; t++)
+          {
+            out[j++] = s[t];
+          }
           break;
         case 'd':
           d = va_arg(ap, int);
@@ -153,8 +156,10 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
           }
           buff[t] = '\0';
 
-          putstr(buff);
-
+          for(t = 0; buff[t] != '\0'; t++)
+          {
+            out[j++] = buff[t];
+          }
           break;
       }
     }
@@ -166,6 +171,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
   out[j] = '\0';
   return strlen(out);
 }
+
 int sprintf(char *out, const char *fmt, ...) {
   size_t i = 0;
   size_t j = 0;

@@ -6,51 +6,6 @@
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
 int printf(const char *fmt, ...) {
-    va_list ap;
-    va_start(ap, fmt);
-    char c;
-    int d;
-    char *s;
-    int count = 0; // to count the number of characters printed
-
-    while (*fmt) {
-        if (*fmt == '%') {
-            fmt++;
-            switch (*fmt) {
-                case 'd':
-                    d = va_arg(ap, int);
-                    count += printf("%d", d);
-                    break;
-                case 's':
-                    s = va_arg(ap, char *);
-                    count += printf("%s", s);
-                    break;
-                case 'c':
-                    c = (char)va_arg(ap, int); // char is promoted to int in va_arg
-                    count += printf("%c", c);
-                    break;
-                case '%':
-                    putch('%');
-                    count++;
-                    break;
-                default:
-                    putch('%');
-                    putch(*fmt);
-                    count += 2;
-                    break;
-            }
-        } else {
-            putch(*fmt);
-            count++;
-        }
-        fmt++;
-    }
-
-    va_end(ap);
-    return count;
-}
-
-int my_printf(const char *fmt, ...) {
   va_list ap;
   va_start(ap, fmt);
   char buff[20] = {0};

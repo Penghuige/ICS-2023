@@ -8,7 +8,7 @@
 int printf(const char *fmt, ...) {
   va_list ap;
   va_start(ap, fmt);
-  //char buff[20] = {0};
+  char buff[20] = {0};
   
   //char out[2000] = {0};
   size_t i;
@@ -16,7 +16,7 @@ int printf(const char *fmt, ...) {
 
   char *s;
   char c;
-  //int d;
+  int d;
   size_t t;
 
   for(i = 0; fmt[i] != '\0'; i++)
@@ -26,39 +26,39 @@ int printf(const char *fmt, ...) {
       i++;
       switch (fmt[i])
       {
-        //case 'd':
-        //  d = va_arg(ap, int);
-        //  //itoa(d, buff, 10);
-        //  t = 0;
-        //  size_t tmp = (d < 0) ? 1 : 0;
-        //  if(d < 0)
-        //  {
-        //    buff[t++] = '-';
-        //    d = -d;
-        //  }
-        //  else if(d == 0)
-        //  {
-        //    buff[t++] = '0'; 
-        //  }
-        //  while(d != 0)
-        //  {
-        //    buff[t++] = d % 10 + '0';
-        //    d /= 10;
-        //  }
-        //  for( ; tmp < t / 2; tmp++)
-        //  {
-        //    char c = buff[t-tmp-1];
-        //    buff[t-tmp-1] = buff[tmp];
-        //    buff[tmp] = c;
-        //  }
-        //  buff[t] = '\0';
+        case 'd':
+          d = va_arg(ap, int);
+          //itoa(d, buff, 10);
+          t = 0;
+          size_t tmp = (d < 0) ? 1 : 0;
+          if(d < 0)
+          {
+            buff[t++] = '-';
+            d = -d;
+          }
+          else if(d == 0)
+          {
+            buff[t++] = '0'; 
+          }
+          while(d != 0)
+          {
+            buff[t++] = d % 10 + '0';
+            d /= 10;
+          }
+          for( ; tmp < t / 2; tmp++)
+          {
+            char c = buff[t-tmp-1];
+            buff[t-tmp-1] = buff[tmp];
+            buff[tmp] = c;
+          }
+          buff[t] = '\0';
 
-        //  for(t = 0; buff[t] != '\0'; t++)
-        //  {
-        //    //out[j++] = buff[t];
-        //    putch(buff[t]);
-        //  }
-        //  break;
+          for(t = 0; buff[t] != '\0'; t++)
+          {
+            //out[j++] = buff[t];
+            putch(buff[t]);
+          }
+          break;
         case 's':
           s = va_arg(ap, char *);
           for(t = 0; s[t] != '\0'; t++)

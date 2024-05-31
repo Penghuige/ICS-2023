@@ -7,14 +7,13 @@
 
 static char sprint_buf[1024];
 
-int printf(const char *fmt, ...)//可以有一个或多个固定参数
+int printf(const char *fmt, ...)
 {
-  va_list args; //用于存放参数列表的数据结构
+  va_list args; 
   int n;
-  /*根据最后一个fmt来初始化参数列表，至于为什么是最后一个参数，是与va_start有关。*/
   va_start(args, fmt);
   n = vsprintf(sprint_buf, fmt, args);
-  va_end(args);//执行清理参数列表的工作
+  va_end(args);
   putstr(sprint_buf);
   return n;
 }
@@ -24,7 +23,6 @@ int my_printf(const char *fmt, ...) {
   va_start(ap, fmt);
   char buff[20] = {0};
   
-  //char out[2000] = {0};
   size_t i;
   size_t j = 0;
 

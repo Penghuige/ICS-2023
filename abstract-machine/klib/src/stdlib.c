@@ -4,7 +4,7 @@
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 static unsigned long int next = 1;
-char* hbrk;
+char* hbrk = NULL;
 
 int rand(void) {
   // RAND_MAX assumed to be 32767
@@ -37,6 +37,10 @@ void *malloc(size_t size) {
   //#if !(defined(__ISA_NATIVE__) && defined(__NATIVE_USE_KLIB__))
   //  panic("Not implemented");
   //#endif
+  if(hbrk == NULL)
+  {
+      hbrk = (void *)ROUNDUP(heap.start, 8);
+  }
   size = (size_t)ROUNDUP(size, 8);
   char *old = hbrk;
   hbrk += size;

@@ -41,7 +41,6 @@ void *malloc(size_t size) {
   {
       hbrk = (void *)ROUNDUP(heap.start, 8);
   }
-  printf("\n%s\n", hbrk);
   size = (size_t)ROUNDUP(size, 8);
   char *old = hbrk;
   hbrk += size;

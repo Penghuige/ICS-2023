@@ -79,7 +79,7 @@ static void do_io(int reg, void *buf) {
     __am_ioe_init();
   }
 #ifndef DTRACE_CONFIG
-  Log("%d", lut[reg]);
+  // Log("%d", lut[reg]);
 #endif
   ((handler_t)lut[reg])(buf);
 }

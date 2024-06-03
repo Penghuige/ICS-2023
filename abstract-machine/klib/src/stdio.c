@@ -111,6 +111,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
   char *s;
   int d;
   char buff[20];
+  char c;
   size_t t;
   
   for(i = 0; fmt[i] != '\0'; i++)
@@ -158,6 +159,12 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
           {
             out[j++] = buff[t];
           }
+          break;
+        case 'c':
+          c = va_arg(ap, int);
+          out[j++] = c; 
+          break;
+        default:
           break;
       }
     }

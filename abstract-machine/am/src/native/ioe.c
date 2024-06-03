@@ -78,9 +78,7 @@ static void do_io(int reg, void *buf) {
   if (!ioe_init_done) {
     __am_ioe_init();
   }
-#ifdef DTRACE_CONFIG
-1
-  assert(0);
+#ifndef DTRACE_CONFIG
   Log("%d", lut[reg]);
 #endif
   ((handler_t)lut[reg])(buf);

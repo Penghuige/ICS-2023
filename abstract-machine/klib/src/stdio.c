@@ -180,6 +180,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 int sprintf(char *out, const char *fmt, ...) {
   size_t i = 0;
   size_t j = 0;
+  char c;
 
   va_list ap;
   va_start(ap, fmt);
@@ -225,6 +226,10 @@ int sprintf(char *out, const char *fmt, ...) {
           }
           break;
         }
+        case 'c':
+          c = va_arg(ap, int);
+          putch(c);
+          break;
         default:
           // Unsupported format specifier
           out[j++] = '%';
@@ -247,6 +252,7 @@ int snprintf(char *out, size_t n, const char *fmt, ...) {
 
   va_list ap;
   char *s;
+  char c;
   int d;
   char buff[20];
   size_t t;
@@ -269,6 +275,10 @@ int snprintf(char *out, size_t n, const char *fmt, ...) {
           {
             out[j++] = s[t];
           }
+          break;
+        case 'c':
+          c = va_arg(ap, int);
+          putch(c);
           break;
         case 'd':
           d = va_arg(ap, int);

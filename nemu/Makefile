@@ -63,8 +63,8 @@ include $(NEMU_HOME)/scripts/native.mk
 endif
 
 # Add Watchpoint check
-ifeq ($(CONFIG_WATCHPOINT),y)
-    CFLAGS += -DCONFIG_WATCHPOINT
-endif
+# ifeq ($(CONFIG_WATCHPOINT),y)
+#     CFLAGS += -DCONFIG_WATCHPOINT
+# endif
 inst.i: ./src/isa/riscv32/inst.c
 	$(CC) $(CFLAGS) -E -o $@ $<

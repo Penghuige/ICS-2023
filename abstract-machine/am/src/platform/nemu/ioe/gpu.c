@@ -10,9 +10,7 @@ void __am_gpu_init() {
   int w = io_read(AM_GPU_CONFIG).width / N;
   int h = io_read(AM_GPU_CONFIG).height / N;
   putch('\n');
-  putch('\n');
-  putch('\n');
-  putch(w);
+  putch((char)w);
   putch('\n');
   putch('\n');
 

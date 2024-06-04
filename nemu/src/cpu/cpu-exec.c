@@ -37,7 +37,7 @@ static char ring_buffer[MAX_RING_TO_STORE][100] = {};
 static int ring_cnt = 0;
 #endif
 #ifdef CONFIG_WATCHPOINT
-extern check_wp();
+extern int check_wp();
 #endif
 
 void device_update();
@@ -53,7 +53,8 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
 #ifdef CONFIG_WATCHPOINT
-	int num = check_wp();
+	//int num = check_wp();
+	int num = -1;
 	if(num != -1)
 	{
 		nemu_state.state = NEMU_STOP;

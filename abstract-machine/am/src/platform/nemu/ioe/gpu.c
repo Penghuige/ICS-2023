@@ -6,16 +6,11 @@
 #define N 32
 
 void __am_gpu_init() {
+  uint32_t t = inl(VGACTL_ADDR);
   int i;
-  int w = io_read(AM_GPU_CONFIG).width / N;
-  int h = io_read(AM_GPU_CONFIG).height / N;
-  putch('\n');
-  putch((char)w);
-  putch('\n');
-  putch('\n');
+  int w = t & 0xff00;
+  int h = t & 0x00ff;
 
-  putch('\n');
-  putch('\n');
   uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
   for (i = 0; i < w * h; i ++) fb[i] = i;
   outl(SYNC_ADDR, 1);

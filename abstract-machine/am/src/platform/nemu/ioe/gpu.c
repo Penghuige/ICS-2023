@@ -8,8 +8,8 @@
 void __am_gpu_init() {
   uint32_t t = inl(VGACTL_ADDR);
   int i;
-  int w = t & 0xff00 >> 16;
-  int h = t & 0x00ff;
+  int w = t >> 16;
+  int h = t & 0xffff;
 
   uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
   for (i = 0; i < w * h; i ++) fb[i] = i;

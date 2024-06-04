@@ -151,6 +151,31 @@ config ITRACE_COND
   string "Only trace instructions when the condition is true"
   default "true"
 
+config IRINGBUF
+  depends on TRACE && TARGET_NATIVE_ELF && ENGINE_INTERPRETER
+  bool "Enable itring buffer tracer"
+  default y
+
+config IRINGBUF_COND
+  depends on IRINGBUF
+  string "Only trace instructions when the condition is true"
+  default "true"
+
+config MTRACE
+  depends on TRACE && TARGET_NATIVE_ELF && ENGINE_INTERPRETER
+  bool "Enable mtracer"
+  default y
+	
+config FTRACE
+  depends on TRACE && TARGET_NATIVE_ELF && ENGINE_INTERPRETER
+  bool "Enable ftracer"
+  default y
+
+
+config DTRACE
+  depends on TRACE && TARGET_NATIVE_ELF && ENGINE_INTERPRETER
+  bool "Enable device tracer"
+  default y
 
 config DIFFTEST
   depends on TARGET_NATIVE_ELF
@@ -222,5 +247,10 @@ config WATCHPOINT
 			Watchpoints allow you to monitor specific memory locations
 			or variables for changes.
 		  This can be useful for debugging or performance profiling.
+
+config BATCHMODE
+    bool "start with batch mode"
+    default y
+
 
 endmenu

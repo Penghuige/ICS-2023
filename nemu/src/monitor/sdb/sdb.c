@@ -246,11 +246,15 @@ static int cmd_d(char * args)
 	return 0;
 }
 
+// exec the batch mode
 void sdb_set_batch_mode() {
   is_batch_mode = true;
 }
 
 void sdb_mainloop() {
+#ifdef CONFIG_BATCHMODE
+  sdb_set_batch_mode();
+#endif
   if (is_batch_mode) {
     cmd_c(NULL);
     return;

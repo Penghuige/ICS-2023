@@ -25,27 +25,34 @@
  * This is useful when you use the `si' command.
  * You can modify this value as you want.
  */
-#define MAX_INST_TO_PRINT 0
+#define MAX_INST_TO_PRINT 10000
+#define MAX_RING_TO_STORE 20
 
 CPU_state cpu = {};
 uint64_t g_nr_guest_inst = 0;
 static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = false;
+#ifdef CONFIG_IRINGBUF
+static char ring_buffer[MAX_RING_TO_STORE][100] = {};
+static int ring_cnt = 0;
+#endif
 
 void device_update();
 
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #ifdef CONFIG_ITRACE_COND
 	// here will write to /ics2023/nemu/build/nemu-log.txt
-	// this may be a bug
-  if (ITRACE_COND) { log_write("%s\n", _this->logbuf); }
+  if (CONFIG_ITRACE_COND) { log_write("%s\n", _this->logbuf); }
+#endif
+#ifdef CONFIG_IRINGBUF_COND
+	if(CONFIG_IRINGBUF_COND) { strcpy(ring_buffer[(ring_cnt++) % MAX_RING_TO_STORE], _this->logbuf); }
 #endif
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
 #ifdef CONFIG_WATCHPOINT
-	int num = check_wp();
-	//printf("num:%d\n", num);
-	//printf("hello!\n");;
+	int num = -1;
+	//IFDEF(CONFIG_WATCHPOINT, num = check_wp());
+	
 	if(num != -1)
 	{
 		nemu_state.state = NEMU_STOP;
@@ -60,7 +67,6 @@ static void exec_once(Decode *s, vaddr_t pc) {
   isa_exec_once(s);
   cpu.pc = s->dnpc;
 #ifdef CONFIG_ITRACE
-	//printf("\nhello?\n\n");
   char *p = s->logbuf;
   p += snprintf(p, sizeof(s->logbuf), FMT_WORD ":", s->pc);
   int ilen = s->snpc - s->pc;
@@ -92,8 +98,11 @@ static void execute(uint64_t n) {
     exec_once(&s, cpu.pc);
     g_nr_guest_inst ++;
     trace_and_difftest(&s, cpu.pc);
-    if (nemu_state.state != NEMU_RUNNING) break;
-    IFDEF(CONFIG_DEVICE, device_update());
+    if (nemu_state.state != NEMU_RUNNING) 
+		{
+			break;
+    }
+		IFDEF(CONFIG_DEVICE, device_update());
   }
 }
 
@@ -132,6 +141,17 @@ void cpu_exec(uint64_t n) {
     case NEMU_RUNNING: nemu_state.state = NEMU_STOP; break;
 
     case NEMU_END: case NEMU_ABORT:
+#ifdef CONFIG_IRINGBUF
+			for(int i = 0; i < MAX_RING_TO_STORE; i++)
+			{
+				char a[4] = "   ";
+				if(i == ring_cnt - 1)
+				{
+					strcpy(a, "==>");
+				}
+				Log("%s%s", a, ring_buffer[i]);
+			}
+#endif
       Log("nemu: %s at pc = " FMT_WORD,
           (nemu_state.state == NEMU_ABORT ? ANSI_FMT("ABORT", ANSI_FG_RED) :
            (nemu_state.halt_ret == 0 ? ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) :

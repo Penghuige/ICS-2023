@@ -30,7 +30,6 @@ enum {
 	TK_NUM,
 	TK_BRAL,
 	TK_BRAR,
-  /* TODO: Add more token types */
 	TK_NEQ,
 	TK_AND,
 	TK_HEX,
@@ -101,7 +100,7 @@ void init_regex() {
 
   for (i = 0; i < NR_REGEX; i ++) {
     ret = regcomp(&re[i], rules[i].regex, REG_EXTENDED);
-		printf("%d ", ret);
+		//printf("%d ", ret);
     if (ret != 0) {
 			continue;
       regerror(ret, &re[i], error_msg, 128);
@@ -326,7 +325,7 @@ uint32_t eval(uint32_t p, uint32_t q) {
   }
   else {
     int op = -1; // = the position of 主运算符 in the token expression;
-		int i;
+		uint32_t i;
 		//int sign = 1;
 	 	int ju = 0;
 		int Max = 0;

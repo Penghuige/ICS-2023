@@ -39,38 +39,23 @@ void isa_reg_display() {
 		printf("\n");
 		// printf("%s\n", reg_name(i));
 	}
-	//i = 0;
-	//while(1)
-	//{
-	//	i++;
-	//	getchar();
-	//	printf("%d : %08x\n", i, cpu.gpr[i]);
-	//}
 }
 
 
 word_t isa_reg_str2val(const char *s, bool *success) {
 	int i = 0;
-//printf("%s\n", s);
 	if(strcmp(s, "pc") == 0 || strcmp(s, "$pc") == 0)
 	{
 		return cpu.pc;
 	}
-
 	for(i = 0; i < REG_NUM; i++)
 	{
-		if(strcmp(s+1, regs[i]) == 0)
-		{
-			// printf("ok!\n");
-			break;
-		}
+		if(strcmp(s+1, regs[i]) == 0) break;
 	}
-	//printf("the i is %d\n", i);
 	if(i == REG_NUM)
 	{
 		*success = false;
 		return -1;
 	}
-
   return cpu.gpr[i];
 }

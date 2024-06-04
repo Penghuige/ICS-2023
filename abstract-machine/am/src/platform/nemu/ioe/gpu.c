@@ -6,14 +6,12 @@
 #define N 32
 
 void __am_gpu_init() {
-  uint32_t t = inl(VGACTL_ADDR);
-  int i;
-  int w = t >> 16;
-  int h = t & 0xffff;
+  //uint32_t t = inl(VGACTL_ADDR);
+  //int i;
+  //int w = t >> 16;
+  //int h = t & 0xffff;
 
-  uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
-  for (i = 0; i < w * h; i ++) fb[i] = i;
-  outl(SYNC_ADDR, 1);
+  //outl(SYNC_ADDR, 1);
 }
 
 void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
@@ -26,6 +24,7 @@ void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
 
 void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
   int x = ctl->x, y = ctl->y, w = ctl->w, h = ctl->h;
+  if(!ctl->sync && (w == 0 || h == 0)) return;
   // get the screen width, avoid to leak
   uint32_t t = inl(VGACTL_ADDR) >> 16;
 
@@ -35,7 +34,7 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
   {
     for(int j = x; j < x + w; j++)
     {
-      fb[x + y * t] = p[x + y * t];
+      fb[i + j * t] = p[i + j * t];
     }
   }
   if (ctl->sync) {

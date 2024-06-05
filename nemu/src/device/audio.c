@@ -51,7 +51,6 @@ static void audio_play(void *userdata, uint8_t *stream, int len)
 }
 
 static void audio_io_handler(uint32_t offset, int len, bool is_write) {
-  assert(!is_write);
   assert(offset >= 0 && offset <= 20);
   SDL_AudioSpec s = {};
   s.format = AUDIO_S16SYS;  // 假设系统中音频数据的格式总是使用16位有符号数来表示

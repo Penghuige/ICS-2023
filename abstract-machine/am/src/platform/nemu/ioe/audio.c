@@ -47,4 +47,5 @@ void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
     ab[nplay] = audio_data[i];
     nplay = (nplay + 1) % sbuf_size;  
   }
+  outl(AUDIO_COUNT_ADDR, inl(AUDIO_COUNT_ADDR) + len); //更新reg_count
 }

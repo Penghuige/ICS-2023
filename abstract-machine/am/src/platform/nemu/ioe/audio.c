@@ -8,7 +8,7 @@
 #define AUDIO_INIT_ADDR      (AUDIO_ADDR + 0x10)
 #define AUDIO_COUNT_ADDR     (AUDIO_ADDR + 0x14)
 
-static uint32_t nplay = 0;
+static uint32_t cnt = 0;
 
 void __am_audio_init() {
   outl(AUDIO_FREQ_ADDR, 0);
@@ -44,8 +44,8 @@ void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
   
   uint8_t *ab = (uint8_t *)(uintptr_t)AUDIO_SBUF_ADDR;  //参考GPU部分
   for(int i = 0; i < len; i++){
-    ab[nplay] = audio_data[i];
-    nplay = (nplay + 1) % sbuf_size;  
+    ab[cnt] = audio_data[i];
+    cnt = (cnt + 1) % sbuf_size;  
   }
   outl(AUDIO_COUNT_ADDR, inl(AUDIO_COUNT_ADDR) + len); //更新reg_count
 }

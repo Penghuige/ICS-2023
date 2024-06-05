@@ -18,6 +18,7 @@
 #include <SDL2/SDL.h>
 
 enum {
+  // need to write
   reg_freq,
   reg_channels,
   reg_samples,
@@ -31,6 +32,8 @@ static uint8_t *sbuf = NULL;
 static uint32_t *audio_base = NULL;
 
 static void audio_io_handler(uint32_t offset, int len, bool is_write) {
+  assert(!is_write);
+  assert(offset >= 0 && offset <= 20);
 }
 
 void init_audio() {

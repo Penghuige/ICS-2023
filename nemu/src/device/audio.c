@@ -31,27 +31,35 @@ enum {
 
 static uint8_t *sbuf = NULL;
 static uint32_t *audio_base = NULL;
+static uint32_t pos = 0;
 
 static void audio_play(void *userdata, uint8_t *stream, int len)
 {
-  int nread = len;
-  if(audio_base[reg_count] < len) nread = audio_base[reg_count];
-  int b = 0;
-  while (b < nread) {
-    uint8_t* t = sbuf;
-    //uint8_t t = io_read(AM_AUDIO_PLAY);
-    int i = -1;
-    for(i = 0; i < nread; i++)
-    {
-      stream[i] = t[i];
-    }
-    int n = i;
-    if (n > 0) b += n;
+  SDL_memset(stream, 0, len);
+  if(audio_base[reg_count] < len) len = audio_base[reg_count];
+
+  uint32_t sbuf_size = audio_base[reg_sbuf_size];
+
+  if( (pos + len) > sbuf_size ){
+    SDL_MixAudio(stream, sbuf + pos, sbuf_size - pos , SDL_MIX_MAXVOLUME);
+    SDL_MixAudio(stream +  (sbuf_size - pos), 
+                    sbuf +  (sbuf_size - pos), 
+                    len - (sbuf_size - pos), 
+                    SDL_MIX_MAXVOLUME);
   }
+  else
+  {
+    SDL_MixAudio(stream, sbuf + pos, len , SDL_MIX_MAXVOLUME);
+  }
+    pos = (pos + len) % sbuf_size;
+  audio_base[reg_count] -= len;
 }
 
 static void audio_io_handler(uint32_t offset, int len, bool is_write) {
-  assert(offset >= 0 && offset <= 20);
+  if(audio_base[reg_init] != 1){
+    return;
+  }
+  audio_base[reg_init] = 0;
   SDL_AudioSpec s = {};
   s.format = AUDIO_S16SYS;  // 假设系统中音频数据的格式总是使用16位有符号数来表示
   s.freq = audio_base[reg_freq];
@@ -75,4 +83,5 @@ void init_audio() {
 
   sbuf = (uint8_t *)new_space(CONFIG_SB_SIZE);
   add_mmio_map("audio-sbuf", CONFIG_SB_ADDR, sbuf, CONFIG_SB_SIZE, NULL);
+  audio_base[reg_sbuf_size] = CONFIG_SB_SIZE;
 }

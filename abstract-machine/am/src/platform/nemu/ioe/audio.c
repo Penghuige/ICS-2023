@@ -8,12 +8,12 @@
 #define AUDIO_INIT_ADDR      (AUDIO_ADDR + 0x10)
 #define AUDIO_COUNT_ADDR     (AUDIO_ADDR + 0x14)
 
-static volatile int nplay = 0;
+static volatile uint32_t nplay = 0;
 
 void __am_audio_init() {
-  outl(AUDIO_FREQ_ADDR, 1);
-  outl(AUDIO_CHANNELS_ADDR, 1);
-  outl(AUDIO_SAMPLES_ADDR, 1);
+  outl(AUDIO_FREQ_ADDR, 0);
+  outl(AUDIO_CHANNELS_ADDR, 0);
+  outl(AUDIO_SAMPLES_ADDR, 0);
 }
 
 void __am_audio_config(AM_AUDIO_CONFIG_T *cfg) {
@@ -23,9 +23,12 @@ void __am_audio_config(AM_AUDIO_CONFIG_T *cfg) {
 
 
 void __am_audio_ctrl(AM_AUDIO_CTRL_T *ctrl) {
-  ctrl->freq= inl(AUDIO_FREQ_ADDR);
-  ctrl->samples= inl(AUDIO_SAMPLES_ADDR);
-  ctrl->channels= inl(AUDIO_CHANNELS_ADDR);
+  // here is out, not in.
+  outl(AUDIO_FREQ_ADDR, ctrl->freq);
+  outl(AUDIO_SAMPLES_ADDR, ctrl->samples);
+  outl(AUDIO_CHANNELS_ADDR, ctrl->channels);
+  // tell the nemu, it needs init 
+  outl(AUDIO_INIT_ADDR, 1);
 }
 
 void __am_audio_status(AM_AUDIO_STATUS_T *stat) {
@@ -36,19 +39,14 @@ void __am_audio_status(AM_AUDIO_STATUS_T *stat) {
 void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
   uint8_t* audio_payload = ctl->buf.start;
   uint8_t* audio_payload_end = ctl->buf.end;
-  uint32_t audio_len = &audio_payload_end - &audio_payload;
-  nplay = 0;
-  Area sbuf;
-  sbuf.start = &audio_payload;
-  while (nplay < audio_len) {
-    int len = (audio_len - nplay > 4096 ? 4096 : audio_len - nplay);
-    sbuf.end = sbuf.start + len;
-    // write into hardware
-    io_write(AM_AUDIO_PLAY, sbuf);
-    sbuf.start += len;
-    nplay += len;
-  }
+  uint32_t len = &audio_payload_end - &audio_payload;
 
-  // wait until the audio finishes
-  while (io_read(AM_AUDIO_STATUS).count > 0);
+  uint32_t sbuf_size = inl(AUDIO_SBUF_ADDR);
+  uint8_t * audio_data = ctl->buf.start;
+  
+  uint8_t *ab = (uint8_t *)(uintptr_t)AUDIO_SBUF_ADDR;  //参考GPU部分
+  for(int i = 0; i < len; i++){
+    ab[nplay] = audio_data[i];
+    nplay = (nplay + 1) % sbuf_size;  
+  }
 }

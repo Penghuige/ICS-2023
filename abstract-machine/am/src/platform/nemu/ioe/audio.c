@@ -8,7 +8,7 @@
 #define AUDIO_INIT_ADDR      (AUDIO_ADDR + 0x10)
 #define AUDIO_COUNT_ADDR     (AUDIO_ADDR + 0x14)
 
-static volatile uint32_t nplay = 0;
+static uint32_t nplay = 0;
 
 void __am_audio_init() {
   outl(AUDIO_FREQ_ADDR, 0);

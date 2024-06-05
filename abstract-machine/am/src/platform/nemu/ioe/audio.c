@@ -37,11 +37,9 @@ void __am_audio_status(AM_AUDIO_STATUS_T *stat) {
 
 
 void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
-  //uint8_t* audio_payload = ctl->buf.start;
-  //uint8_t* audio_payload_end = ctl->buf.end;
   uint32_t len = ctl->buf.start - ctl->buf.end;
 
-  uint32_t sbuf_size = inl(AUDIO_SBUF_ADDR);
+  uint32_t sbuf_size = inl(AUDIO_SBUF_SIZE_ADDR);
   uint8_t * audio_data = ctl->buf.start;
   
   uint8_t *ab = (uint8_t *)(uintptr_t)AUDIO_SBUF_ADDR;  //参考GPU部分

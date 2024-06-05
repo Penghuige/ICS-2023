@@ -33,7 +33,7 @@ static uint8_t *sbuf = NULL;
 static uint32_t *audio_base = NULL;
 static uint32_t pos = 0;
 
-static void audio_play(void *userdata, uint8_t *stream, int len)
+void audio_play(void *userdata, uint8_t *stream, int len)
 {
   SDL_memset(stream, 0, len);
   if(audio_base[reg_count] < len) len = audio_base[reg_count];

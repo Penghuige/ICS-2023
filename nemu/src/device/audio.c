@@ -36,7 +36,8 @@ static uint32_t pos = 0;
 void audio_play(void *userdata, uint8_t *stream, int len)
 {
   SDL_memset(stream, 0, len);
-  if(audio_base[reg_count] < len) len = audio_base[reg_count];
+  uint32_t cnt = audio_base[reg_count];
+  if(cnt < len) len = cnt;
 
   uint32_t sbuf_size = audio_base[reg_sbuf_size];
 

@@ -11,9 +11,9 @@
 static uint32_t cnt = 0;
 
 void __am_audio_init() {
-  outl(AUDIO_FREQ_ADDR, 0);
-  outl(AUDIO_CHANNELS_ADDR, 0);
-  outl(AUDIO_SAMPLES_ADDR, 0);
+  //outl(AUDIO_FREQ_ADDR, 0);
+  //outl(AUDIO_CHANNELS_ADDR, 0);
+  //outl(AUDIO_SAMPLES_ADDR, 0);
 }
 
 void __am_audio_config(AM_AUDIO_CONFIG_T *cfg) {

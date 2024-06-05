@@ -11,11 +11,14 @@
 static uint32_t nplay = 0;
 
 void __am_audio_init() {
+  outl(AUDIO_FREQ_ADDR, 0);
+  outl(AUDIO_CHANNELS_ADDR, 0);
+  outl(AUDIO_SAMPLES_ADDR, 0);
 }
 
 void __am_audio_config(AM_AUDIO_CONFIG_T *cfg) {
   cfg->present = true;
-  //cfg->bufsize = inl(AUDIO_SBUF_SIZE_ADDR);
+  cfg->bufsize = inl(AUDIO_SBUF_SIZE_ADDR);
 }
 
 
@@ -34,9 +37,9 @@ void __am_audio_status(AM_AUDIO_STATUS_T *stat) {
 
 
 void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
-  uint8_t* audio_payload = ctl->buf.start;
-  uint8_t* audio_payload_end = ctl->buf.end;
-  uint32_t len = &audio_payload_end - &audio_payload;
+  //uint8_t* audio_payload = ctl->buf.start;
+  //uint8_t* audio_payload_end = ctl->buf.end;
+  uint32_t len = ctl->buf.start - ctl->buf.end;
 
   uint32_t sbuf_size = inl(AUDIO_SBUF_ADDR);
   uint8_t * audio_data = ctl->buf.start;

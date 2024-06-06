@@ -57,9 +57,8 @@ void audio_play(void *userdata, uint8_t *stream, int len)
 }
 
 static void audio_io_handler(uint32_t offset, int len, bool is_write) {
-  //if(audio_base[reg_init] == 1){
+  if(audio_base[reg_init] == 1){
     SDL_AudioSpec s = {};
-    printf("hello?\n\n\n");
     s.format = AUDIO_S16SYS;  // 假设系统中音频数据的格式总是使用16位有符号数来表示
     s.freq = audio_base[reg_freq];
     s.channels = audio_base[reg_channels];
@@ -69,9 +68,8 @@ static void audio_io_handler(uint32_t offset, int len, bool is_write) {
     SDL_InitSubSystem(SDL_INIT_AUDIO);
     SDL_OpenAudio(&s, NULL);
     SDL_PauseAudio(0);
-    printf("hello?\n\n\n");
     audio_base[reg_init] = 0;
-  //}
+  }
 }
 
 void init_audio() {

@@ -59,6 +59,7 @@ void sim_t::diff_get_regs(void* diff_context) {
   for (int i = 0; i < NR_GPR; i++) {
     ctx->gpr[i] = state->XPR[i];
   }
+  ctx->csr.mstatus = 0x1800;
   ctx->pc = state->pc;
 }
 

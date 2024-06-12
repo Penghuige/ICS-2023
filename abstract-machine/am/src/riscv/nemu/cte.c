@@ -6,7 +6,8 @@ static Context* (*user_handler)(Event, Context*) = NULL;
 
 Context* __am_irq_handle(Context *c) {
   if (user_handler) {
-    for(int i = 0; i < 32; i++) printf("%u\n", c->gpr[i]);
+    for(int i = 0; i < 32; i++) printf("%d\n", c->gpr[i]);
+    printf("hello");
     Event ev = {0};
     switch (c->mcause) {
       default: ev.event = EVENT_ERROR; break;

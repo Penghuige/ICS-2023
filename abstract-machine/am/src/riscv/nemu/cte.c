@@ -6,20 +6,20 @@ static Context* (*user_handler)(Event, Context*) = NULL;
 
 Context* __am_irq_handle(Context *c) {
   if (user_handler) {
-    for(int i = 0; i < 32; i++) printf("%d\n", c->gpr[i]);
-    printf("hello");
+    //for(int i = 0; i < 32; i++) printf("%d\n", c->gpr[i]);
     Event ev = {0};
+    printf("%d\n", c->mcause);
     switch (c->mcause) {
       default: ev.event = EVENT_ERROR; break;
     }
 
     c = user_handler(ev, c);
-    for(int i = 0; i < 32; i++) printf("%u\n", c->gpr[i]);
     assert(c != NULL);
   }
 
   return c;
 }
+// do_event
 
 extern void __am_asm_trap(void);
 

@@ -6,7 +6,6 @@ static Context* (*user_handler)(Event, Context*) = NULL;
 
 Context* __am_irq_handle(Context *c) {
   if (user_handler) {
-    //for(int i = 0; i < 32; i++) printf("%d\n", c->gpr[i]);
     //printf("%d\n", c->mcause);
     Event ev = {0};
     switch (c->mcause) {
@@ -20,7 +19,6 @@ Context* __am_irq_handle(Context *c) {
 
   return c;
 }
-// do_event
 
 extern void __am_asm_trap(void);
 

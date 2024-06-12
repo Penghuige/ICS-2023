@@ -13,6 +13,7 @@ struct Context {
   uintptr_t gpr[NR_REGS];
   uintptr_t mcause, mstatus, mepc;
   void *pdir;
+  uintptr_t np;
 };
 
 /*

@@ -9,12 +9,15 @@ Context* __am_irq_handle(Context *c) {
     //for(int i = 0; i < 32; i++) printf("%d\n", c->gpr[i]);
     Event ev = {0};
     switch (c->mcause) {
-      case EVENT_IRQ_TIMER:
+      case EVENT_NULL:
         putch('t'); break;
-      case EVENT_IRQ_IODEV:
+      case EVENT_SYSCALL:
         putch('d'); break;
       case EVENT_YIELD:
         putch('y'); break;
+      case EVENT_PAGEFAULT: break;
+      case EVENT_IRQ_TIMER: break;
+      case EVENT_IRQ_IODEV: break;
       default: ev.event = EVENT_ERROR; break;
     }
 

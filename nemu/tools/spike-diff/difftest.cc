@@ -36,9 +36,18 @@ static debug_module_config_t difftest_dm_config = {
   .support_impebreak = true
 };
 
+typedef struct {
+  word_t mtvec; // 它保存发生异常时处理器需要跳转到的地址。
+  vaddr_t mepc; // 它指向发生异常的指令。
+  word_t mcause; // （Machine Exception Cause）它指示发生异常的种类。
+  word_t mstatus; //（Machine Status）它保存全局中断使能，以及许多其他的状态，如
+//} MUXDEF(CONFIG_RV64, riscv64_CSRs, riscv32_CSRs);
+} riscv32_CSRs;
+
 struct diff_context_t {
   word_t gpr[MUXDEF(CONFIG_RVE, 16, 32)];
   word_t pc;
+  riscv32_CSRs csr;
 };
 
 static sim_t* s = NULL;
@@ -60,6 +69,10 @@ void sim_t::diff_get_regs(void* diff_context) {
     ctx->gpr[i] = state->XPR[i];
   }
   ctx->pc = state->pc;
+  ctx->csr.mstatus = 0x1800;
+  //ctx->csr.mepc = state->csr.mepc;
+  //ctx->csr.mcause = state->csr.mcause;
+  //ctx->csr.mtvec = state->csr.mtvec;
 }
 
 void sim_t::diff_set_regs(void* diff_context) {
@@ -68,7 +81,7 @@ void sim_t::diff_set_regs(void* diff_context) {
     state->XPR.write(i, (sword_t)ctx->gpr[i]);
   }
   state->pc = ctx->pc;
-	state->mstatus = 0x1800;
+  state->csr.mstatus = 0x1800;
 }
 
 void sim_t::diff_memcpy(reg_t dest, void* src, size_t n) {

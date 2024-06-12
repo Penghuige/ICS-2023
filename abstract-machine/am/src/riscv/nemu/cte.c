@@ -8,8 +8,13 @@ Context* __am_irq_handle(Context *c) {
   if (user_handler) {
     //for(int i = 0; i < 32; i++) printf("%d\n", c->gpr[i]);
     Event ev = {0};
-    printf("%d\n", c->mcause);
     switch (c->mcause) {
+      case EVENT_IRQ_TIMER:
+        putch('t'); break;
+      case EVENT_IRQ_IODEV:
+        putch('d'); break;
+      case EVENT_YIELD:
+        putch('y'); break;
       default: ev.event = EVENT_ERROR; break;
     }
 

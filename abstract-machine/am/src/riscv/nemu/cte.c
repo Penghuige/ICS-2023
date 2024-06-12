@@ -10,15 +10,7 @@ Context* __am_irq_handle(Context *c) {
     printf("%d\n", c->mcause);
     Event ev = {0};
     switch (c->mcause) {
-      case -1:
-        putch('t'); break;
-      case EVENT_SYSCALL:
-        putch('d'); break;
-      case EVENT_YIELD:
-        putch('y'); break;
-      case EVENT_PAGEFAULT: break;
-      case EVENT_IRQ_TIMER: break;
-      case EVENT_IRQ_IODEV: break;
+      case -1: ev.event = EVENT_YIELD; break;
       default: ev.event = EVENT_ERROR; break;
     }
 

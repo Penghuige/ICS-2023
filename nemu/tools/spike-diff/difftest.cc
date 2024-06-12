@@ -72,7 +72,7 @@ void sim_t::diff_get_regs(void* diff_context) {
   ctx->csr.mstatus = 0x1800;
   ctx->csr.mepc = state->csr.mepc;
   ctx->csr.mcause = state->csr.mcause;
-  ctx->csr.mtcex = state->csr.mepc;
+  ctx->csr.mtvec = state->csr.mtvec;
 }
 
 void sim_t::diff_set_regs(void* diff_context) {

@@ -65,6 +65,14 @@ static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_
 	  case TYPE_B: src1R(); src2R(); immB(); break;
   }
 }
+#ifdef CONFIG_ETRACE
+static void etrace_record(Decode *s)
+{
+  Log("exception occur at pc:%08x, exception NO:%d\n", s->pc, R(17));
+}
+#else
+static void etrace_record(Decode *s) {}
+#endif
 
 
 #ifdef CONFIG_FTRACE
@@ -200,7 +208,7 @@ INSTPAT_START();
 
   INSTPAT("??????? ????? ????? 010 ????? 11100 11", csrrs  , I, R(rd) = CSR(imm); CSR(imm) |= src1);
   INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw  , I, R(rd) = CSR(imm); CSR(imm) = src1);
-  INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , I, ECALL(s->dnpc));
+  INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , I, etrace_record(s); ECALL(s->dnpc));
   INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , R, s->dnpc = CSR(0x341));
 
   INSTPAT("??????? ????? ????? ??? ????? ????? ??", inv    , N, INV(s->pc));

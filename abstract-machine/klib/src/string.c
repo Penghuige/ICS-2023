@@ -9,6 +9,7 @@ size_t strlen(const char *s) {
   while(s[ret] != '\0')
   {
     ret++;
+    assert(ret < 10000000);
   }
   return ret;
 }

@@ -68,7 +68,7 @@ static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_
 #ifdef CONFIG_ETRACE
 static void etrace_record(Decode *s)
 {
-  Log("exception occur at pc:%08x, exception NO:%d\n", s->pc, R(17));
+  Log("exception occur at pc:%08x, exception NO:%d", s->pc, R(17));
 }
 #else
 static void etrace_record(Decode *s) {}

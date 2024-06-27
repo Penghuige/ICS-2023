@@ -1,3 +1,4 @@
+#include <cstdio>
 #include <proc.h>
 #include <elf.h>
 
@@ -9,9 +10,29 @@
 # define Elf_Phdr Elf32_Phdr
 #endif
 
+
 static uintptr_t loader(PCB *pcb, const char *filename) {
-  TODO();
-  return 0;
+  //FILE *fp = fopen(filename, "rb");
+  //if (fp == NULL) {
+  //  Log("File not found: %s", filename);
+  //  return 0;
+  //}
+  //assert(*(uint32_t *)ehdr->e_ident == 0x464c457f);
+
+//  Elf32_Ehdr ehdr;
+//  ramdisk_read(&ehdr, 0, sizeof(ehdr));
+//
+//  Elf32_Phdr phdr[ehdr.e_phnum];
+//  ramdisk_read(&phdr, ehdr.e_ehsize, ehdr.e_phnum * sizeof(Elf32_Phdr));
+//
+//  for(int i = 0 ; i < ehdr.e_phnum ; i++){
+//    if(phdr[i].p_type == PT_LOAD){
+//      ramdisk_read((void *)phdr[i].p_vaddr, phdr[i].p_offset, phdr[i].p_filesz);
+//      memset((void *)(phdr[i].p_vaddr + phdr[i].p_filesz), 0, phdr[i].p_memsz - phdr[i].p_filesz);
+//    }
+//  }
+//  
+//  return ehdr.e_entry;
 }
 
 void naive_uload(PCB *pcb, const char *filename) {

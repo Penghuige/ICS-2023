@@ -19,10 +19,10 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   //}
   //assert(*(uint32_t *)ehdr->e_ident == 0x464c457f);
 
-  Elf32_Ehdr ehdr;
+  Elf_Ehdr ehdr;
   ramdisk_read(&ehdr, 0, sizeof(ehdr));
 
-  Elf32_Phdr phdr[ehdr.e_phnum];
+  Elf_Phdr phdr[ehdr.e_phnum];
   ramdisk_read(&phdr, ehdr.e_ehsize, ehdr.e_phnum * sizeof(Elf32_Phdr));
 
   for(int i = 0 ; i < ehdr.e_phnum ; i++){

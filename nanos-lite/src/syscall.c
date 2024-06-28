@@ -6,8 +6,7 @@ void do_syscall(Context *c) {
   a[0] = c->GPR1;
 
   switch (a[0]) {
-    case 1:
-    case 4:
+    case EVENT_SYSCALL:
       break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }

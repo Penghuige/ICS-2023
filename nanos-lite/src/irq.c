@@ -1,10 +1,12 @@
 #include <common.h>
 
+extern void do_syscall(Context* c);
+
 static Context* do_event(Event e, Context* c) {
   switch (e.event) {
-    case EVENT_SYSCALL:
-      break;
-    default: panic("Unhandled event ID = %d %d", e.event, EVENT_SYSCALL);
+    case EVENT_YIELD:printf("event ID=%d\nc->GPRx=%d\n",e.event,c->GPRx);halt(0);printf("执行了halt之后");break;//EVENT_YIELD
+    case EVENT_SYSCALL:do_syscall(c);break;
+    default: panic("Unhandled event ID = %d", e.event);
   }
 
   return c;

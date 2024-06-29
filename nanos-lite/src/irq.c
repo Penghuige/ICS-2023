@@ -4,6 +4,7 @@ extern void do_syscall(Context* c);
 
 static Context* do_event(Event e, Context* c) {
 //#ifdef CONFIG_STRACE
+  // the GPR1 is a7 register. It is used to pass the syscall number.
   printf("event ID=%d c->GPR1=%d c->GPRx=%d\n",e.event,c->GPR1, c->GPRx);
 //#endif
   switch (e.event) {

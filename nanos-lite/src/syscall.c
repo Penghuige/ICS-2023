@@ -25,6 +25,9 @@ void do_syscall(Context *c) {
       sys_yield();
       // return value is zero
       c->GPR2 = 0;
+      c->GPR1 = 0;
+      c->GPR3 = 0;
+      c->GPRx = 0;
 
       break;
     case 4: // sys_write

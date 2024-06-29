@@ -4,7 +4,7 @@ extern void do_syscall(Context* c);
 
 static Context* do_event(Event e, Context* c) {
 //#ifdef CONFIG_STRACE
-  printf("event ID=%d c->GPRx=%d\n",e.event,c->GPRx);
+  printf("event ID=%d c->GPR1=%d c->GPRx=%d\n",e.event,c->GPR1, c->GPRx);
 //#endif
   switch (e.event) {
     case EVENT_YIELD:

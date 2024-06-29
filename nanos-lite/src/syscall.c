@@ -6,7 +6,7 @@ void sys_yield();
 
 void do_syscall(Context *c) {
   uintptr_t a[4];
-  a[0] = c->GPRx;
+  a[0] = c->GPR1;
   a[1] = c->GPR2;
   a[2] = c->GPR3;
   a[3] = c->GPR4;
@@ -26,8 +26,6 @@ void do_syscall(Context *c) {
       // return value is zero
       break;
     case 4: // sys_write
-      putch('1');
-      printf("hello?\n");
       printf("%.*s", a[3], (char *)a[2]);
       c->GPRx = a[3];
       break;

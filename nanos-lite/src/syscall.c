@@ -13,6 +13,7 @@ void do_syscall(Context *c) {
 
 
   switch (a[0]) {
+    case EVENT_YIELD:
     case EVENT_SYSCALL:
       switch (a[1]) {
         case 0: // sys_exit

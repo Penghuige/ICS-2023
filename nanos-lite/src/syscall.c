@@ -25,6 +25,7 @@ void do_syscall(Context *c) {
       sys_yield();
       break;
     case 4: // sys_write
+      printf("hello?\n");
       printf("%.*s", a[3], (char *)a[2]);
       c->GPRx = a[3];
       break;

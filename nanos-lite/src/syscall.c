@@ -24,7 +24,6 @@ void do_syscall(Context *c) {
     case 1: // sys_yield
       sys_yield();
       // return value is zero
-      halt(0);
       break;
     case 4: // sys_write
       printf("hello?\n");
@@ -40,5 +39,5 @@ void sys_exit(int code) {
 }
 
 void sys_yield() {
-  yield();
+  asm volatile("li a7, 0; ecall");
 }

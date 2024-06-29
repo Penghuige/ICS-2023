@@ -26,6 +26,7 @@ void do_syscall(Context *c) {
       // return value is zero
       break;
     case 4: // sys_write
+      putch('\n');
       printf("hello?\n");
       printf("%.*s", a[3], (char *)a[2]);
       c->GPRx = a[3];

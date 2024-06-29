@@ -3,9 +3,9 @@
 extern void do_syscall(Context* c);
 
 static Context* do_event(Event e, Context* c) {
-#ifdef CONFIG_STRACE
+//#ifdef CONFIG_STRACE
   printf("event ID=%d c->GPRx=%d\n",e.event,c->GPRx);
-#endif
+//#endif
   switch (e.event) {
     case EVENT_YIELD:
     case EVENT_SYSCALL:

@@ -19,7 +19,7 @@ void do_syscall(Context *c) {
   // when it call a sys_write, the syscall ID is 4, and the argument is the file descriptor
   switch (a[0]) {
     case 0: // sys_exit
-      sys_exit(0);
+      sys_exit(c->GPRx);
       break;
     case 1: // sys_yield
       sys_yield();

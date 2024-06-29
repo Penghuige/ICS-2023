@@ -23,6 +23,9 @@ void do_syscall(Context *c) {
       break;
     case 1: // sys_yield
       sys_yield();
+      // return value is zero
+      c->GPR2 = 0;
+
       break;
     case 4: // sys_write
       printf("hello?\n");

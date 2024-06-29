@@ -13,7 +13,7 @@ void do_syscall(Context *c) {
 
 //#ifdef CONFIG_STRACE
   printf("breakdown ID = %d\n", a[0]);
-  printf("syscall ID = %d\n", a[1]);
+  printf("syscall ID = %d\n", a[0]);
 //#endif
 
   // a[0] is a7 is the syscall ID, while a[1] is a0 is the syscall argument

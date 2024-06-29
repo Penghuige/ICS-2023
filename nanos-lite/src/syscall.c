@@ -24,9 +24,9 @@ void do_syscall(Context *c) {
         default: panic("Unhandled syscall ID = %d", a[1]);
       }
       break;
-    case 0:
-      sys_exit(c->GPR2);
-      break;
+    //case 0:
+    //  sys_exit(c->GPR2);
+    //  break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
 }

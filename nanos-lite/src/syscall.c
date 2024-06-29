@@ -24,6 +24,7 @@ void do_syscall(Context *c) {
     case 1: // sys_yield
       sys_yield();
       // return value is zero
+      c->GPRx = 0;
       break;
     case 4: // sys_write
       printf("%.*s", a[3], (char *)a[2]);

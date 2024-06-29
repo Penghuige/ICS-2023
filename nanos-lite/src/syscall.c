@@ -11,11 +11,13 @@ void do_syscall(Context *c) {
   a[2] = c->GPR3;
   a[3] = c->GPR4;
 
+#ifdef CONFIG_STRACE
+  printf("syscall ID = %d\n", a[1]);
+#endif
 
   switch (a[0]) {
     case EVENT_YIELD:
     case EVENT_SYSCALL:
-      printf("syscall ID = %d\n", a[1]);
       switch (a[1]) {
         case 0: // sys_exit
           sys_exit(a[2]);
@@ -26,9 +28,6 @@ void do_syscall(Context *c) {
         default: panic("Unhandled syscall ID = %d", a[1]);
       }
       break;
-    //case 0:
-    //  sys_exit(c->GPR2);
-    //  break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
 }

@@ -15,6 +15,7 @@ void do_syscall(Context *c) {
   switch (a[0]) {
     case EVENT_YIELD:
     case EVENT_SYSCALL:
+      printf("syscall ID = %d\n", a[1]);
       switch (a[1]) {
         case 0: // sys_exit
           sys_exit(a[2]);

@@ -39,7 +39,7 @@ typedef struct {
 
 #define GPR2 gpr[10]
 #define GPR3 gpr[11]
-#define GPR4 gpr[22]
-#define GPRx gpr[23]
+#define GPR4 gpr[12]
+#define GPRx gpr[10]
 
 #endif

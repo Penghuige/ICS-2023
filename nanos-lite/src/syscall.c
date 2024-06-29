@@ -16,22 +16,17 @@ void do_syscall(Context *c) {
   printf("syscall ID = %d\n", a[1]);
 //#endif
 
+  // a[0] is a7 is the syscall ID, while a[1] is a0 is the syscall argument
   switch (a[0]) {
-    case EVENT_YIELD:
-    case EVENT_SYSCALL:
-      switch (a[1]) {
-        case 0: // sys_exit
-          sys_exit(a[2]);
-          break;
-        case 1: // sys_yield
-          sys_yield();
-          break;
-        case 4: // sys_write
-          printf("%.*s", a[3], (char *)a[2]);
-          c->GPRx = a[3];
-          break;
-        default: panic("Unhandled syscall ID = %d", a[1]);
-      }
+    case 0: // sys_exit
+      sys_exit(a[2]);
+      break;
+    case 1: // sys_yield
+      sys_yield();
+      break;
+    case 4: // sys_write
+      printf("%.*s", a[3], (char *)a[2]);
+      c->GPRx = a[3];
       break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }

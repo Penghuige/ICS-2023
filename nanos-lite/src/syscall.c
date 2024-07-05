@@ -2,7 +2,7 @@
 #include "syscall.h"
 
 void sys_exit(int code);
-void sys_yield();
+int sys_yield();
 
 void do_syscall(Context *c) {
   uintptr_t a[4];
@@ -39,7 +39,8 @@ void sys_exit(int code) {
   halt(code);
 }
 
-void sys_yield() {
+int sys_yield() {
   asm volatile("li a7, 0; ecall");
   //yield();
+  return 0;
 }

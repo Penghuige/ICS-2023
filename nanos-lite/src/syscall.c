@@ -40,7 +40,7 @@ void sys_exit(int code) {
 }
 
 int sys_yield() {
-  asm volatile("li a7, 4;");
+  asm volatile("li a7, -1;");
   //yield();
 
   return 0;

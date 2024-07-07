@@ -256,7 +256,7 @@ void sdb_mainloop() {
   sdb_set_batch_mode();
 #endif
   if (is_batch_mode) {
-    //cmd_c(NULL);
+    cmd_c(NULL);
     return;
   }
 /*

@@ -9,6 +9,8 @@ Context* __am_irq_handle(Context *c) {
     printf("%d\n", c->mcause);
     Event ev = {0};
     switch (c->mcause) {
+      // 是因为在yield函数中，我们调用了ecall指令，这个指令会触发一个异常，异常号为-1。
+      case -1: ev.event = EVENT_YIELD; break;
       case EVENT_YIELD: ev.event = EVENT_YIELD; break;
       case EVENT_PAGEFAULT: ev.event = EVENT_PAGEFAULT; break;
       case 0:case 4:case 5:case 6:case 7:case 8:case 9:case 10:case 11:case 12:case 13:case 14:case 15:case 16:case 17:case 18:case 19:ev.event=EVENT_SYSCALL;break;

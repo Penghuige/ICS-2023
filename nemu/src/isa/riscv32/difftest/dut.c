@@ -19,7 +19,6 @@
 
 bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
   // all new
-  /*
   if(cpu.csr.mepc != ref_r->csr.mepc){
     printf("\e[1;31mthe different register is mepc, dut is %08x, ref is %08x\n", cpu.csr.mepc, ref_r->csr.mepc);
     return false;
@@ -36,7 +35,6 @@ bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
     printf("\e[1;31mthe different register is mcause, dut is %08x, ref is %08x\n", cpu.csr.mcause, ref_r->csr.mcause);
     return false;
   }
-  */
   for(int i = 0; i < ARRLEN(ref_r->gpr); i++)
   {
     if(cpu.gpr[i] != ref_r->gpr[i]){

@@ -23,7 +23,7 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   // only when yield is called, NO is -1
   if(NO == -1) epc += 4;
   //cpu.csr.mcause = NO;
-  cpu.csr.mcause = 3;
+  cpu.csr.mcause = 1;
   // false instruction
   cpu.csr.mepc = epc;
 

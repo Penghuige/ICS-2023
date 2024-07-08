@@ -255,7 +255,7 @@ void sdb_mainloop() {
 #ifdef CONFIG_BATCHMODE
   sdb_set_batch_mode();
 #endif
-  if (!is_batch_mode) {
+  if (is_batch_mode) {
     cmd_c(NULL);
     return;
   }

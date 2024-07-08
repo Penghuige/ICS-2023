@@ -40,10 +40,10 @@ struct diff_context_t {
   word_t gpr[MUXDEF(CONFIG_RVE, 16, 32)];
   word_t pc;
   // new add
-  word_t mcause;
-  vaddr_t mepc;
-  word_t mstatus;
   word_t mtvec;
+  vaddr_t mepc;
+  word_t mcause;
+  word_t mstatus;
 };
 
 static sim_t* s = NULL;
@@ -66,8 +66,8 @@ void sim_t::diff_get_regs(void* diff_context) {
   }
   ctx->pc = state->pc;
   ctx->mcause = state->mcause->read();
-  ctx->mepc = state->mepc->read();
   ctx->mstatus = state->mstatus->read();
+  ctx->mepc = state->mepc->read();
   ctx->mtvec = state->mtvec->read();
 }
 

@@ -9,9 +9,9 @@ static Context* do_event(Event e, Context* c) {
 //#endif
   switch (e.event) {
     case EVENT_YIELD:
-      printf("EVENT_YIELD not ");
+      //printf("EVENT_YIELD not ");
     case EVENT_SYSCALL:
-      printf("EVENT_SYSCALL\n");
+      //printf("EVENT_SYSCALL\n");
       do_syscall(c);
       break;
     case EVENT_ERROR:

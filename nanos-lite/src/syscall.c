@@ -3,6 +3,7 @@
 
 void sys_exit(int code);
 int sys_yield();
+void sys_write(intptr_t *buf, size_t count);
 
 void do_syscall(Context *c) {
   uintptr_t a[4];
@@ -28,7 +29,7 @@ void do_syscall(Context *c) {
       c->GPRx = 0;
       break;
     case 4: // sys_write
-      printf("%s", a[3], (char *)a[2]);
+      sys_write((intptr_t*)a[1], a[2]);
       c->GPRx = a[3];
       break;
     default: panic("Unhandled syscall ID = %d", a[0]);
@@ -44,4 +45,10 @@ int sys_yield() {
   //yield();
 
   return 0;
+}
+
+void sys_write(intptr_t *buf, size_t count){
+  for (int i = 0; i < count; i++) {
+    putch(*((char*)buf + i));
+  }
 }

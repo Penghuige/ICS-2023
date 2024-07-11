@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/time.h>
@@ -33,7 +34,7 @@
 #ifdef __riscv_e
 # define ARGS_ARRAY ("ecall", "a5", "a0", "a1", "a2", "a0")
 #else
-# define ARGS_ARRAY ("ecall", "a7", "a2", "a1", "a2", "a0")
+# define ARGS_ARRAY ("ecall", "a7", "a0", "a1", "a2", "a0")
 #endif
 #elif defined(__ISA_AM_NATIVE__)
 # define ARGS_ARRAY ("call *0x100000", "rdi", "rsi", "rdx", "rcx", "rax")
@@ -74,8 +75,7 @@ void *_sbrk(intptr_t increment) {
 }
 
 int _read(int fd, void *buf, size_t count) {
-  _exit(SYS_read);
-  return 0;
+  return _syscall_(SYS_read, fd, (intptr_t)buf, count);
 }
 
 int _close(int fd) {

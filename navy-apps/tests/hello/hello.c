@@ -1,8 +1,10 @@
 #include <unistd.h>
 #include <stdio.h>
 
+extern int _write(int fd, void *buf, size_t count);
+
 int main() {
-  write(1, "Hello World!\n", 13);
+  _write(1, "Hello World!\n", 13);
   int i = 2;
   volatile int j = 0;
   while (1) {

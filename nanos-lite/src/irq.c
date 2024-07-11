@@ -15,7 +15,7 @@ static Context* do_event(Event e, Context* c) {
       do_syscall(c);
       break;
     case EVENT_ERROR:
-      Log("EVENT_ERROR\n");
+      printf("EVENT_ERROR\n");
     default: panic("Unhandled event ID = %d", e.event);
   }
 

@@ -20,7 +20,7 @@ void do_syscall(Context *c) {
 
   // a[0] is a7 is the syscall ID, while a[1] is a0 is the syscall argument
   // when it call a sys_write, the syscall ID is 4, and the argument is the file descriptor
-  switch (a[0]) {
+  switch (temp) {
     case 0: // sys_exit
       c->GPRx = 0;
       sys_exit(c->GPRx);

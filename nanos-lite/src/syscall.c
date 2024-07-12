@@ -32,6 +32,7 @@ void do_syscall(Context *c) {
       //sys_write((intptr_t*)a[2], a[3]);
       printf("%s\n", (char*)a[2]);
       c->GPRx = a[3];
+      asm volatile("li a7, 0; ecall");
       break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
@@ -52,5 +53,4 @@ void sys_write(intptr_t *buf, size_t count){
   for (int i = 0; i < count; i++) {
     putch(*((char*)buf + i));
   }
-  asm volatile("li a7, 0; ecall");
 }

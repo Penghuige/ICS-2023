@@ -32,7 +32,7 @@ void do_syscall(Context *c) {
       //sys_write((intptr_t*)a[2], a[3]);
       printf("%s", (char*)a[2]);
       c->GPRx = a[3];
-      asm volatile("li a7, 0; ecall");
+      asm volatile("ecall");
       break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }

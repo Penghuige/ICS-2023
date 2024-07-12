@@ -7,6 +7,7 @@ void sys_write(intptr_t *buf, size_t count);
 
 void do_syscall(Context *c) {
   uintptr_t a[4];
+  uintptr_t temp = c->gpr[15];
   a[0] = c->GPR1;
   a[1] = c->GPR2;
   a[2] = c->GPR3;
@@ -14,6 +15,7 @@ void do_syscall(Context *c) {
 
 //#ifdef CONFIG_STRACE
   printf("syscall ID = %d\n", a[0]);
+  printf("syscall ID = %d\n", temp);
 //#endif
 
   // a[0] is a7 is the syscall ID, while a[1] is a0 is the syscall argument

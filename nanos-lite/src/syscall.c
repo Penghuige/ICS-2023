@@ -6,7 +6,6 @@ int sys_yield();
 void sys_write(intptr_t *buf, size_t count);
 
 void do_syscall(Context *c) {
-  printf("now pc is %d\n", c->mepc);
   uintptr_t a[4];
   a[0] = c->GPR1;
   a[1] = c->GPR2;

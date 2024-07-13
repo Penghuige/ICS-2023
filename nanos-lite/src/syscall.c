@@ -18,6 +18,8 @@ void do_syscall(Context *c) {
 
   // a[0] is a7 is the syscall ID, while a[1] is a0 is the syscall argument
   // when it call a sys_write, the syscall ID is 4, and the argument is the file descriptor
+  // end is used to store the program break
+  extern char end;
   switch (a[0]) {
     case 0: // sys_exit
       c->GPRx = 0;
@@ -32,6 +34,10 @@ void do_syscall(Context *c) {
       //sys_write((intptr_t*)a[2], a[3]);
       printf("%s", (char*)a[2]);
       c->GPRx = a[3];
+      break;
+    case 9: // sys_brk
+      end = c->GPR1;
+      c->GPRx = 0;
       break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }

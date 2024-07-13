@@ -65,7 +65,7 @@ static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_
 	  case TYPE_B: src1R(); src2R(); immB(); break;
   }
 }
-#ifndef CONFIG_ETRACE
+#ifdef CONFIG_STRACE
 static void etrace_record(Decode *s)
 {
   Log("exception occur at pc:%08x, exception NO:%d", s->pc, R(17));

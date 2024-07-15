@@ -33,7 +33,6 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   // replace the ramdisk_read with fs_read, it used to be zero while ramdisk_read.
   //ramdisk_read(&ehdr, 0, sizeof(Elf_Ehdr));
 
-  printf("ehdr.e_ident: %x\n", *(uint32_t *)ehdr.e_ident);
   assert(*(uint32_t *)ehdr.e_ident == 0x464c457f);
 
   printf("ehdr.e_phnum: %d\n", ehdr.e_phnum);

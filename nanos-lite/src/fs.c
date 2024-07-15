@@ -103,6 +103,7 @@ int fs_close(int fd) {
 
 size_t fs_read(int fd, void *buf, size_t len) {
   int index = get_index(fd);
+  printf("index: %d\n", index);
   if(index == -1)
   {
     panic("file %d not found", fd);

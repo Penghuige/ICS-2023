@@ -87,7 +87,7 @@ int fs_open(const char *pathname, int flags, int mode) {
       printf("a is %d\n", a);
       open_table[a].fd = i;
       open_table[a].open_offset = 0;
-      a++;
+      a += 1;
       return i;
     }
   }

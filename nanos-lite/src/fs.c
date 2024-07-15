@@ -84,7 +84,6 @@ int fs_open(const char *pathname, int flags, int mode) {
       assert(open_index < LENGTH(open_table));
       open_table[open_index].fd = i;
       open_table[open_index].open_offset = 0;
-      open_index++;
       return i;
     }
   }

@@ -70,9 +70,6 @@ static int get_index(int fd)
 }
 
 int fs_open(const char *pathname, int flags, int mode) {
-  //for(int i = 0; i < LENGTH(file_table); i++) {
-  //  printf("file_table[%d].name = %s\n", i, file_table[i].name);
-  //}
   Log("open %s", pathname);
   for(int i = 0; i < LENGTH(file_table); i++) {
     if(strcmp(pathname, file_table[i].name) == 0) {
@@ -84,8 +81,10 @@ int fs_open(const char *pathname, int flags, int mode) {
       // record 
       printf("file fd is %d\n", i);
       printf("open_index is %d\n", open_index);
+      assert(open_index < LENGTH(open_table));
       open_table[open_index].fd = i;
-      open_table[open_index++].open_offset = 0;
+      open_table[open_index].open_offset = 0;
+      open_index++;
       return i;
     }
   }

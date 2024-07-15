@@ -59,7 +59,7 @@ static int get_index(int fd)
   int ret = -1;
   for(int i = 0; i < open_index; i++)
   {
-    printf("name: %d\n", open_table[i].fd);
+    //printf("name: %d\n", open_table[i].fd);
     if(fd == open_table[i].fd)
     {
       ret = i;
@@ -82,6 +82,7 @@ int fs_open(const char *pathname, int flags, int mode) {
         return i;
       }
       // record 
+      printf("file fd is %d\n", i);
       open_table[open_index].fd = i;
       open_table[open_index].open_offset = 0;
       open_index++;

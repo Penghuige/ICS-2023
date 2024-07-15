@@ -60,9 +60,8 @@ static uintptr_t loader_temp(PCB *pcb, const char *filename) {
 }
 
 static uintptr_t loader(PCB *pcb, const char *filename) {
+  printf("filename: %s\n", filename);
   // make sure the elf read is the fs_read
-  int fd = fs_open(filename, 0, 0);
-  if(fd < 0) return -1;
   Elf_Ehdr ehdr;
 
   // replace the ramdisk_read with fs_read, it used to be zero while ramdisk_read.

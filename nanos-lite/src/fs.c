@@ -52,6 +52,7 @@ static OFinfo open_table[LENGTH(file_table)];
 
 void init_fs() {
   // TODO: initialize the size of /dev/fb
+  printf("open_index is %d\n", open_index);
   open_index = 0;
 }
 

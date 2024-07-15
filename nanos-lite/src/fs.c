@@ -47,7 +47,7 @@ static Finfo file_table[] __attribute__((used)) = {
 };
 
 // it is not need to use in other files
-static int open_index = 0;
+static int open_index = 1;
 static OFinfo open_table[LENGTH(file_table)];
 
 void init_fs() {
@@ -84,7 +84,7 @@ int fs_open(const char *pathname, int flags, int mode) {
       assert(open_index < LENGTH(open_table));
       open_table[open_index].fd = i;
       open_table[open_index].open_offset = 0;
-      open_index+=100;
+      open_index++;
 
       return i;
     }

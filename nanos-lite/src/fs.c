@@ -46,8 +46,9 @@ static Finfo file_table[] __attribute__((used)) = {
 #include "files.h"
 };
 
-// it need to use in other files
+// it is not need to use in other files
 static int open_index = 0;
+static int a = 0;
 static OFinfo open_table[LENGTH(file_table)];
 
 void init_fs() {
@@ -83,7 +84,7 @@ int fs_open(const char *pathname, int flags, int mode) {
       }
       // record 
       printf("file fd is %d\n", i);
-      printf("open_index is %d\n", open_index);
+      printf("a is %d\n", a);
       open_table[open_index].fd = i;
       open_table[open_index].open_offset = 0;
       open_index++;

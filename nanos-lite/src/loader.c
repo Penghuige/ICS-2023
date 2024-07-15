@@ -60,7 +60,6 @@ static uintptr_t loader_temp(PCB *pcb, const char *filename) {
 }
 
 static uintptr_t loader(PCB *pcb, const char *filename) {
-  printf("filename: %s\n", filename);
   // make sure the elf read is the fs_read
   Elf_Ehdr ehdr;
 

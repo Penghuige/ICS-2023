@@ -27,7 +27,7 @@ void init_proc() {
   Log("Initializing processes...");
 
   // load program here
-  const char filename[] = "build/ramdisk.img";
+  const char filename[] = "/bin/file-test";
   naive_uload(NULL, filename);
 }
 

@@ -59,6 +59,7 @@ static int get_index(int fd)
   int ret = -1;
   for(int i = 0; i < open_index; i++)
   {
+    printf("name: %d", open_table[i].fd);
     if(fd == open_table[i].fd)
     {
       ret = i;

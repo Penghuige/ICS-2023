@@ -56,7 +56,8 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 
   assert(fs_close(fd) == 0);
   
-  return ehdr.e_entry;
+  //return ehdr.e_entry;
+  return 0x80000000;
 }
 
 void naive_uload(PCB *pcb, const char *filename) {

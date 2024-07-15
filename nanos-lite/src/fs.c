@@ -47,7 +47,7 @@ static Finfo file_table[] __attribute__((used)) = {
 };
 
 // it need to use in other files
-//static size_t open_index = 0;
+static size_t open_index = 0;
 static OFinfo open_table[LENGTH(file_table)];
 
 void init_fs() {
@@ -57,35 +57,35 @@ void init_fs() {
 static int get_index(int fd)
 {
   int ret = -1;
-  //for(int i = 0; i < open_index; i++)
-  //{
-  //  if(fd == open_table[i].fd)
-  //  {
-  //    ret = i;
-  //    break;
-  //  }
-  //}
+  for(int i = 0; i < open_index; i++)
+  {
+    if(fd == open_table[i].fd)
+    {
+      ret = i;
+      break;
+    }
+  }
   return ret;
 }
 
 int fs_open(const char *pathname, int flags, int mode) {
-  //printf("open %s\n", pathname);
-  //for(int i = 0; i < LENGTH(file_table); i++) {
-  //  if(strcmp(pathname, file_table[i].name) == 0) {
-  //    if(i <= 2)
-  //    {
-  //      Log("ignore open %s", pathname);
-  //      return i;
-  //    }
-  //    // record 
-  //    open_table[open_index].fd = i;
-  //    open_table[open_index].open_offset = 0;
-  //    open_index++;
-  //    return i;
-  //  }
-  //}
-  //panic("file %s not found", pathname);
-  //while(1);
+  Log("open %s\n", pathname);
+  for(int i = 0; i < LENGTH(file_table); i++) {
+    if(strcmp(pathname, file_table[i].name) == 0) {
+      if(i <= 2)
+      {
+        Log("ignore open %s", pathname);
+        return i;
+      }
+      // record 
+      open_table[open_index].fd = i;
+      open_table[open_index].open_offset = 0;
+      open_index++;
+      return i;
+    }
+  }
+  panic("file %s not found", pathname);
+  while(1);
   return -1;
 }
 

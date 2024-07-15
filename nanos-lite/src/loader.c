@@ -18,7 +18,7 @@ extern size_t fs_read(int fd, void *buf, size_t len);
 extern size_t fs_write(int fd, void *buf, size_t len);
 extern size_t fs_lseek(int fd, size_t offset, int whence);
 
-static uintptr_t loader(PCB *pcb, const char *filename) {
+static uintptr_t loader_temp(PCB *pcb, const char *filename) {
   int fd = fs_open(filename, 0, 0);
   if (fd < 0) {
     Log("File not found: %s", filename);
@@ -59,9 +59,39 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   return ehdr.e_entry;
 }
 
+static uintptr_t loader(PCB *pcb, const char *filename) {
+  // make sure the elf read is the fs_read
+  Elf_Ehdr ehdr;
+
+  // replace the ramdisk_read with fs_read, it used to be zero while ramdisk_read.
+  ramdisk_read(&ehdr, 0, sizeof(Elf_Ehdr));
+
+  assert(*(uint32_t *)ehdr.e_ident == 0x464c457f);
+
+  printf("ehdr.e_phnum: %d\n", ehdr.e_phnum);
+
+  Elf_Phdr phdr[ehdr.e_phnum];
+
+  ramdisk_read(phdr, ehdr.e_ehsize, ehdr.e_phnum * sizeof(Elf_Phdr));
+
+  for(int i = 0 ; i < ehdr.e_phnum ; i++){
+    if(phdr[i].p_type == PT_LOAD){
+      ramdisk_read((void *)phdr[i].p_vaddr, phdr[i].p_offset, phdr[i].p_memsz);
+      // need to set offset
+      memset((void *)(phdr[i].p_vaddr + phdr[i].p_filesz), 0, phdr[i].p_memsz - phdr[i].p_filesz);
+    }
+  }
+
+  return ehdr.e_entry;
+}
+
 void naive_uload(PCB *pcb, const char *filename) {
   uintptr_t entry = loader(pcb, filename);
   Log("Jump to entry = %p", entry);
   ((void(*)())entry) ();
+  if(0)
+  {
+    loader_temp(pcb, filename);
+  }
 }
 

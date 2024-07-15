@@ -28,6 +28,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 
   // make sure the elf read is the fs_read
   Elf_Ehdr ehdr;
+  printf("ehdr.e_ehsize: %d\n", ehdr.e_ehsize);
 
   assert(fs_read(fd, &ehdr, sizeof(ehdr)) == sizeof(ehdr));
   // replace the ramdisk_read with fs_read, it used to be zero while ramdisk_read.

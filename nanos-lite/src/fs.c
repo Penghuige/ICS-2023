@@ -72,7 +72,7 @@ int fs_open(const char *pathname, int flags, int mode) {
   //for(int i = 0; i < LENGTH(file_table); i++) {
   //  printf("file_table[%d].name = %s\n", i, file_table[i].name);
   //}
-  Log("open %s\n", pathname);
+  Log("open %s", pathname);
   for(int i = 0; i < LENGTH(file_table); i++) {
     if(strcmp(pathname, file_table[i].name) == 0) {
       if(i <= 2)

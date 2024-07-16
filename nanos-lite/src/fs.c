@@ -60,8 +60,17 @@ void init_fs() {
 
 static int get_index(int fd)
 {
+  if (fd < 0 || fd >= LENGTH(open_table))
+  {
+    return -1;
+  }
+  if(fd <= 2)
+  {
+    Log("ignore open %s", file_table[fd].name);
+    return fd;
+  }
   int ret = -1;
-  for(int i = 2; i < open_index; i++)
+  for(int i = 0; i < open_index; i++)
   {
     //printf("name: %d\n", open_table[i].fd);
     if(fd == open_table[i].fd)

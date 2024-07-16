@@ -56,7 +56,7 @@ void do_syscall(Context *c) {
       c->GPRx = fs_lseek(a[1], a[2], a[3]);
       break;
     case 9: // sys_brk
-      end = c->GPR1;
+      end = c->GPR2;
       c->GPRx = 0;
       break;
     default: panic("Unhandled syscall ID = %d", a[0]);
@@ -70,7 +70,6 @@ void sys_exit(int code) {
 int sys_yield() {
   asm volatile("li a7, 0; ecall");
   //yield();
-
   return 0;
 }
 

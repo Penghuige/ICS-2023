@@ -125,8 +125,37 @@ size_t fs_read(int fd, void *buf, size_t len) {
   open_table[index].open_offset += ret;
   return ret;
 }
-
 size_t fs_write(int fd, const void *buf, size_t len) {
+    if (fd == 0) {
+        Log("ignore write %s", file_table[fd].name);
+        return 0;
+    }
+
+    if (fd == 1 || fd == 2) {
+        for (size_t i = 0; i < len; ++i)
+            putch(*((char *)buf + i));
+        return len;
+    }
+
+    int target_index = get_index(fd);
+    if (target_index == -1) {
+        Log("file %s not open before write", file_table[fd].name);
+        return -1;
+    }
+
+    size_t write_len = len;
+    size_t open_offset = open_table[target_index].open_offset;
+    size_t size = file_table[fd].size;
+    size_t disk_offset = file_table[fd].disk_offset;
+
+    if (open_offset > size) return 0;
+
+    if (open_offset + len > size) write_len = size - open_offset;
+    ramdisk_write(buf, disk_offset + open_offset, write_len);
+    open_table[target_index].open_offset += write_len;
+    return write_len;
+}
+size_t my_fs_write(int fd, const void *buf, size_t len) {
   int index = get_index(fd);
   Log("WRITE index: %d, name: %s, offset: %d", index, file_table[fd].name, open_table[index].open_offset);
   if(index == -1)
@@ -142,7 +171,7 @@ size_t fs_write(int fd, const void *buf, size_t len) {
 }
 
 size_t fs_lseek(int fd, size_t offset, int whence) {
-  Log("offset: %d, whence: %d", offset, whence);
+  Log("LSEEK offset: %d, whence: %d", offset, whence);
   int index = get_index(fd);
   if(index == -1)
   {
@@ -157,7 +186,6 @@ size_t fs_lseek(int fd, size_t offset, int whence) {
       open_table[index].open_offset += offset;
       break;
     case SEEK_END:
-      printf("open_offset: %d, size: %d, offset: %d\n", open_table[index].open_offset, file_table[fd].size, offset);
       open_table[index].open_offset = file_table[fd].size + offset;
       break;
     default:

@@ -1,16 +1,8 @@
+#include "klib-macros.h"
 #include <fs.h>
 
 typedef size_t (*ReadFn) (void *buf, size_t offset, size_t len);
 typedef size_t (*WriteFn) (const void *buf, size_t offset, size_t len);
-
-extern size_t ramdisk_read(void *buf, size_t offset, size_t len);
-extern size_t ramdisk_write(const void *buf, size_t offset, size_t len);
-
-size_t serial_write(const void *buf, size_t offset, size_t len);
-size_t events_read(void *buf, size_t offset, size_t len);
-size_t dispinfo_read(void *buf, size_t offset, size_t len);
-size_t fb_write(const void *buf, size_t offset, size_t len);
-int fs_close(int fd);
 
 typedef struct {
   char *name;
@@ -18,137 +10,176 @@ typedef struct {
   size_t disk_offset;
   ReadFn read;
   WriteFn write;
-  size_t open_offset;
 } Finfo;
 
-enum {FD_STDIN, FD_STDOUT, FD_STDERR, FD_FB, FD_EVENT, FD_DISPINFO, FD_SB, FD_SBCTL};
+// record open-file table, it need to store file name and offset
+typedef struct {
+  size_t fd;
+  // where it must to write
+  size_t open_offset;
+}OFinfo;
+
+// File system
+int fs_open(const char *pathname, int flags, int mode);
+size_t fs_read(int fd, void *buf, size_t len);
+size_t fs_write(int fd, const void *buf, size_t len);
+size_t fs_lseek(int fd, size_t offset, int whence);
+int fs_close(int fd);
+
+enum {FD_STDIN, FD_STDOUT, FD_STDERR, FD_FB};
+
+extern size_t ramdisk_read(void *buf, size_t offset, size_t len);
+extern size_t ramdisk_write(const void *buf, size_t offset, size_t len);
+
 size_t invalid_read(void *buf, size_t offset, size_t len) {
-  panic("This device does not support read");
-  return -1;
-}
-
-size_t invalid_write(const void *buf, size_t offset, size_t len) {
-  panic("This device does not support write");
-  return -1;
-}
-
-size_t stdin_read(void *buf, size_t offset, size_t len) {
+  panic("should not reach here");
   return 0;
 }
 
-/* This is the information about all files in disk.
- * Special read/write helpers:
- *   invalid_read, invalid_write: the device is not readable or writable.
- *   NULL, fs_read will call seekable_read, so as write.
- */
+size_t invalid_write(const void *buf, size_t offset, size_t len) {
+  panic("should not reach here");
+  return 0;
+}
+
+/* This is the information about all files in disk. */
 static Finfo file_table[] __attribute__((used)) = {
-    [FD_STDIN] = {"stdin", 0, 0, stdin_read, invalid_write},
-    [FD_STDOUT] = {"stdout", 0, 0, invalid_read, serial_write},
-    [FD_STDERR] = {"stderr", 0, 0, invalid_read, serial_write},
-    [FD_FB] = {"/dev/fb", 0, 0, invalid_read, NULL},
-    [FD_EVENT] = {"/dev/events", 0, 0, events_read, invalid_write},
-    [FD_DISPINFO] = {"/proc/dispinfo", 0, 0, dispinfo_read, invalid_write},
+  [FD_STDIN]  = {"stdin", 0, 0, invalid_read, invalid_write},
+  [FD_STDOUT] = {"stdout", 0, 0, invalid_read, invalid_write},
+  [FD_STDERR] = {"stderr", 0, 0, invalid_read, invalid_write},
 #include "files.h"
 };
 
+// it is not need to use in other files
+static int open_index;
+static OFinfo open_table[LENGTH(file_table)];
+
 void init_fs() {
+  // TODO: initialize the size of /dev/fb
+  open_index = 0;
 }
 
-/* As linux and glibc's specification, if the return value is between -4095 and -1,
- * it indicates error number.
- */
-
-int fs_open(const char *pathname, int flags, int mode) {
-  for (int i = 0; i < LENGTH(file_table); i++) {
-    if (strcmp(pathname, file_table[i].name) == 0) {
-      file_table[i].open_offset = 0;
-      return i;
+static int get_index(int fd)
+{
+  if (fd < 0 || fd >= LENGTH(open_table))
+  {
+    return -1;
+  }
+  if(fd <= 2)
+  {
+    Log("ignore open %s", file_table[fd].name);
+    return fd;
+  }
+  int ret = -1;
+  for(int i = 0; i < open_index; i++)
+  {
+    //printf("name: %d\n", open_table[i].fd);
+    if(fd == open_table[i].fd)
+    {
+      ret = i;
+      break;
     }
   }
-  if (flags & 0x0200) {
-    panic("sfs cannot create file %s", pathname);
-    return -1;
-  }
-  return -1;
-}
-
-size_t fs_read(int fd, void *buf, size_t len) {
-  if(fd < 0 || fd >= LENGTH(file_table)) {
-    panic("fd %d not exist", fd);
-    return -1;
-  }
-  if (file_table[fd].read)
-    return file_table[fd].read(buf, file_table[fd].disk_offset + file_table[fd].open_offset, len);
-  size_t t = len;
-  if (file_table[fd].open_offset + len > file_table[fd].size) {
-    t = file_table[fd].size - file_table[fd].open_offset;
-  }
-  size_t ret = ramdisk_read(buf, file_table[fd].disk_offset + file_table[fd].open_offset, t);
-  assert(ret == t);
-  file_table[fd].open_offset += ret;
   return ret;
 }
 
-static size_t seekable_write(int fd, const void *buf, size_t len) {
-  size_t t = len;
-  if (file_table[fd].open_offset + len > file_table[fd].size) {
-    t = file_table[fd].size - file_table[fd].open_offset;
+int fs_open(const char *pathname, int flags, int mode) {
+  Log("open %s", pathname);
+  for(int i = 0; i < LENGTH(file_table); i++) {
+    printf("file_table[%d].name: %s\n", i, file_table[i].name);
+    if(strcmp(pathname, file_table[i].name) == 0) {
+      if(i <= 2)
+      {
+        Log("ignore open %s", pathname);
+        return i;
+      }
+      // record 
+      //printf("file fd is %d\n", i);
+      //printf("open_index is %d\n", open_index);
+      assert(open_index < LENGTH(open_table));
+      open_table[open_index].fd = i;
+      open_table[open_index].open_offset = 0;
+      open_index++;
+
+      return i;
+    }
   }
-  size_t ret;
-  switch (fd) {
-    case FD_FB:
-      ret = fb_write(buf, file_table[fd].disk_offset + file_table[fd].open_offset, t);
-      break;
-    default:
-      ret = ramdisk_write(
-          buf, file_table[fd].disk_offset + file_table[fd].open_offset, t);
+  panic("file %s not found", pathname);
+  while(1);
+  return -1;
+}
+
+int fs_close(int fd) {
+  int index = get_index(fd);
+  if(index != -1)
+  {
+    open_table[fd].fd = -1;
   }
-  assert(ret == t);
-  file_table[fd].open_offset += ret;
+  return 0;
+}
+
+size_t fs_read(int fd, void *buf, size_t len) {
+  int index = get_index(fd);
+  Log("READ index: %d, name: %s, offset: %d", index, file_table[fd].name, open_table[index].open_offset);
+  if(index == -1)
+  {
+    panic("file %d not found", fd);
+  }
+  size_t offset = open_table[index].open_offset;
+  // printf("offset: %d\n", offset);
+  // 他的buf就是指向的Elf_Ehdr ehdr, 第二个参数是偏移量，记录在文件表中的disk_offset，第三个参数是长度
+  size_t read_len = len;
+  // when the file size is not enough
+  if (file_table[fd].size < offset + len) {
+    read_len = file_table[fd].size - offset;
+  }
+  size_t ret = ramdisk_read(buf, file_table[fd].disk_offset + offset, read_len);
+  // 怎么能用不知道的函数来写呢？
+  // size_t ret = file_table[fd].read(buf, offset, len);
+  printf("read ret: %d\n", ret);
+  open_table[index].open_offset += ret;
   return ret;
 }
 
 size_t fs_write(int fd, const void *buf, size_t len) {
-  if(fd < 0 || fd >= LENGTH(file_table)) {
-    panic("fd %d not exist", fd);
-    return -1;
+  int index = get_index(fd);
+  Log("WRITE index: %d, name: %s, offset: %d", index, file_table[fd].name, open_table[index].open_offset);
+  if(index == -1)
+  {
+    panic("file %d not found", fd);
   }
-  if (file_table[fd].write)
-    return file_table[fd].write(buf, file_table[fd].disk_offset + file_table[fd].open_offset, len);
-  return seekable_write(fd, buf, len);
+  size_t offset = open_table[index].open_offset;
+  size_t read_len = len;
+  // when the file size is not enough
+  if(file_table[fd].size < offset + len)
+  {
+    read_len = file_table[fd].size - offset;
+  }
+  size_t ret = ramdisk_write(buf, file_table[fd].disk_offset + offset, read_len);
+
+  open_table[index].open_offset += ret;
+  return ret;
 }
 
 size_t fs_lseek(int fd, size_t offset, int whence) {
-  if(fd < 0 || fd >= LENGTH(file_table)) {
-    panic("fd %d not exist", fd);
-    return -1;
+  Log("LSEEK offset: %d, whence: %d", offset, whence);
+  int index = get_index(fd);
+  if(index == -1)
+  {
+    panic("file %d not found", fd);
   }
-  switch (whence) {
+  switch(whence)
+  {
     case SEEK_SET:
-      file_table[fd].open_offset = offset;
+      open_table[index].open_offset = offset;
       break;
     case SEEK_CUR:
-      file_table[fd].open_offset += offset;
+      open_table[index].open_offset += offset;
       break;
     case SEEK_END:
-      file_table[fd].open_offset = file_table[fd].size + offset;
+      open_table[index].open_offset = file_table[fd].size + offset;
       break;
     default:
-      panic("invalid whence");
-      return -1;
+      panic("whence error");
   }
-  if (file_table[fd].open_offset > file_table[fd].size) {
-    panic("fs_lseek: seek beyond file size");
-    return -1;
-  }
-  return file_table[fd].open_offset;
-}
-
-int fs_close(int fd) {
-  if(fd < 0 || fd >= LENGTH(file_table)) {
-    panic("fd %d not exist", fd);
-    return -1;
-  }
-  file_table[fd].open_offset = 0;
-  return 0;
+  return open_table[index].open_offset;
 }

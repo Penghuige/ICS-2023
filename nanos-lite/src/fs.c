@@ -106,7 +106,7 @@ int fs_close(int fd) {
 
 size_t fs_read(int fd, void *buf, size_t len) {
   int index = get_index(fd);
-  Log("index: %d", index);
+  Log("index: %d, name: %s, offset: %d", index, file_table[fd].name, open_table[index].open_offset);
   if(index == -1)
   {
     panic("file %d not found", fd);

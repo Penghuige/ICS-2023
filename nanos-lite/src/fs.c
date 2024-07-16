@@ -80,8 +80,8 @@ int fs_open(const char *pathname, int flags, int mode) {
         return i;
       }
       // record 
-      printf("file fd is %d\n", i);
-      printf("open_index is %d\n", open_index);
+      //printf("file fd is %d\n", i);
+      //printf("open_index is %d\n", open_index);
       assert(open_index < LENGTH(open_table));
       open_table[open_index].fd = i;
       open_table[open_index].open_offset = 0;
@@ -112,7 +112,7 @@ size_t fs_read(int fd, void *buf, size_t len) {
     panic("file %d not found", fd);
   }
   size_t offset = open_table[index].open_offset;
-  printf("offset: %d\n", offset);
+  // printf("offset: %d\n", offset);
   size_t ret = file_table[fd].read(buf, offset, len);
   printf("ret: %d\n", ret);
   open_table[index].open_offset += ret;

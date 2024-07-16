@@ -38,7 +38,7 @@ void do_syscall(Context *c) {
       break;
     case 2: // sys_open
       path = (char*)a[1];
-      printf("path: %s\n", path);
+      //printf("path: %s\n", path);
       c->GPRx = fs_open(path, a[2], a[3]);
       break;
     case 3: // sys_read
@@ -56,7 +56,7 @@ void do_syscall(Context *c) {
       c->GPRx = fs_lseek(a[1], a[2], a[3]);
       break;
     case 9: // sys_brk
-      end = c->GPR1;
+      end = c->GPR2;
       c->GPRx = 0;
       break;
     default: panic("Unhandled syscall ID = %d", a[0]);

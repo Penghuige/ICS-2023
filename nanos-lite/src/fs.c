@@ -76,6 +76,7 @@ static int get_index(int fd)
 int fs_open(const char *pathname, int flags, int mode) {
   Log("open %s", pathname);
   for(int i = 0; i < LENGTH(file_table); i++) {
+    printf("file_table[%d].name: %s\n", i, file_table[i].name);
     if(strcmp(pathname, file_table[i].name) == 0) {
       if(i <= 2)
       {

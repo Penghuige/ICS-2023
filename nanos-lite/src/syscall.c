@@ -38,6 +38,7 @@ void do_syscall(Context *c) {
       break;
     case 2: // sys_open
       path = (char*)a[1];
+      printf("path: %s\n", path);
       c->GPRx = fs_open(path, a[2], a[3]);
       break;
     case 3: // sys_read

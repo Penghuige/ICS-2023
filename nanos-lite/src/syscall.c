@@ -36,6 +36,7 @@ void do_syscall(Context *c) {
       c->GPRx = 0;
       break;
     case 2: // sys_open
+      Log("fs_open(%s, %d, %d) = %d",(const char *)c->GPR1, c->GPR2, c->GPR3, c->GPRx);
       c->GPRx = fs_open((const char*)a[1], a[2], a[3]);
       break;
     case 3: // sys_read

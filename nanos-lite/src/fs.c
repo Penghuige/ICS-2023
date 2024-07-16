@@ -61,7 +61,7 @@ void init_fs() {
 static int get_index(int fd)
 {
   int ret = -1;
-  for(int i = 0; i < open_index; i++)
+  for(int i = 3; i < open_index; i++)
   {
     //printf("name: %d\n", open_table[i].fd);
     if(fd == open_table[i].fd)
@@ -109,31 +109,6 @@ int fs_close(int fd) {
 }
 
 size_t fs_read(int fd, void *buf, size_t len) {
-    if (fd <= 2) {
-        Log("ignore read %s", file_table[fd].name);
-        return 0;
-    }
-
-    int target_index = get_index(fd);
-    if (target_index == -1) {
-        Log("file %s not open before read", file_table[fd].name);
-        return -1;
-    }
-
-    size_t read_len = len;
-    size_t open_offset = open_table[target_index].open_offset;
-    size_t size = file_table[fd].size;
-    size_t disk_offset = file_table[fd].disk_offset;
-
-    if (open_offset > size) return 0;
-
-    if (open_offset + len > size) read_len = size - open_offset;
-    ramdisk_read(buf, disk_offset + open_offset, read_len);
-    open_table[target_index].open_offset += read_len;
-    return read_len;
-}
-
-size_t my_fs_read(int fd, void *buf, size_t len) {
   int index = get_index(fd);
   Log("READ index: %d, name: %s, offset: %d", index, file_table[fd].name, open_table[index].open_offset);
   if(index == -1)
@@ -143,44 +118,20 @@ size_t my_fs_read(int fd, void *buf, size_t len) {
   size_t offset = open_table[index].open_offset;
   // printf("offset: %d\n", offset);
   // 他的buf就是指向的Elf_Ehdr ehdr, 第二个参数是偏移量，记录在文件表中的disk_offset，第三个参数是长度
-  size_t ret = ramdisk_read(buf, file_table[fd].disk_offset + offset, len);
+  size_t read_len = len;
+  // when the file size is not enough
+  if (file_table[fd].size < offset + len) {
+    read_len = file_table[fd].size - offset;
+  }
+  size_t ret = ramdisk_read(buf, file_table[fd].disk_offset + offset, read_len);
   // 怎么能用不知道的函数来写呢？
   // size_t ret = file_table[fd].read(buf, offset, len);
   printf("read ret: %d\n", ret);
   open_table[index].open_offset += ret;
   return ret;
 }
+
 size_t fs_write(int fd, const void *buf, size_t len) {
-    if (fd == 0) {
-        Log("ignore write %s", file_table[fd].name);
-        return 0;
-    }
-
-    if (fd == 1 || fd == 2) {
-        for (size_t i = 0; i < len; ++i)
-            putch(*((char *)buf + i));
-        return len;
-    }
-
-    int target_index = get_index(fd);
-    if (target_index == -1) {
-        Log("file %s not open before write", file_table[fd].name);
-        return -1;
-    }
-
-    size_t write_len = len;
-    size_t open_offset = open_table[target_index].open_offset;
-    size_t size = file_table[fd].size;
-    size_t disk_offset = file_table[fd].disk_offset;
-
-    if (open_offset > size) return 0;
-
-    if (open_offset + len > size) write_len = size - open_offset;
-    ramdisk_write(buf, disk_offset + open_offset, write_len);
-    open_table[target_index].open_offset += write_len;
-    return write_len;
-}
-size_t my_fs_write(int fd, const void *buf, size_t len) {
   int index = get_index(fd);
   Log("WRITE index: %d, name: %s, offset: %d", index, file_table[fd].name, open_table[index].open_offset);
   if(index == -1)
@@ -188,8 +139,13 @@ size_t my_fs_write(int fd, const void *buf, size_t len) {
     panic("file %d not found", fd);
   }
   size_t offset = open_table[index].open_offset;
-  size_t ret = ramdisk_write(buf, file_table[fd].disk_offset + offset, len);
-  printf("write ret: %d\n", ret);
+  size_t read_len = len;
+  // when the file size is not enough
+  if(file_table[fd].size < offset + len)
+  {
+    read_len = file_table[fd].size - offset;
+  }
+  size_t ret = ramdisk_write(buf, file_table[fd].disk_offset + offset, read_len);
 
   open_table[index].open_offset += ret;
   return ret;

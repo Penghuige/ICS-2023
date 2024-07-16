@@ -47,12 +47,12 @@ static Finfo file_table[] __attribute__((used)) = {
 };
 
 // it is not need to use in other files
-static int open_index = 0;
+static int open_index;
 static OFinfo open_table[LENGTH(file_table)];
 
 void init_fs() {
   // TODO: initialize the size of /dev/fb
-  //open_index = 0;
+  open_index = 0;
 }
 
 static int get_index(int fd)

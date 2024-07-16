@@ -28,6 +28,9 @@ int fs_close(int fd);
 
 enum {FD_STDIN, FD_STDOUT, FD_STDERR, FD_FB};
 
+extern size_t ramdisk_read(void *buf, size_t offset, size_t len);
+extern size_t ramdisk_write(const void *buf, size_t offset, size_t len);
+
 size_t invalid_read(void *buf, size_t offset, size_t len) {
   panic("should not reach here");
   return 0;
@@ -113,7 +116,9 @@ size_t fs_read(int fd, void *buf, size_t len) {
   }
   size_t offset = open_table[index].open_offset;
   // printf("offset: %d\n", offset);
-  size_t ret = file_table[fd].read(buf, offset, len);
+  size_t ret = ramdisk_read(buf, file_table[fd].disk_offset + offset, len);
+  // 怎么能用不知道的函数来写呢？
+  // size_t ret = file_table[fd].read(buf, offset, len);
   printf("ret: %d\n", ret);
   open_table[index].open_offset += ret;
   return ret;

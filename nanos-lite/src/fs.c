@@ -142,6 +142,7 @@ size_t fs_write(int fd, const void *buf, size_t len) {
 }
 
 size_t fs_lseek(int fd, size_t offset, int whence) {
+  Log("offset: %d, whence: %d", offset, whence);
   int index = get_index(fd);
   if(index == -1)
   {
@@ -156,6 +157,7 @@ size_t fs_lseek(int fd, size_t offset, int whence) {
       open_table[index].open_offset += offset;
       break;
     case SEEK_END:
+      printf("open_offset: %d, size: %d, offset: %d\n", open_table[index].open_offset, file_table[fd].size, offset);
       open_table[index].open_offset = file_table[fd].size + offset;
       break;
     default:

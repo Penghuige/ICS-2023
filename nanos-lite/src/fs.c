@@ -106,13 +106,15 @@ int fs_close(int fd) {
 
 size_t fs_read(int fd, void *buf, size_t len) {
   int index = get_index(fd);
-  Log("index: %d\n", index);
+  Log("index: %d", index);
   if(index == -1)
   {
     panic("file %d not found", fd);
   }
   size_t offset = open_table[index].open_offset;
+  printf("offset: %d\n", offset);
   size_t ret = file_table[fd].read(buf, offset, len);
+  printf("ret: %d\n", ret);
   open_table[index].open_offset += ret;
   return ret;
 }

@@ -109,29 +109,33 @@ int fs_close(int fd) {
 
 size_t fs_read(int fd, void *buf, size_t len) {
   int index = get_index(fd);
-  Log("index: %d, name: %s, offset: %d", index, file_table[fd].name, open_table[index].open_offset);
+  Log("READ index: %d, name: %s, offset: %d", index, file_table[fd].name, open_table[index].open_offset);
   if(index == -1)
   {
     panic("file %d not found", fd);
   }
   size_t offset = open_table[index].open_offset;
   // printf("offset: %d\n", offset);
+  // 他的buf就是指向的Elf_Ehdr ehdr, 第二个参数是偏移量，记录在文件表中的disk_offset，第三个参数是长度
   size_t ret = ramdisk_read(buf, file_table[fd].disk_offset + offset, len);
   // 怎么能用不知道的函数来写呢？
   // size_t ret = file_table[fd].read(buf, offset, len);
-  printf("ret: %d\n", ret);
+  printf("read ret: %d\n", ret);
   open_table[index].open_offset += ret;
   return ret;
 }
 
 size_t fs_write(int fd, const void *buf, size_t len) {
   int index = get_index(fd);
+  Log("WRITE index: %d, name: %s, offset: %d", index, file_table[fd].name, open_table[index].open_offset);
   if(index == -1)
   {
     panic("file %d not found", fd);
   }
   size_t offset = open_table[index].open_offset;
-  size_t ret = file_table[fd].write(buf, offset, len);
+  size_t ret = ramdisk_write(buf, file_table[fd].disk_offset + offset, len);
+  printf("write ret: %d\n", ret);
+
   open_table[index].open_offset += ret;
   return ret;
 }

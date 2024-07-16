@@ -25,6 +25,7 @@ void do_syscall(Context *c) {
   // when it call a sys_write, the syscall ID is 4, and the argument is the file descriptor
   // end is used to store the program break
   extern char end;
+  char *path;
   switch (a[0]) {
     case 0: // sys_exit
       c->GPRx = 0;
@@ -36,7 +37,8 @@ void do_syscall(Context *c) {
       c->GPRx = 0;
       break;
     case 2: // sys_open
-      c->GPRx = fs_open((const char*)a[1], 0, 0);
+      path = (char*)a[1];
+      c->GPRx = fs_open(path, a[2], a[3]);
       break;
     case 3: // sys_read
       c->GPRx = fs_read(a[1], (intptr_t*)a[2], a[3]);

@@ -1,83 +1,69 @@
 #include <common.h>
+#include <fs.h>
+#include "sys/errno.h"
 #include "syscall.h"
+#include <stdlib.h>
+#include <sys/time.h>
+#include <proc.h>
 
-void sys_exit(int code);
-int sys_yield();
-void sys_write(intptr_t *buf, size_t count);
-
-extern int fs_open(const char *pathname, int flags, int mode);
-extern int fs_read(int fd, intptr_t *buf, size_t count);
-extern int fs_close(int fd);
-extern int fs_lseek(int fd, size_t offset, int whence);
+int mm_brk(uintptr_t brk);
 
 void do_syscall(Context *c) {
-  uintptr_t a[4];
-  a[0] = c->GPR1;
-  a[1] = c->GPR2;
-  a[2] = c->GPR3;
+  uintptr_t a[4]; a[0] = c->GPR1; a[1] = c->GPR2; a[2] = c->GPR3;
   a[3] = c->GPR4;
 
-//#ifdef CONFIG_STRACE
-  printf("syscall ID = %d\n", a[0]);
-//#endif
-
-  // a[0] is a7 is the syscall ID, while a[1] is a0 is the syscall argument
-  // when it call a sys_write, the syscall ID is 4, and the argument is the file descriptor
-  // end is used to store the program break
-  extern char end;
   switch (a[0]) {
-    case 0: // sys_exit
-      sys_exit(0);
+    case SYS_exit: {
+      // context_uload(current, "/bin/nterm", (char *const[]){"/bin/nterm", NULL}, (char *[]){NULL});
+      // switch_boot_pcb();
+      // yield();
+      // assert(0);
+      halt(a[1]);
+      break;
+    }
+    case SYS_yield:
+      yield();
       c->GPRx = 0;
       break;
-    case 1: // sys_yield
-      sys_yield();
-      // return value is zero
+    case SYS_write:
+      c->GPRx = fs_write(a[1], (void *) a[2], a[3]);
+      break;
+    case SYS_brk:
+      c->GPRx = mm_brk(a[1]);
+      break;
+    case SYS_read:
+      c->GPRx = fs_read(a[1], (void *) a[2], a[3]);
+      break;
+    case SYS_open:
+      c->GPRx = fs_open((char *) a[1], a[2], a[3]);
+      break;
+    case SYS_close:
       c->GPRx = 0;
       break;
-    case 2: // sys_open
-      //path = "/share/files/num";
-      //printf("path: %s\n", "hallo?");
-      c->GPRx = fs_open((char*)a[1], a[2], a[3]);
-      break;
-    case 3: // sys_read
-      c->GPRx = fs_read(a[1], (intptr_t*)a[2], a[3]);
-      break;
-    case 4: // sys_write
-      sys_write((intptr_t*)a[2], a[3]);
-      //printf("%s", (char*)a[2]);
-      c->GPRx = a[3];
-      break;
-    case 7: // sys_close
-      c->GPRx = fs_close(a[1]);
-      break;
-    case 8: // sys_lseek
+    case SYS_lseek:
       c->GPRx = fs_lseek(a[1], a[2], a[3]);
       break;
-    case 9: // sys_brk
-      end = c->GPR2;
+    case SYS_gettimeofday:
+      if (a[1] != 0) {
+        uint64_t us = io_read(AM_TIMER_UPTIME).us;
+        struct timeval *tv = (struct timeval *) a[1];
+        tv->tv_sec = us / 1000000;
+        tv->tv_usec = us % 1000000;
+      }
       c->GPRx = 0;
       break;
+    case SYS_execve:
+      context_uload(current, (char *) a[1], (char **) a[2], (char **) a[3]);
+      if (current->cp == NULL) {
+        extern int nanos_errno;
+        c->GPRx = -nanos_errno;
+      } else {
+        // TODO free page
+        switch_boot_pcb();
+        yield();
+        assert(0);
+      }
+      break;
     default: panic("Unhandled syscall ID = %d", a[0]);
-  }
-}
-
-void sys_exit(int code) {
-  halt(code);
-}
-
-int sys_yield() {
-  //asm volatile("li a7, 0; ecall");
-  yield();
-  return 0;
-}
-
-int sys_read(int fd, intptr_t *buf, size_t count) {
-  return fs_read(fd, buf, count);
-}
-
-void sys_write(intptr_t *buf, size_t count){
-  for (int i = 0; i < count; i++) {
-    putch(*((char*)buf + i));
   }
 }

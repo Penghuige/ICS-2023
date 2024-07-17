@@ -21,7 +21,7 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   {
     // yield value is -1, but event_yield is 1
     NO = 1; // event_yield
-    epc += 4;
+    //epc += 4;
   }
   cpu.csr.mcause = NO;
   // false instruction

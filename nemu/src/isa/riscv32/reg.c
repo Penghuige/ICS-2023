@@ -39,7 +39,7 @@ void isa_reg_display() {
 		printf("\n");
 		// printf("%s\n", reg_name(i));
 	}
-  printf("mtvec\t0x%08x\t mepc\t0x%08x\t\nmcause\t0x%08x\t mstatus\t0x%0x8\t", cpu.csr.mtvec, cpu.csr.mepc, cpu.csr.mcause, cpu.csr.mstatus);
+  printf("mtvec\t0x%08x\t mepc\t0x%08x\t mcause\t0x%08x\t mstatus\t0x%0x8\t\n", cpu.csr.mtvec, cpu.csr.mepc, cpu.csr.mcause, cpu.csr.mstatus);
 }
 
 

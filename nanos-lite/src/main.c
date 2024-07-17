@@ -7,10 +7,7 @@ void init_irq(void);
 void init_fs(void);
 void init_proc(void);
 
-char *__mainargs;
-
-int main(char *mainargs) {
-  __mainargs = mainargs;
+int main() {
   extern const char logo[];
   printf("%s", logo);
   Log("'Hello World!' from Nanos-lite");

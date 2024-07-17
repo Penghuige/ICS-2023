@@ -35,7 +35,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 
   assert(*(uint32_t *)ehdr.e_ident == 0x464c457f);
 
-  printf("ehdr.e_phnum: %d\n", ehdr.e_phnum);
+  //printf("ehdr.e_phnum: %d\n", ehdr.e_phnum);
 
   Elf_Phdr phdr[ehdr.e_phnum];
 
@@ -68,7 +68,7 @@ static uintptr_t loader_temp(PCB *pcb, const char *filename) {
 
   assert(*(uint32_t *)ehdr.e_ident == 0x464c457f);
 
-  printf("ehdr.e_phnum: %d\n", ehdr.e_phnum);
+  //printf("ehdr.e_phnum: %d\n", ehdr.e_phnum);
 
   Elf_Phdr phdr[ehdr.e_phnum];
 

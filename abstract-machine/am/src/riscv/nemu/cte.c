@@ -28,6 +28,7 @@ bool cte_init(Context*(*handler)(Event, Context*)) {
   // 内联汇编,异常处理的入口地址设置为__am_asm_trap。
   // %0 是内联汇编中的操作数占位符，它表示内联汇编指令中的第一个操作数。在这里的内联汇编指令中，%0 用来引用第一个输入操作数，即 "r"(__am_asm_trap) 中的 __am_asm_trap。
   //"r" 约束表示将一个寄存器作为输入操作数
+  // put the address of __am_asm_trap into mtvec
   // initialize exception entry
   asm volatile("csrw mtvec, %0" : : "r"(__am_asm_trap));
 

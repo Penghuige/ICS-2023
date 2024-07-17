@@ -27,7 +27,7 @@ void do_syscall(Context *c) {
   extern char end;
   switch (a[0]) {
     case 0: // sys_exit
-      sys_exit(0);
+      sys_exit(a[1]);
       c->GPRx = 0;
       break;
     case 1: // sys_yield

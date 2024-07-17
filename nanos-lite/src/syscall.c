@@ -37,7 +37,7 @@ void do_syscall(Context *c) {
       break;
     case 2: // sys_open
       //path = "/share/files/num";
-      //printf("path: %s\n", path);
+      printf("path: %s\n", "hallo?");
       c->GPRx = fs_open((char*)a[1], a[2], a[3]);
       break;
     case 3: // sys_read

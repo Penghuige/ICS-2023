@@ -28,8 +28,8 @@ void do_syscall(Context *c) {
   char *path;
   switch (a[0]) {
     case 0: // sys_exit
+      sys_exit(a[1]);
       c->GPRx = 0;
-      sys_exit(c->GPRx);
       break;
     case 1: // sys_yield
       sys_yield();

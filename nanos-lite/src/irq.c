@@ -2,6 +2,9 @@
 
 void do_syscall(Context *c);
 
+Context *schedule(Context *prev);
+
+
 static Context* do_event(Event e, Context* c) {
   switch (e.event) {
     case EVENT_PAGEFAULT:
@@ -9,10 +12,13 @@ static Context* do_event(Event e, Context* c) {
       while (1);
       return c;
     case EVENT_IRQ_TIMER:
+      return schedule(c);
     case EVENT_IRQ_IODEV:
       // Log("EVENT_IRQ_IODEV");
       return c;
     case EVENT_YIELD:
+      return schedule(c);
+      break;
     case EVENT_SYSCALL:
       do_syscall(c);
       break;

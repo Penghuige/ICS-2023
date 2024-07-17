@@ -4,6 +4,7 @@
 #include <fs.h>
 #include <stdint.h>
 #include <memory.h>
+#include <wchar.h>
 
 #ifdef __LP64__
 # define Elf_Ehdr Elf64_Ehdr
@@ -41,6 +42,7 @@ void context_kload(PCB *pcb, void (*entry)(void *), void *arg) {
 }
 
 int nanos_errno;
+
 
 static uintptr_t loader(PCB *pcb, const char *filename) {
   pcb->max_brk = 0;

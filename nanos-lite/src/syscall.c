@@ -25,10 +25,9 @@ void do_syscall(Context *c) {
   // when it call a sys_write, the syscall ID is 4, and the argument is the file descriptor
   // end is used to store the program break
   extern char end;
-  char *path;
   switch (a[0]) {
     case 0: // sys_exit
-      sys_exit(a[1]);
+      sys_exit(0);
       c->GPRx = 0;
       break;
     case 1: // sys_yield
@@ -37,9 +36,9 @@ void do_syscall(Context *c) {
       c->GPRx = 0;
       break;
     case 2: // sys_open
-      path = "/share/files/num";
+      //path = "/share/files/num";
       //printf("path: %s\n", path);
-      c->GPRx = fs_open(path, a[2], a[3]);
+      c->GPRx = fs_open((char*)a[1], a[2], a[3]);
       break;
     case 3: // sys_read
       c->GPRx = fs_read(a[1], (intptr_t*)a[2], a[3]);
@@ -68,8 +67,8 @@ void sys_exit(int code) {
 }
 
 int sys_yield() {
-  asm volatile("li a7, 0; ecall");
-  //yield();
+  //asm volatile("li a7, 0; ecall");
+  yield();
   return 0;
 }
 

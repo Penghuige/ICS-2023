@@ -11,6 +11,7 @@
 #endif
 
 extern size_t ramdisk_read(void *buf, size_t offset, size_t len);
+extern size_t ramdisk_write(const void *buf, size_t offset, size_t len);
 
 extern int fs_open(const char *pathname, int flags, int mode);
 extern int fs_close(int fd);
@@ -50,6 +51,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
       // need to set offset
       assert(fs_lseek(fd, phdr[i].p_offset, SEEK_SET) == phdr[i].p_offset);
       assert(fs_read(fd, (void *)phdr[i].p_vaddr, phdr[i].p_filesz) == phdr[i].p_filesz);
+      // set zero
       memset((void *)(phdr[i].p_vaddr + phdr[i].p_filesz), 0, phdr[i].p_memsz - phdr[i].p_filesz);
     }
   }

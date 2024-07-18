@@ -27,6 +27,8 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   // false instruction
   cpu.csr.mepc = epc;
 
+  cpu.csr.mstatus = NO;
+
   return cpu.csr.mtvec;
 }
 

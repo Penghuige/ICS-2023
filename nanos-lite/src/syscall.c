@@ -63,7 +63,7 @@ void do_syscall(Context *c) {
 }
 
 void sys_exit(int code) {
-  halt(code);
+  halt(0);
 }
 
 int sys_yield() {

@@ -32,7 +32,7 @@ bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
         }
         printf("\n");
       }
-      printf("mtvec\t0x%08x\tmepc\t0x%08x\tmcause\t0x%08x\tmstatus\t0x%08x\n", ref_r->csr.mtvec, ref_r->csr.mepc, ref_r->csr.mcause, ref_r->csr.mstatus);
+      printf("\e[1;31mtvec\t0x%08x\tmepc\t0x%08x\tmcause\t0x%08x\tmstatus\t0x%08x\n", ref_r->csr.mtvec, ref_r->csr.mepc, ref_r->csr.mcause, ref_r->csr.mstatus);
       return false;
     }
   }

@@ -10,9 +10,6 @@ Context* __am_irq_handle(Context *c) {
     Event ev = {0};
     switch (c->mcause) {
       // 是因为在yield函数中，我们调用了ecall指令，这个指令会触发一个异常，异常号为-1。
-    case -1:
-      ev.event = EVENT_YIELD;
-      break;
     case 8:
     case 11:
       if (c->GPR1 == -1)

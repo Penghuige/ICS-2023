@@ -24,6 +24,7 @@ bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
       extern const char *regs[];
       printf("\e[1;31mthe different register is regs %s, dut is %08x, ref is %08x\n", regs[i], cpu.gpr[i], ref_r->gpr[i]);
       // disaplay all the right register
+      printf("\e[1;31m$pc\t0x%x\n\e[0m", ref_r->pc);
       for(int j = 0; j < ARRLEN(ref_r->gpr)/4; j++)
       {
         for(int k = 0; k < 4; k++)

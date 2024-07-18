@@ -31,8 +31,7 @@ void do_syscall(Context *c) {
       c->GPRx = 0;
       break;
     case 1: // sys_yield
-      sys_yield();
-      c->GPR1 = 0;
+      yield();
       // return value is zero
       c->GPRx = 0;
       break;
@@ -68,8 +67,8 @@ void sys_exit(int code) {
 }
 
 int sys_yield() {
-  asm volatile("li a7, 0; ecall");
-  //yield();
+  //asm volatile("li a7, 0; ecall");
+  yield();
   return 0;
 }
 

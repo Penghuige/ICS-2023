@@ -52,7 +52,7 @@ static vaddr_t *csr_register(word_t imm)
 #define immB() do { *imm = SEXT((BITS(i, 31, 31) << 12) | (BITS(i, 7, 7) << 11) | (BITS(i, 30, 25) << 5) | (BITS(i, 11, 8) << 1), 13); } while(0)
 #define immJ() do { *imm = SEXT((BITS(i, 31, 31) << 20) | (BITS(i, 19, 12) << 12) | (BITS(i, 20, 20) << 11) | (BITS(i, 30, 21) << 1), 21); } while(0)
 #define immR() do { /* No immediate value for R-type instructions */ } while(0)
-#define ECALL(dnpc) do {dnpc = isa_raise_intr(cpu.csr.prv == PRV_M ? MCAUSE_ECALL_FROM_M:MCAUSE_ECALL_FROM_U, dnpc); } while(0)
+#define ECALL(dnpc) do {dnpc = isa_raise_intr(cpu.csr.prv == PRV_M ? MCAUSE_ECALL_FROM_M:MCAUSE_ECALL_FROM_U, s->pc); } while(0)
 #define CSR(i) *csr_register(i)
 
 static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_t *imm, int type) {
@@ -213,7 +213,7 @@ INSTPAT_START();
   INSTPAT("??????? ????? ????? 010 ????? 11100 11", csrrs  , I, R(rd) = CSR(imm); CSR(imm) |= src1);
   INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw  , I, R(rd) = CSR(imm); CSR(imm) = src1);
   INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , I, etrace_record(s); ECALL(s->dnpc));
-  INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , R, s->dnpc = CSR(0x341));
+  INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , R, s->dnpc = cpu.csr.mepc);
 
   INSTPAT("??????? ????? ????? ??? ????? ????? ??", inv    , N, INV(s->pc));
   INSTPAT_END();

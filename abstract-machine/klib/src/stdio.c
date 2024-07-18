@@ -128,6 +128,30 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
             out[j++] = s[t];
           }
           break;
+        case 'x':
+          d = va_arg(ap, int);
+          char hex[17] = {"0123456789abcdef"};
+          char hex_num[10] = {0};
+          int k = 0;
+          if(d == 0)
+          {
+            out[j++] = '0';
+          }
+          else
+          {
+            while(d != 0)
+            {
+              hex_num[k++] = hex[d % 16];
+              d /= 16;
+            }
+            out[j++] = '0';
+            out[j++] = 'x';
+            for(k--; k >= 0; k--)
+            {
+              out[j++] = hex_num[k];
+            }
+          }
+          break;
         case 'd':
           d = va_arg(ap, int);
           //itoa(d, buff, 10);
@@ -199,6 +223,25 @@ int sprintf(char *out, const char *fmt, ...) {
           }
           break;
         }
+        case 'x':
+          int d = va_arg(ap, int);
+          char hex[17] = "0123456789abcdef";
+          char hex_num[10] = {0};
+          int k = 0;
+          if (d == 0) {
+            out[j++] = '0';
+          } else {
+            while (d != 0) {
+              hex_num[k++] = hex[d % 16];
+              d /= 16;
+            }
+            out[j++] = '0';
+            out[j++] = 'x';
+            for (k--; k >= 0; k--) {
+              out[j++] = hex_num[k];
+            }
+          }
+          break;
         case 'd': {
           int d = va_arg(ap, int);
           char buff[12]; // Enough to hold all digits of a 32-bit integer, including sign and null terminator
@@ -280,6 +323,30 @@ int snprintf(char *out, size_t n, const char *fmt, ...) {
           c = va_arg(ap, int);
           putch(c);
           break;
+        case 'x':
+          d = va_arg(ap, int);
+          char hex[17] = {"0123456789abcdef"};
+          char hex_num[10] = {0};
+          int k = 0;
+          if(d == 0)
+          {
+            out[j++] = '0';
+          }
+          else
+          {
+            while(d != 0)
+            {
+              hex_num[k++] = hex[d % 16];
+              d /= 16;
+            }
+            out[j++] = '0';
+            out[j++] = 'x';
+            for(k--; k >= 0; k--)
+            {
+              out[j++] = hex_num[k];
+            }
+          }
+          break;
         case 'd':
           d = va_arg(ap, int);
           //itoa(d, buff, 10);
@@ -349,6 +416,30 @@ int vsnprintf(char *out, size_t n, const char *fmt, va_list ap) {
           for(t = 0; s[t] != '\0'; t++)
           {
             out[j++] = s[t];
+          }
+          break;
+        case 'x':
+          d = va_arg(ap, int);
+          char hex[17] = {"0123456789abcdef"};
+          char hex_num[10] = {0};
+          int k = 0;
+          if(d == 0)
+          {
+            out[j++] = '0';
+          }
+          else
+          {
+            while(d != 0)
+            {
+              hex_num[k++] = hex[d % 16];
+              d /= 16;
+            }
+            out[j++] = '0';
+            out[j++] = 'x';
+            for(k--; k >= 0; k--)
+            {
+              out[j++] = hex_num[k];
+            }
           }
           break;
         case 'd':

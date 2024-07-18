@@ -37,23 +37,27 @@ bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
   }
   for(int i = 0; i < ARRLEN(ref_r->gpr); i++)
   {
-    if(cpu.gpr[i] != ref_r->gpr[i] || !sign){
+    if(cpu.gpr[i] != ref_r->gpr[i]){
       extern const char *regs[];
       printf("\e[1;31mthe different register is regs %s, dut is %08x, ref is %08x\n\e[0m", regs[i], cpu.gpr[i], ref_r->gpr[i]);
-      // disaplay all the right register
-      printf("\e[1;31m$pc\t0x%x\n\e[0m", ref_r->pc);
-      for(int j = 0; j < ARRLEN(ref_r->gpr)/4; j++)
-      {
-        for(int k = 0; k < 4; k++)
-        {
-          printf("\e[1;31m$%s\t0x%08x\t\e[0m", regs[4*j+k], ref_r->gpr[4*j+k]);
-        }
-        printf("\n");
-      }
-      printf("\e[1;31mmtvec\t0x%08x\tmepc\t0x%08x\tmcause\t0x%08x\tmstatus\t0x%08x\n\e[0m", ref_r->csr.mtvec, ref_r->csr.mepc, ref_r->csr.mcause, ref_r->csr.mstatus);
       sign = false;
       break;
     }
+  }
+  if(!sign)
+  {
+     // disaplay all the right register
+     printf("\e[1;31m$pc\t0x%x\n\e[0m", ref_r->pc);
+     extern const char *regs[];
+     for(int j = 0; j < ARRLEN(ref_r->gpr)/4; j++)
+     {
+       for(int k = 0; k < 4; k++)
+       {
+         printf("\e[1;31m$%s\t0x%08x\t\e[0m", regs[4*j+k], ref_r->gpr[4*j+k]);
+       }
+       printf("\n");
+     }
+     printf("\e[1;31mmtvec\t0x%08x\tmepc\t0x%08x\tmcause\t0x%08x\tmstatus\t0x%08x\n\e[0m", ref_r->csr.mtvec, ref_r->csr.mepc, ref_r->csr.mcause, ref_r->csr.mstatus);
   }
   // all new
   return sign;

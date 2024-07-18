@@ -63,12 +63,12 @@ void do_syscall(Context *c) {
 }
 
 void sys_exit(int code) {
-  halt(0);
+  halt(code);
 }
 
 int sys_yield() {
-  asm volatile("li a7, 0; ecall");
-  //yield();
+  //asm volatile("li a7, 0; ecall");
+  yield();
   return 0;
 }
 

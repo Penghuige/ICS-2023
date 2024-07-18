@@ -13,7 +13,10 @@ Context* __am_irq_handle(Context *c) {
     case 8:
     case 11:
       if (c->GPR1 == -1)
+      {
+        printf("c->GPR1:%d\n", c->GPR1);
         ev.event = EVENT_YIELD;
+      }
       else
         ev.event = EVENT_SYSCALL;
       break;

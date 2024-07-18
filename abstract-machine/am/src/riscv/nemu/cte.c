@@ -21,10 +21,11 @@ Context* __am_irq_handle(Context *c) {
       default: ev.event = EVENT_ERROR; break;
     }
 
-    if(c->GPR1 == -1)
+    if(c->GPR1 < 0)
     {
-      printf("hallo?\n");
+      printf("pre mepc: %x\n", c->mepc);
       c->mepc += 4;
+      printf("after mecp: %x\n", c->mepc);
     }
     c = user_handler(ev, c);
     assert(c != NULL);

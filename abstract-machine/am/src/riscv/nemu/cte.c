@@ -23,6 +23,10 @@ Context* __am_irq_handle(Context *c) {
     }
 
     c = user_handler(ev, c);
+    if(c->gpr[17] == -1)
+    {
+      c->mepc += 4;
+    }
     assert(c != NULL);
   }
 

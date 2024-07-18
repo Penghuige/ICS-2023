@@ -18,6 +18,7 @@
 #include "../local-include/reg.h"
 
 bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
+  bool sign = true;
   for(int i = 0; i < ARRLEN(ref_r->gpr); i++)
   {
     if(cpu.gpr[i] != ref_r->gpr[i]){
@@ -34,27 +35,28 @@ bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
         printf("\n");
       }
       printf("\e[1;31mmtvec\t0x%08x\tmepc\t0x%08x\tmcause\t0x%08x\tmstatus\t0x%08x\n\e[0m", ref_r->csr.mtvec, ref_r->csr.mepc, ref_r->csr.mcause, ref_r->csr.mstatus);
-      return false;
+      sign = false;
+      break;
     }
   }
   // all new
   if(cpu.csr.mepc != ref_r->csr.mepc){
     printf("\e[1;31mthe different register is mepc, dut is %08x, ref is %08x\n", cpu.csr.mepc, ref_r->csr.mepc);
-    return false;
+    sign = false;
   }
   if(cpu.csr.mtvec != ref_r->csr.mtvec){
     printf("\e[1;31mthe different register is mtvec, dut is %08x, ref is %08x\n", cpu.csr.mtvec, ref_r->csr.mtvec);
-    return false;
+    sign = false;
   }
   if(cpu.csr.mstatus != ref_r->csr.mstatus){
     printf("\e[1;31mthe different register is mstatus, dut is %08x, ref is %08x\n", cpu.csr.mstatus, ref_r->csr.mstatus);
-    return false;
+    sign = false;
   }
   if(cpu.csr.mcause != ref_r->csr.mcause){
     printf("\e[1;31mthe different register is mcause, dut is %08x, ref is %08x\n", cpu.csr.mcause, ref_r->csr.mcause);
-    return false;
+    sign = false;
   }
-  return true;
+  return sign;
 }
 
 void isa_difftest_attach() {

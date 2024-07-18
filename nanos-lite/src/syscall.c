@@ -31,6 +31,8 @@ void do_syscall(Context *c) {
       c->GPRx = 0;
       break;
     case 1: // sys_yield
+      yield();
+      c->GPR1 = 0;
       // return value is zero
       c->GPRx = 0;
       break;

@@ -21,7 +21,7 @@ Context* __am_irq_handle(Context *c) {
       default: ev.event = EVENT_ERROR; break;
     }
 
-    if(c->GPR1 < 0)
+    if(c->GPR1 == -1)
     {
       printf("pre mepc: %x\n", c->mepc);
       c->mepc += 4;

@@ -23,6 +23,7 @@ Context* __am_irq_handle(Context *c) {
 
     if(c->GPR1 == -1)
     {
+      printf("hallo?\n");
       c->mepc += 4;
     }
     c = user_handler(ev, c);

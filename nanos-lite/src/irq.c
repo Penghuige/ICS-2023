@@ -9,6 +9,7 @@ static Context* do_event(Event e, Context* c) {
 //#endif
   switch (e.event) {
     case EVENT_YIELD:
+      break;
     case EVENT_SYSCALL:
       do_syscall(c);
       break;

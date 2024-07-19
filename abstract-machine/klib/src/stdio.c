@@ -23,7 +23,6 @@ char* itoa(int value, char* str, int base) {
   {
     *ptr++ = '0';
     *ptr++ = 'x';
-    value &= 0xffffffff;
   }
   low = ptr;
   do {

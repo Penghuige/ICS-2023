@@ -19,19 +19,15 @@ char* itoa(int value, char* str, int base) {
   if (value < 0 && base == 10) {
     *ptr++ = '-';
   }
-  if(value < 0)
-  {
-    value = -value;
-  }
   if(base == 16)
   {
     *ptr++ = '0';
     *ptr++ = 'x';
+    value &= 0x0fffffff;
   }
   low = ptr;
   do {
-    putch("0123456789abcdefghijklmnopqrstuvwxyz"[value % base]);
-    *ptr++ = "0123456789abcdefghijklmnopqrstuvwxyz"[value % base];
+    *ptr++ = "zyxwvutsrqponmlkjihgfedcba9876543210123456789abcdefghijklmnopqrstuvwxyz"[35 + value % base];
     value /= base;
   } while (value);
   *ptr-- = '\0';

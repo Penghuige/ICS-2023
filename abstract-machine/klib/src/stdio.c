@@ -8,8 +8,9 @@
 
 static char sprint_buf[1024];
 
-static char *_itoa(int num, char *buff, uint16_t base)
+static char *_itoa(int num1, char *buff, uint16_t base)
 {
+  uint32_t num = num1;
   static const char sym[] = "0123456789abcdef";
 
   char tmp[32];

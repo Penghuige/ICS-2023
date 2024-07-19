@@ -147,6 +147,13 @@ size_t fs_write(int fd, const void *buf, size_t len) {
   {
     panic("file %d not found", fd);
   }
+  if(index == FD_STDOUT || fd == FD_STDERR)
+  {
+    for(int i = 0; i < len; i++)
+    {
+      putch(((char *)buf)[i]);
+    }
+  }
   size_t offset = open_table[index].open_offset;
   size_t read_len = len;
   // when the file size is not enough
@@ -158,13 +165,6 @@ size_t fs_write(int fd, const void *buf, size_t len) {
 
   open_table[index].open_offset += ret;
 
-  if(fd == FD_STDOUT || fd == FD_STDERR)
-  {
-    for(int i = 0; i < ret; i++)
-    {
-      putch(((char *)buf)[i]);
-    }
-  }
   return ret;
 }
 

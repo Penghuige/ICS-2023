@@ -74,8 +74,13 @@ static void etrace_record(Decode *s)
 {
   Log("exception occur at pc:%08x, exception NO:%d", s->pc, R(17));
 }
+static void etrace_return(Decode *s)
+{
+  Log("return from exception at pc:%08x, to %08x", s->pc, s->dnpc);
+}
 #else
 static void etrace_record(Decode *s) {}
+static void etrace_return(Decode *s) {}
 #endif
 
 
@@ -214,7 +219,7 @@ INSTPAT_START();
   INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw  , I, R(rd) = CSR(imm); CSR(imm) = src1);
   INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , I, etrace_record(s); ECALL(s->dnpc));
   // reset the previous prv, set the mpp to PRV_U(0), reset the previous mie to mpie, set mpie to 1
-  INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , R, cpu.csr.prv = cpu.csr.mpp, cpu.csr.mpp = 0, cpu.csr.mie = cpu.csr.mpie, cpu.csr.mpie = 1;s->dnpc = cpu.csr.mepc);
+  INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , R, cpu.csr.prv = cpu.csr.mpp, cpu.csr.mpp = 0, cpu.csr.mie = cpu.csr.mpie, cpu.csr.mpie = 1;s->dnpc = cpu.csr.mepc; etrace_return(s));
 
   INSTPAT("??????? ????? ????? ??? ????? ????? ??", inv    , N, INV(s->pc));
   INSTPAT_END();

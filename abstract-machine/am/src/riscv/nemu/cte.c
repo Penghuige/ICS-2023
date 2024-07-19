@@ -21,7 +21,7 @@ Context* __am_irq_handle(Context *c) {
       default: ev.event = EVENT_ERROR; break;
     }
 
-    if(c->GPR1 == -1 || (c->GPR1 == 1 && ev.event == EVENT_SYSCALL))
+    if(c->GPR1 == -1 || ( 1 && ev.event == EVENT_SYSCALL))
     {
       // printf("pre mepc: 0x%x\n", c->mepc);
       c->mepc += 4;

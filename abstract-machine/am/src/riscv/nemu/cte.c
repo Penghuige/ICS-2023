@@ -25,7 +25,7 @@ Context* __am_irq_handle(Context *c) {
     {
       printf("pre mepc: %x\n", c->mepc);
       c->mepc += 4;
-      printf("after mecp: %x\n", c->mepc);
+      printf("after mecp: %d\n", c->mepc);
     }
     c = user_handler(ev, c);
     assert(c != NULL);

@@ -27,6 +27,7 @@ char* itoa(int value, char* str, int base) {
   low = ptr;
   do {
     *ptr++ = "zyxwvutsrqponmlkjihgfedcba9876543210123456789abcdefghijklmnopqrstuvwxyz"[35 + value % base];
+    putch(*ptr);
     value /= base;
   } while (value);
   *ptr-- = '\0';
@@ -78,7 +79,6 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
           itoa(d, buff, 16);
           for(t = 0; buff[t] != '\0'; t++)
           {
-            putch(buff[t]);
             out[j++] = buff[t];
           }
           break;

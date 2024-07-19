@@ -93,12 +93,12 @@ void naive_uload(PCB *pcb, const char *filename) {
   {
     printf("filename is NULL\n");
   }
-  uintptr_t entry = loader_temp(pcb, filename);
+  uintptr_t entry = loader(pcb, filename);
   Log("Jump to entry = %p", entry);
   ((void(*)())entry) ();
   if(0)
   {
-    loader(pcb, filename);
+    loader_temp(pcb, filename);
   }
 }
 

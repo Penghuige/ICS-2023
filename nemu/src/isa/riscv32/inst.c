@@ -219,7 +219,7 @@ INSTPAT_START();
   INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw  , I, R(rd) = CSR(imm); CSR(imm) = src1);
   INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , I, etrace_record(s); ECALL(s->dnpc));
   // reset the previous prv, set the mpp to PRV_U(0), reset the previous mie to mpie, set mpie to 1
-  INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , R, getchar(); s->dnpc = cpu.csr.mepc;cpu.csr.prv = cpu.csr.mpp, cpu.csr.mpp = 0, cpu.csr.mie = cpu.csr.mpie, cpu.csr.mpie = 1; etrace_return(s));
+  INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , R, s->dnpc = cpu.csr.mepc;cpu.csr.prv = cpu.csr.mpp, cpu.csr.mpp = 0, cpu.csr.mie = cpu.csr.mpie, cpu.csr.mpie = 1; etrace_return(s));
 
   INSTPAT("??????? ????? ????? ??? ????? ????? ??", inv    , N, INV(s->pc));
   INSTPAT_END();

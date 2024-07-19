@@ -13,6 +13,7 @@ int main() {
   int i, n;
   for (i = 500; i < 1000; i ++) {
     fscanf(fp, "%d", &n);
+    // away false here
     assert(n == i + 1);
   }
 
@@ -20,6 +21,8 @@ int main() {
   for (i = 0; i < 500; i ++) {
     fprintf(fp, "%4d\n", i + 1 + 1000);
   }
+
+  printf("here ok!\n");
 
   for (i = 500; i < 1000; i ++) {
     fscanf(fp, "%d", &n);

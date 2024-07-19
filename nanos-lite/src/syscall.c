@@ -43,7 +43,7 @@ void do_syscall(Context *c) {
       c->GPRx = fs_read(a[1], (intptr_t*)a[2], a[3]);
       break;
     case 4: // sys_write
-      sys_write((intptr_t*)a[1], a[2]);
+      sys_write((intptr_t*)a[2], a[3]);
       //printf("%s", (char*)a[2]);
       c->GPRx = a[3];
       break;

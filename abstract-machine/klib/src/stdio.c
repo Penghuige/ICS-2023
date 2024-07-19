@@ -19,6 +19,11 @@ char* itoa(int value, char* str, int base) {
   if (value < 0 && base == 10) {
     *ptr++ = '-';
   }
+  if(base == 16)
+  {
+    *ptr++ = '0';
+    *ptr++ = 'x';
+  }
   low = ptr;
   do {
     *ptr++ = "zyxwvutsrqponmlkjihgfedcba9876543210123456789abcdefghijklmnopqrstuvwxyz"[35 + value % base];

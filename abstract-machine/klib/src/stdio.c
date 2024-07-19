@@ -8,6 +8,7 @@
 static char sprint_buf[1024];
 
 char* itoa(int num, char* str, int base) {
+  // negative!!!
   uint32_t value = num;
   char* rc;
   char* ptr;
@@ -19,11 +20,6 @@ char* itoa(int num, char* str, int base) {
   rc = ptr = str;
   if (value < 0 && base == 10) {
     *ptr++ = '-';
-  }
-  if(base == 16)
-  {
-    *ptr++ = '0';
-    *ptr++ = 'x';
   }
   low = ptr;
   do {

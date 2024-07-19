@@ -23,10 +23,9 @@ Context* __am_irq_handle(Context *c) {
 
     if(c->GPR1 == -1)
     {
-      printf("pre mepc: %x\n", c->mepc);
-      printf("pre mepc: %d\n", c->mepc);
+      printf("pre mepc: 0x%x\n", c->mepc);
       c->mepc += 4;
-      printf("after mecp: %d\n", c->mepc);
+      printf("after mecp: 0x%x\n", c->mepc);
     }
     c = user_handler(ev, c);
     assert(c != NULL);

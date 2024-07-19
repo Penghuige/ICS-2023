@@ -7,6 +7,32 @@
 
 static char sprint_buf[1024];
 
+char* itoa(int value, char* str, int base) {
+  char* rc;
+  char* ptr;
+  char* low;
+  if (base < 2 || base > 36) {
+    *str = '\0';
+    return str;
+  }
+  rc = ptr = str;
+  if (value < 0 && base == 10) {
+    *ptr++ = '-';
+  }
+  low = ptr;
+  do {
+    *ptr++ = "zyxwvutsrqponmlkjihgfedcba9876543210123456789abcdefghijklmnopqrstuvwxyz"[35 + value % base];
+    value /= base;
+  } while (value);
+  *ptr-- = '\0';
+  while (low < ptr) {
+    char tmp = *low;
+    *low++ = *ptr;
+    *ptr-- = tmp;
+  }
+  return rc;
+}
+
 int printf(const char *fmt, ...)
 {
   va_list args; 
@@ -130,26 +156,10 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
           break;
         case 'x':
           d = va_arg(ap, int);
-          char hex[17] = "0123456789abcdef";
-          char hex_num[10] = {0};
-          int k = 0;
-          if(d == 0)
+          itoa(d, buff, 16);
+          for(t = 0; buff[t] != '\0'; t++)
           {
-            out[j++] = '0';
-          }
-          else
-          {
-            while(d != 0)
-            {
-              hex_num[k++] = hex[d % 16];
-              d /= 16;
-            }
-            out[j++] = '0';
-            out[j++] = 'x';
-            for(k--; k >= 0; k--)
-            {
-              out[j++] = hex_num[k];
-            }
+            out[j++] = buff[t];
           }
           break;
         case 'd':
@@ -205,6 +215,7 @@ int sprintf(char *out, const char *fmt, ...) {
   size_t i = 0;
   size_t j = 0;
   char c;
+  int d;
 
   va_list ap;
   va_start(ap, fmt);
@@ -224,26 +235,17 @@ int sprintf(char *out, const char *fmt, ...) {
           break;
         }
         case 'x':
-          int d = va_arg(ap, int);
-          char hex[17] = "0123456789abcdef";
-          char hex_num[10] = {0};
-          int k = 0;
-          if (d == 0) {
-            out[j++] = '0';
-          } else {
-            while (d != 0) {
-              hex_num[k++] = hex[d % 16];
-              d /= 16;
-            }
-            out[j++] = '0';
-            out[j++] = 'x';
-            for (k--; k >= 0; k--) {
-              out[j++] = hex_num[k];
-            }
+          d = va_arg(ap, int);
+          // Convert to hex
+          char buff[20];
+          itoa(d, buff, 16);
+          for(int t = 0; buff[t] != '\0'; t++)
+          {
+            out[j++] = buff[t];
           }
           break;
         case 'd': {
-          int d = va_arg(ap, int);
+          d = va_arg(ap, int);
           char buff[12]; // Enough to hold all digits of a 32-bit integer, including sign and null terminator
           int t = 0;
           if (d < 0) {
@@ -325,26 +327,11 @@ int snprintf(char *out, size_t n, const char *fmt, ...) {
           break;
         case 'x':
           d = va_arg(ap, int);
-          char hex[17] = "0123456789abcdef";
-          char hex_num[10] = {0};
-          int k = 0;
-          if(d == 0)
+          
+          itoa(d, buff, 16);
+          for(t = 0; buff[t] != '\0'; t++)
           {
-            out[j++] = '0';
-          }
-          else
-          {
-            while(d != 0)
-            {
-              hex_num[k++] = hex[d % 16];
-              d /= 16;
-            }
-            out[j++] = '0';
-            out[j++] = 'x';
-            for(k--; k >= 0; k--)
-            {
-              out[j++] = hex_num[k];
-            }
+            out[j++] = buff[t];
           }
           break;
         case 'd':
@@ -420,26 +407,10 @@ int vsnprintf(char *out, size_t n, const char *fmt, va_list ap) {
           break;
         case 'x':
           d = va_arg(ap, int);
-          char hex[17] = "0123456789abcdef";
-          char hex_num[10] = {0};
-          int k = 0;
-          if(d == 0)
+          itoa(d, buff, 16);
+          for(t = 0; buff[t] != '\0'; t++)
           {
-            out[j++] = '0';
-          }
-          else
-          {
-            while(d != 0)
-            {
-              hex_num[k++] = hex[d % 16];
-              d /= 16;
-            }
-            out[j++] = '0';
-            out[j++] = 'x';
-            for(k--; k >= 0; k--)
-            {
-              out[j++] = hex_num[k];
-            }
+            out[j++] = buff[t];
           }
           break;
         case 'd':

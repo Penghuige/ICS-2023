@@ -28,14 +28,6 @@ Context* __am_irq_handle(Context *c) {
       printf("after mecp: 0x%x\n", c->mepc);
     }
     c = user_handler(ev, c);
-        if(c->GPR1 == -1)
-    {
-      printf("pre mepc: 0x%x\n", c->mepc);
-      c->mepc += 4;
-      printf("after mecp: 0x%x\n", c->mepc);
-    }
-    c = user_handler(ev, c);
-
     assert(c != NULL);
   }
 

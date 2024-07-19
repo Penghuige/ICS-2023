@@ -6,12 +6,6 @@ static Context* (*user_handler)(Event, Context*) = NULL;
 
 Context* __am_irq_handle(Context *c) {
   if (user_handler) {
-    if(c->GPR1 == -1)
-    {
-      printf("pre mepc: 0x%x\n", c->mepc);
-      c->mepc += 4;
-      printf("after mecp: 0x%x\n", c->mepc);
-    }
     Event ev = {0};
     switch (c->mcause) {
       // 是因为在yield函数中，我们调用了ecall指令，这个指令会触发一个异常，异常号为-1。
@@ -27,6 +21,12 @@ Context* __am_irq_handle(Context *c) {
       default: ev.event = EVENT_ERROR; break;
     }
 
+    if(c->GPR1 == -1 || 1)
+    {
+      printf("pre mepc: 0x%x\n", c->mepc);
+      c->mepc += 4;
+      printf("after mecp: 0x%x\n", c->mepc);
+    }
     c = user_handler(ev, c);
     assert(c != NULL);
   }

@@ -30,6 +30,7 @@ char* itoa(int value, char* str, int base) {
   }
   low = ptr;
   do {
+    putch("0123456789abcdefghijklmnopqrstuvwxyz"[value % base]);
     *ptr++ = "0123456789abcdefghijklmnopqrstuvwxyz"[value % base];
     value /= base;
   } while (value);

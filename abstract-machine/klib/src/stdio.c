@@ -2,12 +2,13 @@
 #include <klib.h>
 #include <klib-macros.h>
 #include <stdarg.h>
+#include <stdint.h>
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
 static char sprint_buf[1024];
 
-char* itoa(int value, char* str, int base) {
+char* itoa(int value, char* str, uint16_t base) {
   char* rc;
   char* ptr;
   char* low;
@@ -19,13 +20,15 @@ char* itoa(int value, char* str, int base) {
   if (value < 0 && base == 10) {
     *ptr++ = '-';
   }
+  if(base == 16)
+  {
+    *ptr++ = '0';
+    *ptr++ = 'x';
+  }
   low = ptr;
   do {
-    int temp = value % base < 0 ? value % base + base : value % base;
-    *ptr++ = "0123456789abcdefghijklmnopqrstuvwxyz"[temp];
+    *ptr++ = "zyxwvutsrqponmlkjihgfedcba9876543210123456789abcdefghijklmnopqrstuvwxyz"[35 + value % base];
     // output the value
-    printf("%d mod %d = %d\n", value, base, temp);
-    value += temp;
     value /= base;
   } while (value);
   *ptr-- = '\0';

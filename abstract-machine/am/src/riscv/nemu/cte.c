@@ -5,6 +5,13 @@
 static Context* (*user_handler)(Event, Context*) = NULL;
 
 Context* __am_irq_handle(Context *c) {
+    if(c->GPR1 == -1)
+    {
+      printf("pre mepc: 0x%x\n", c->mepc);
+      c->mepc += 4;
+      printf("after mecp: 0x%x\n", c->mepc);
+    }
+
   if (user_handler) {
     Event ev = {0};
     switch (c->mcause) {
@@ -21,12 +28,6 @@ Context* __am_irq_handle(Context *c) {
       default: ev.event = EVENT_ERROR; break;
     }
 
-    if(c->GPR1 == -1)
-    {
-      printf("pre mepc: 0x%x\n", c->mepc);
-      c->mepc += 4;
-      printf("after mecp: 0x%x\n", c->mepc);
-    }
     c = user_handler(ev, c);
     assert(c != NULL);
   }

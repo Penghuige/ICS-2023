@@ -28,7 +28,7 @@ char* itoa(int value, char* str, int base) {
   do {
     *ptr++ = "zyxwvutsrqponmlkjihgfedcba9876543210123456789abcdefghijklmnopqrstuvwxyz"[35 + value % base];
     // output the value
-    putch(value);
+    printf("%d\n", value);
     value /= base;
   } while (value);
   *ptr-- = '\0';

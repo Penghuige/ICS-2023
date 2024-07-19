@@ -153,7 +153,7 @@ size_t fs_write(int fd, const void *buf, size_t len) {
     {
       putch(((char *)buf)[i]);
     }
-    return len;
+    //return len;
   }
   size_t offset = open_table[index].open_offset;
   size_t read_len = len;

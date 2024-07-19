@@ -21,7 +21,8 @@ Context* __am_irq_handle(Context *c) {
       default: ev.event = EVENT_ERROR; break;
     }
 
-    if(c->GPR1 == -1 || ( 1 && ev.event == EVENT_SYSCALL))
+    // syscall and yield is a same trap
+    if(ev.event == EVENT_SYSCALL || ev.event == EVENT_YIELD)
     {
       // printf("pre mepc: 0x%x\n", c->mepc);
       c->mepc += 4;

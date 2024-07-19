@@ -2,48 +2,13 @@
 #include <klib.h>
 #include <klib-macros.h>
 #include <stdarg.h>
-#include <stdint.h>
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
 static char sprint_buf[1024];
 
-static char *_itoa(int num1, char *buff, uint16_t base)
-{
-  uint32_t num = num1;
-  static const char sym[] = "0123456789abcdef";
-
-  char tmp[32];
-  bool is_neg = false;
-  if (num == 0)
-  {
-    strcpy(buff, "0");
-    return buff;
-  }
-  else if (num < 0)
-  {
-    is_neg = true;
-    strcpy(buff, "-");
-    buff++;
-    num = -num;
-  }
-
-  uint8_t i = 0;
-  while (num != 0)
-  {
-    tmp[i] = sym[num % base];
-    num /= base;
-    i++;
-  }
-
-  for (int j = i - 1; j >= 0; --j)
-    buff[i - 1 - j] = tmp[j];
-  buff[i] = '\0';
-
-  return is_neg ? (buff - 1) : buff;
-}
-
-char* itoa(int value, char* str, uint16_t base) {
+char* itoa(int num, char* str, int base) {
+  uint32_t value = num;
   char* rc;
   char* ptr;
   char* low;
@@ -54,6 +19,11 @@ char* itoa(int value, char* str, uint16_t base) {
   rc = ptr = str;
   if (value < 0 && base == 10) {
     *ptr++ = '-';
+  }
+  if(base == 16)
+  {
+    *ptr++ = '0';
+    *ptr++ = 'x';
   }
   low = ptr;
   do {
@@ -107,7 +77,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
           break;
         case 'x':
           d = va_arg(ap, int);
-          _itoa(d, buff, 16);
+          itoa(d, buff, 16);
           for(t = 0; buff[t] != '\0'; t++)
           {
             out[j++] = buff[t];
@@ -189,7 +159,7 @@ int sprintf(char *out, const char *fmt, ...) {
           d = va_arg(ap, int);
           // Convert to hex
           char buff[20];
-          _itoa(d, buff, 16);
+          itoa(d, buff, 16);
           for(int t = 0; buff[t] != '\0'; t++)
           {
             out[j++] = buff[t];
@@ -279,7 +249,7 @@ int snprintf(char *out, size_t n, const char *fmt, ...) {
         case 'x':
           d = va_arg(ap, int);
           
-          _itoa(d, buff, 16);
+          itoa(d, buff, 16);
           for(t = 0; buff[t] != '\0'; t++)
           {
             out[j++] = buff[t];
@@ -358,7 +328,7 @@ int vsnprintf(char *out, size_t n, const char *fmt, va_list ap) {
           break;
         case 'x':
           d = va_arg(ap, int);
-          _itoa(d, buff, 16);
+          itoa(d, buff, 16);
           for(t = 0; buff[t] != '\0'; t++)
           {
             out[j++] = buff[t];

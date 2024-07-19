@@ -157,6 +157,14 @@ size_t fs_write(int fd, const void *buf, size_t len) {
   size_t ret = ramdisk_write(buf, file_table[fd].disk_offset + offset, read_len);
 
   open_table[index].open_offset += ret;
+
+  if(fd == FD_STDOUT || fd == FD_STDERR)
+  {
+    for(int i = 0; i < ret; i++)
+    {
+      putch(((char *)buf)[i]);
+    }
+  }
   return ret;
 }
 

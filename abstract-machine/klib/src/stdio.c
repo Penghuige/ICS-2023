@@ -19,7 +19,6 @@ char* itoa(int value, char* str, int base) {
   if (value < 0 && base == 10) {
     *ptr++ = '-';
   }
-  if(value < 0) value = -value;
   if(base == 16)
   {
     *ptr++ = '0';
@@ -30,10 +29,9 @@ char* itoa(int value, char* str, int base) {
     int temp = value % base < 0 ? value % base + base : value % base;
     *ptr++ = "0123456789abcdefghijklmnopqrstuvwxyz"[temp];
     // output the value
-    printf("%d mod %d = %d\n", value, base, value % base < 0 ? value % base + base : value % base);
-    value -= temp;
+    printf("%d mod %d = %d\n", value, base, temp);
     value /= base;
-  } while (value > 0);
+  } while (value);
   *ptr-- = '\0';
   while (low < ptr) {
     char tmp = *low;

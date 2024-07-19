@@ -18,10 +18,6 @@
 
 word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   cpu.csr.mcause = NO;
-  if(NO)
-  {
-    epc += 4;
-  }
   // false instruction
   cpu.csr.mepc = epc;
 

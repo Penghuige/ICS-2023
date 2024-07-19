@@ -78,6 +78,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
           itoa(d, buff, 16);
           for(t = 0; buff[t] != '\0'; t++)
           {
+            putch(buff[t]);
             out[j++] = buff[t];
           }
           break;

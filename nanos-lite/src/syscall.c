@@ -1,14 +1,16 @@
 #include <common.h>
 #include "syscall.h"
+#include "am.h"
 
 void sys_exit(int code);
 int sys_yield();
-void sys_write(intptr_t *buf, size_t count);
+int sys_write(int fd, intptr_t *buf, size_t count);
 
 extern int fs_open(const char *pathname, int flags, int mode);
-extern int fs_read(int fd, intptr_t *buf, size_t count);
+extern size_t fs_read(int fd, intptr_t *buf, size_t count);
+extern size_t fs_write(int fd, intptr_t *buf, size_t count);
 extern int fs_close(int fd);
-extern int fs_lseek(int fd, size_t offset, int whence);
+extern size_t fs_lseek(int fd, size_t offset, int whence);
 
 void do_syscall(Context *c) {
   uintptr_t a[4];
@@ -43,9 +45,8 @@ void do_syscall(Context *c) {
       c->GPRx = fs_read(a[1], (intptr_t*)a[2], a[3]);
       break;
     case 4: // sys_write
-      sys_write((intptr_t*)a[2], a[3]);
+      c->GPRx = sys_write(a[1], (intptr_t*)a[2], a[3]);
       //printf("%s", (char*)a[2]);
-      c->GPRx = a[3];
       break;
     case 7: // sys_close
       c->GPRx = fs_close(a[1]);
@@ -75,8 +76,6 @@ int sys_read(int fd, intptr_t *buf, size_t count) {
   return fs_read(fd, buf, count);
 }
 
-void sys_write(intptr_t *buf, size_t count){
-  for (int i = 0; i < count; i++) {
-    putch(*((char*)buf + i));
-  }
+int sys_write(int fd, intptr_t *buf, size_t count){
+  return fs_write(fd, buf, count);
 }

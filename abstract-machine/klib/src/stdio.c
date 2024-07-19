@@ -130,7 +130,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
           break;
         case 'x':
           d = va_arg(ap, int);
-          char hex[17] = {"0123456789abcdef"};
+          char hex[17] = "0123456789abcdef";
           char hex_num[10] = {0};
           int k = 0;
           if(d == 0)
@@ -325,7 +325,7 @@ int snprintf(char *out, size_t n, const char *fmt, ...) {
           break;
         case 'x':
           d = va_arg(ap, int);
-          char hex[17] = {"0123456789abcdef"};
+          char hex[17] = "0123456789abcdef";
           char hex_num[10] = {0};
           int k = 0;
           if(d == 0)
@@ -420,7 +420,7 @@ int vsnprintf(char *out, size_t n, const char *fmt, va_list ap) {
           break;
         case 'x':
           d = va_arg(ap, int);
-          char hex[17] = {"0123456789abcdef"};
+          char hex[17] = "0123456789abcdef";
           char hex_num[10] = {0};
           int k = 0;
           if(d == 0)

@@ -26,7 +26,7 @@ char* itoa(int value, char* str, int base) {
   }
   low = ptr;
   do {
-    *ptr++ = "zyxwvutsrqponmlkjihgfedcba9876543210123456789abcdefghijklmnopqrstuvwxyz"[35 + value % base];
+    *ptr++ = "0123456789abcdefghijklmnopqrstuvwxyz"[value % base < 0 ? value % base + base : value % base];
     // output the value
     printf("%d mod %d = %d\n", value, base, value % base);
     value /= base;

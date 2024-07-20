@@ -35,7 +35,7 @@ int main()
     t2 = t1;
     t1 = NDL_GetTicks();
     // ms
-    if(t1 - t2 > 500)
+    if(t1 - t2 > 0.5)
     {
       printf("i will be print!\n");
     }

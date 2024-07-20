@@ -58,6 +58,9 @@ void do_syscall(Context *c) {
       end = c->GPR2;
       c->GPRx = 0;
       break;
+    case 19: // sys_gettimeofday
+      
+      break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
 }

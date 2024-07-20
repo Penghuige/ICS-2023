@@ -57,10 +57,12 @@ static OFinfo open_table[LENGTH(file_table)];
 
 void init_fs() {
   // TODO: initialize the size of /dev/fb
-  open_index = 0;
-  open_table[0].fd = FD_STDIN;;
-  open_table[1].fd = FD_STDOUT;
-  open_table[2].fd = FD_STDERR;
+  // make the special file here
+  open_index = 3;
+
+  open_table[0] = (OFinfo){.fd = FD_STDIN, .open_offset = 0};
+  open_table[1] = (OFinfo){.fd = FD_STDOUT, .open_offset = 0};
+  open_table[2] = (OFinfo){.fd = FD_STDERR, .open_offset = 0};
 }
 
 static int get_index(int fd)
@@ -146,10 +148,6 @@ size_t fs_read(int fd, void *buf, size_t len) {
 }
 
 size_t fs_write(int fd, const void *buf, size_t len) {
-  if(fd == FD_STDOUT || fd == FD_STDERR)
-  {
-    return len;
-  }
   int index = get_index(fd);
   Log("WRITE index: %d, name: %s, offset: %d", index, file_table[fd].name, open_table[index].open_offset);
   if(index == -1)
@@ -162,6 +160,10 @@ size_t fs_write(int fd, const void *buf, size_t len) {
   if(file_table[fd].size < offset + len)
   {
     read_len = file_table[fd].size - offset;
+  }
+  if(file_table[index].write)
+  {
+    return file_table[index].write(buf, offset, len);
   }
   size_t ret = ramdisk_write(buf, file_table[fd].disk_offset + offset, read_len);
 

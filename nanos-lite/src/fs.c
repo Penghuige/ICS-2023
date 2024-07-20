@@ -61,11 +61,11 @@ static OFinfo open_table[LENGTH(file_table)];
 void init_fs() {
   // TODO: initialize the size of /dev/fb
   // make the special file here
-  open_index = 3;
-
-  open_table[0] = (OFinfo){.fd = FD_STDIN, .open_offset = 0};
-  open_table[1] = (OFinfo){.fd = FD_STDOUT, .open_offset = 0};
-  open_table[2] = (OFinfo){.fd = FD_STDERR, .open_offset = 0};
+  open_index = FD_FB;
+  for(int i = 0; i < FD_FB; i++)
+  {
+    open_table[i] = (OFinfo){.fd = i, .open_offset = 0};
+  }
 }
 
 static int get_index(int fd)
@@ -143,9 +143,9 @@ size_t fs_read(int fd, void *buf, size_t len) {
     read_len = file_table[fd].size - offset;
   }
 
-  if(file_table[fd].read)
+  if(file_table[index].read)
   {
-    return file_table[fd].read(buf, offset, len);
+    return file_table[index].read(buf, offset, len);
   }
   size_t ret = ramdisk_read(buf, file_table[fd].disk_offset + offset, read_len);
   // 怎么能用不知道的函数来写呢？

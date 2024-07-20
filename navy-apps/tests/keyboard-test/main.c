@@ -5,12 +5,10 @@ extern int NDL_PollEvent(char *buf, int len);
 
 int main()
 {
-  char* s;
-  NDL_PollEvent(s, 10);
   while(1)
   {
-    printf("%s", s);
-    NDL_PollEvent(s, 10);
+    char s[64];
+    if(NDL_PollEvent(s, sizeof(s)) != 0) printf("receive: %s", s);
   }
 
   return 0;

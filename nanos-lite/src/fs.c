@@ -74,7 +74,7 @@ static int get_index(int fd)
   {
     return -1;
   }
-  if(fd <= FD_FB)
+  if(fd < FD_FB)
   {
     Log("ignore open %s", file_table[fd].name);
     return fd;

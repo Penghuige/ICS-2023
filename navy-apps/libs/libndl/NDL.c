@@ -58,8 +58,8 @@ static void init_display()
       hi = hi * 10 + buf[i] - '0';
     }
   }
-  canvas_h = hi;
-  canvas_w = wi;
+  screen_h = hi;
+  screen_w = wi;
 }
 
 void NDL_OpenCanvas(int *w, int *h) {

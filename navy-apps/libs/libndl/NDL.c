@@ -44,6 +44,7 @@ static void init_display()
   int i = 6;
   for(; buf[i] != '\n'; i++)
   {
+    printf("buf[i] is %c\n", buf[i]);
     if(buf[i] >= '0' && buf[i] <= '9')
     {
       wi = wi * 10 + buf[i] - '0';
@@ -54,6 +55,7 @@ static void init_display()
   i += 7;
   for(; buf[i] != '\n'; i++)
   {
+    printf("buf[i] is %c\n", buf[i]);
     if(buf[i] >= '0' && buf[i] <= '9')
     {
       hi = hi * 10 + buf[i] - '0';

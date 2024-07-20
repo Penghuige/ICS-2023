@@ -74,7 +74,7 @@ void NDL_OpenCanvas(int *w, int *h) {
   {
     *h = screen_h;
   }
-  if (getenv("NWM_APP")) {
+  if (!getenv("NWM_APP")) {
     int fbctl = 4;
     fbdev = 5;
     screen_w = *w; screen_h = *h;

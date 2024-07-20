@@ -38,13 +38,11 @@ static void init_display()
   assert(nread < sizeof(buf) - 1);
   assert(close(index) == 0);
   assert(strncmp(buf, "WIDTH:", 6) == 0);
-  printf("buf is %s\n", buf);
 
   int wi = 0, hi = 0;
   int i = 6;
   for(; buf[i] != '\n'; i++)
   {
-    printf("buf[i] is %c\n", buf[i]);
     if(buf[i] >= '0' && buf[i] <= '9')
     {
       wi = wi * 10 + buf[i] - '0';
@@ -55,7 +53,6 @@ static void init_display()
   i += 7;
   for(; buf[i] != '\n'; i++)
   {
-    printf("buf[i] is %c\n", buf[i]);
     if(buf[i] >= '0' && buf[i] <= '9')
     {
       hi = hi * 10 + buf[i] - '0';
@@ -68,12 +65,9 @@ static void init_display()
 void NDL_OpenCanvas(int *w, int *h) {
   init_display();
   // if not set, initialize.
-  if(*w == 0 || *w > screen_w)
+  if(*w == 0 && *h == 0)
   {
     *w = screen_w;
-  }
-  if(*h == 0 || *h > screen_h)
-  {
     *h = screen_h;
   }
   if (getenv("NWM_APP")) {

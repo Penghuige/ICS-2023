@@ -1,12 +1,12 @@
 #include <common.h>
 #include "syscall.h"
 #include "am.h"
+#include <sys/time.h>
 
 void sys_exit(int code);
 int sys_yield();
 int sys_write(int fd, intptr_t *buf, size_t count);
-int sys_gettimeofday();
-
+int sys_gettimeofday(uintptr_t *a);
 
 extern int fs_open(const char *pathname, int flags, int mode);
 extern size_t fs_read(int fd, intptr_t *buf, size_t count);
@@ -61,7 +61,7 @@ void do_syscall(Context *c) {
       c->GPRx = 0;
       break;
     case 19: // sys_gettimeofday
-      c->GPRx = sys_gettimeofday();
+      c->GPRx = sys_gettimeofday(a);
       break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
@@ -85,8 +85,20 @@ int sys_write(int fd, intptr_t *buf, size_t count){
   return fs_write(fd, buf, count);
 }
 
-int sys_gettimeofday()
-{
-
+int sys_gettimeofday(uintptr_t *a) {
+  struct timeval* tv = (struct timeval*)a[1];
+  struct timezone* tz = (struct timezone*)a[2];
+  uint64_t us = io_read(AM_TIMER_UPTIME).us;
+  if (tv != NULL) {
+    tv->tv_sec = us / (1000*1000);
+    tv->tv_usec = us % (1000*1000);
+  }
+  else
+  {
+    Log("tv is NULL!");
+  }
+  if (tz != NULL) {
+    // to implement
+  }
   return 0;
 }

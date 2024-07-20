@@ -32,11 +32,11 @@ int main()
   uint32_t t2 = t1;
   while(1)
   {
-    t2 = t1;
     t1 = NDL_GetTicks();
     // ms
     if(t1 - t2 > 0.5)
     {
+      t2 = t1;
       printf("i will be print!\n");
     }
   }

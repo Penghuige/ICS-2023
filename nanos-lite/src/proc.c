@@ -29,8 +29,10 @@ void init_proc() {
   // load program here
   //const char filename[] = "/bin/file-test";
   //naive_uload(NULL, filename);
-  const char filename2[] = "/bin/timer-test";
-  naive_uload(NULL, filename2);
+  //const char filename2[] = "/bin/timer-test";
+  // naive_uload(NULL, filename2);
+  const char filename3[] = "/bin/keyboard-test";
+  naive_uload(NULL, filename3);
 }
 
 Context* schedule(Context *prev) {

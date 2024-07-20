@@ -28,10 +28,12 @@ size_t fs_write(int fd, const void *buf, size_t len);
 size_t fs_lseek(int fd, size_t offset, int whence);
 int fs_close(int fd);
 
-enum {FD_STDIN, FD_STDOUT, FD_STDERR, FD_FB};
+enum {FD_STDIN, FD_STDOUT, FD_STDERR, DEV_EVENTS, FD_FB};
 
 extern size_t ramdisk_read(void *buf, size_t offset, size_t len);
 extern size_t ramdisk_write(const void *buf, size_t offset, size_t len);
+
+extern size_t events_read(void *buf, size_t offset, size_t len);
 
 size_t invalid_read(void *buf, size_t offset, size_t len) {
   panic("should not reach here");
@@ -48,6 +50,7 @@ static Finfo file_table[] __attribute__((used)) = {
   [FD_STDIN]  = {"stdin", 0, 0, invalid_read, invalid_write},
   [FD_STDOUT] = {"stdout", 0, 0, invalid_read, serial_write},
   [FD_STDERR] = {"stderr", 0, 0, invalid_read, serial_write},
+  [DEV_EVENTS] = {"/dev/events", 0, 0, events_read, NULL},
 #include "files.h"
 };
 
@@ -71,7 +74,7 @@ static int get_index(int fd)
   {
     return -1;
   }
-  if(fd <= 2)
+  if(fd <= FD_FB)
   {
     Log("ignore open %s", file_table[fd].name);
     return fd;
@@ -94,7 +97,7 @@ int fs_open(const char *pathname, int flags, int mode) {
   for(int i = 0; i < LENGTH(file_table); i++) {
     printf("file_table[%d].name: %s\n", i, file_table[i].name);
     if(strcmp(pathname, file_table[i].name) == 0) {
-      if(i <= 2)
+      if(i <= FD_FB)
       {
         Log("ignore open %s", pathname);
         return i;

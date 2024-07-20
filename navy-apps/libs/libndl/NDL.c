@@ -38,6 +38,7 @@ static void init_display()
   assert(nread < sizeof(buf) - 1);
   assert(close(index) == 0);
   assert(strncmp(buf, "WIDTH:", 6) == 0);
+  printf("buf is %s\n", buf);
 
   int wi = 0, hi = 0;
   int i = 6;
@@ -48,6 +49,8 @@ static void init_display()
       wi = wi * 10 + buf[i] - '0';
     }
   }
+  assert(strncmp(buf+i+1, "HEIGHT:", 7) == 0);
+
   i += 7;
   for(; buf[i] != '\n'; i++)
   {

@@ -64,7 +64,7 @@ static void init_display()
 }
 
 void NDL_OpenCanvas(int *w, int *h) {
-  init_display();
+  //init_display();
   // if not set, initialize.
   if(*w == 0)
   {
@@ -74,6 +74,7 @@ void NDL_OpenCanvas(int *w, int *h) {
   {
     *h = screen_h;
   }
+  // not right
   if (getenv("NWM_APP")) {
     int fbctl = 4;
     fbdev = 5;

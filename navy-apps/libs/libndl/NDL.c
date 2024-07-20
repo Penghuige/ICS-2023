@@ -11,6 +11,9 @@ static int evtdev = -1;
 static int fbdev = -1;
 static int screen_w = 0, screen_h = 0;
 
+static int canvas_w = 0, canvas_h = 0;
+static int canvas_x = 0, canvas_y = 0;
+
 uint32_t NDL_GetTicks() {
   struct timeval tv;
   assert(gettimeofday(&tv, NULL) == 0);
@@ -25,7 +28,51 @@ int NDL_PollEvent(char *buf, int len) {
   return ret == 0 ? 0 : 1;
 }
 
+static void init_display()
+{
+  // open a canvas with w*h
+  int index = open("/proc/dispinfo", 0, 0);
+  // canvas is a frame buffer
+  char buf[64];
+  int nread = read(index, buf, sizeof(buf) - 1);
+  assert(nread < sizeof(buf) - 1);
+  assert(close(index) == 0);
+  assert(strncmp(buf, "WIDTH:", 6) == 0);
+
+  int wi = 0, hi = 0;
+  int i = 6;
+  for(; buf[i] != '\n'; i++)
+  {
+    if(buf[i] >= '0' && buf[i] <= '9')
+    {
+      wi = wi * 10 + buf[i] - '0';
+    }
+  }
+
+  assert(strncmp(buf + i, "HEIGHT:", 7) == 0);
+  i += 7;
+  for(; buf[i] != '\n'; i++)
+  {
+    if(buf[i] >= '0' && buf[i] <= '9')
+    {
+      hi = hi * 10 + buf[i] - '0';
+    }
+  }
+  canvas_h = hi;
+  canvas_w = wi;
+}
+
 void NDL_OpenCanvas(int *w, int *h) {
+  init_display();
+  // if not set, initialize.
+  if(*w == 0 || *w > screen_w)
+  {
+    *w = screen_w;
+  }
+  if(*h == 0 || *h > screen_h)
+  {
+    *h = screen_h;
+  }
   if (getenv("NWM_APP")) {
     int fbctl = 4;
     fbdev = 5;
@@ -61,6 +108,7 @@ int NDL_PlayAudio(void *buf, int len) {
 int NDL_QueryAudio() {
   return 0;
 }
+
 
 int NDL_Init(uint32_t flags) {
   if (getenv("NWM_APP")) {

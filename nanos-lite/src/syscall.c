@@ -5,6 +5,8 @@
 void sys_exit(int code);
 int sys_yield();
 int sys_write(int fd, intptr_t *buf, size_t count);
+int sys_gettimeofday();
+
 
 extern int fs_open(const char *pathname, int flags, int mode);
 extern size_t fs_read(int fd, intptr_t *buf, size_t count);
@@ -59,7 +61,7 @@ void do_syscall(Context *c) {
       c->GPRx = 0;
       break;
     case 19: // sys_gettimeofday
-      
+      c->GPRx = sys_gettimeofday();
       break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
@@ -81,4 +83,10 @@ int sys_read(int fd, intptr_t *buf, size_t count) {
 
 int sys_write(int fd, intptr_t *buf, size_t count){
   return fs_write(fd, buf, count);
+}
+
+int sys_gettimeofday()
+{
+
+  return 0;
 }

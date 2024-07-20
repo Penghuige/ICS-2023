@@ -8,8 +8,8 @@ int main()
   while(1)
   {
     char s[64];
-    if(NDL_PollEvent(s, sizeof(s)) != 0) printf("receive: %s", s);
-    for(int i = 0; i < 10000; i++) ;
+    if(NDL_PollEvent(s, sizeof(s)) != 0) printf("receive: %s\n", s);
+    for(int i = 0; i < 1000000; i++) ;
   }
 
   return 0;

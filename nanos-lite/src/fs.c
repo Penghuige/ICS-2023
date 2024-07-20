@@ -143,9 +143,9 @@ size_t fs_read(int fd, void *buf, size_t len) {
     read_len = file_table[fd].size - offset;
   }
 
-  if(file_table[index].read)
+  if(file_table[fd].read)
   {
-    return file_table[index].read(buf, offset, len);
+    return file_table[fd].read(buf, offset, len);
   }
   size_t ret = ramdisk_read(buf, file_table[fd].disk_offset + offset, read_len);
   // 怎么能用不知道的函数来写呢？

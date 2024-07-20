@@ -58,6 +58,7 @@ static void init_display()
       hi = hi * 10 + buf[i] - '0';
     }
   }
+  printf("hi is %d, wi is %d\n", hi, wi);
   screen_h = hi;
   screen_w = wi;
 }

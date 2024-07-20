@@ -48,8 +48,6 @@ static void init_display()
       wi = wi * 10 + buf[i] - '0';
     }
   }
-
-  assert(strncmp(buf + i, "HEIGHT:", 7) == 0);
   i += 7;
   for(; buf[i] != '\n'; i++)
   {

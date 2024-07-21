@@ -64,6 +64,16 @@ static OFinfo open_table[LENGTH(file_table)];
 void init_fs() {
   // TODO: initialize the size of /dev/fb
   // make the special file here
+  // size is the screen size * pixel size
+  AM_GPU_CONFIG_T ev = io_read(AM_GPU_CONFIG);
+  int width = ev.width;
+  int height = ev.height;
+  // pixel size is uint32_t
+  file_table[FD_FB].size = width * height * sizeof(uint32_t);
+
+  
+  
+
   open_index = FD_FB;
   for(int i = 0; i < FD_FB; i++)
   {

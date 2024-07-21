@@ -35,6 +35,7 @@ extern size_t ramdisk_write(const void *buf, size_t offset, size_t len);
 
 extern size_t events_read(void *buf, size_t offset, size_t len);
 extern size_t dispinfo_read(void *buf, size_t offset, size_t len);
+extern size_t fb_write(const void *buf, size_t offset, size_t len);
 
 
 size_t invalid_read(void *buf, size_t offset, size_t len) {
@@ -54,6 +55,7 @@ static Finfo file_table[] __attribute__((used)) = {
   [FD_STDERR] = {"stderr", 0, 0, invalid_read, serial_write},
   [DEV_EVENTS] = {"/dev/events", 0, 0, events_read, NULL},
   [DEV_DISPLAY] = {"/proc/dispinfo", 0, 0, dispinfo_read, NULL},
+  [FD_FB] = {"/dev/fb", 0, 0, invalid_read, fb_write},
 #include "files.h"
 };
 
@@ -70,9 +72,6 @@ void init_fs() {
   int height = ev.height;
   // pixel size is uint32_t
   file_table[FD_FB].size = width * height * sizeof(uint32_t);
-
-  
-  
 
   open_index = FD_FB;
   for(int i = 0; i < FD_FB; i++)
@@ -211,5 +210,6 @@ size_t fs_lseek(int fd, size_t offset, int whence) {
     default:
       panic("whence error");
   }
+  
   return open_table[index].open_offset;
 }

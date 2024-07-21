@@ -14,8 +14,6 @@ static int screen_w = 0, screen_h = 0;
 static int canvas_w = 0, canvas_h = 0;
 static int canvas_x = 0, canvas_y = 0;
 
-uint32_t* canvas = NULL;
-
 uint32_t NDL_GetTicks() {
   struct timeval tv;
   assert(gettimeofday(&tv, NULL) == 0);
@@ -30,8 +28,7 @@ int NDL_PollEvent(char *buf, int len) {
   return ret == 0 ? 0 : 1;
 }
 
-static void init_display()
-{
+void NDL_OpenCanvas(int *w, int *h) {
   // open a canvas with w*h
   int index = open("/proc/dispinfo", 0, 0);
   // canvas is a frame buffer
@@ -60,13 +57,8 @@ static void init_display()
       hi = hi * 10 + buf[i] - '0';
     }
   }
-  printf("hi is %d, wi is %d\n", hi, wi);
   screen_h = hi;
   screen_w = wi;
-}
-
-void NDL_OpenCanvas(int *w, int *h) {
-  init_display();
   // if not set, initialize.
   if(*w == 0)
   {
@@ -81,8 +73,6 @@ void NDL_OpenCanvas(int *w, int *h) {
   // mid
   canvas_x=(screen_w - canvas_w) / 2;
   canvas_y=(screen_h - canvas_h) / 2;
-
-  canvas = malloc(canvas_w * canvas_h * sizeof(uint32_t));
 
   if (getenv("NWM_APP")) {
     int fbctl = 4;
@@ -107,12 +97,13 @@ void NDL_OpenCanvas(int *w, int *h) {
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
   // write into /dev/fb
   int index = open("/dev/fb", 0, 0);
+  lseek(index, (canvas_y * w + canvas_x) * 4, SEEK_SET);
   for(int i = 0; i < h; i++)
   {
     // write into canvas, then write into file.
-    lseek(index, ((canvas_y + y + i) * w + x + canvas_x)*4, SEEK_SET);
-    //printf("write at %d\n", (int)((y + i) * w + x)*4);
     write(index, pixels + i*w, canvas_w*4);
+    lseek(index, w*4, SEEK_CUR);
+    //printf("write at %d\n", (int)((y + i) * w + x)*4);
     //for(int j = 0; j < w; j++) printf("write %d ", (int)pixels[i*w + j]);
   }
   assert(close(index) == 0);

@@ -107,6 +107,7 @@ void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
   for(int i = 0; i < h; i++)
   {
     lseek(index, ((y + i) * w + x)*4, SEEK_SET);
+    for(int j = 0; j < w; j++) printf("print %d ", pixels[i*w + j]);
     write(index, pixels + i*w, w*4);
   }
   assert(close(index) == 0);

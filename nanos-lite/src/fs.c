@@ -73,8 +73,8 @@ void init_fs() {
   // pixel size is uint32_t
   file_table[FD_FB].size = width * height * sizeof(uint32_t);
 
-  open_index = FD_FB;
-  for(int i = 0; i < FD_FB; i++)
+  open_index = FD_FB+1;
+  for(int i = 0; i <= FD_FB; i++)
   {
     open_table[i] = (OFinfo){.fd = i, .open_offset = 0};
   }

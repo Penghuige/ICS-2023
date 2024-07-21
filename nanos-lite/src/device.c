@@ -41,7 +41,6 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len) {
 
 size_t fb_write(const void *buf, size_t offset, size_t len) {
   AM_GPU_FBDRAW_T ev = io_read(AM_GPU_FBDRAW);
-  printf("offset is %d, len is %d\n", offset, len);
   offset /= 4;
   len /= 4;
 

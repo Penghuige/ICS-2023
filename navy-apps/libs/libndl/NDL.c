@@ -66,7 +66,7 @@ static void init_display()
 }
 
 void NDL_OpenCanvas(int *w, int *h) {
-  //init_display();
+  init_display();
   // if not set, initialize.
   if(*w == 0)
   {
@@ -78,6 +78,9 @@ void NDL_OpenCanvas(int *w, int *h) {
   }
   // not right
   canvas_w = *w, canvas_h = *h;
+  // mid
+  canvas_x=(screen_w - canvas_w) / 2;
+  canvas_y=(screen_h - canvas_h) / 2;
 
   canvas = malloc(canvas_w * canvas_h * sizeof(uint32_t));
 
@@ -106,9 +109,10 @@ void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
   int index = open("/dev/fb", 0, 0);
   for(int i = 0; i < h; i++)
   {
-    lseek(index, ((y + i) * w + x)*4, SEEK_SET);
+    // write into canvas, then write into file.
+    lseek(index, ((canvas_y + y + i) * w + x + canvas_x)*4, SEEK_SET);
     //printf("write at %d\n", (int)((y + i) * w + x)*4);
-    write(index, pixels + i*w, w*4);
+    write(index, pixels + i*w, canvas_w*4);
     //for(int j = 0; j < w; j++) printf("write %d ", (int)pixels[i*w + j]);
   }
   assert(close(index) == 0);

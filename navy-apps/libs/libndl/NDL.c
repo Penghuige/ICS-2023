@@ -70,8 +70,8 @@ void NDL_OpenCanvas(int *w, int *h) {
   }
   // not right
   canvas_w = *w, canvas_h = *h;
-  printf("canvas_w is %d, canvas_h is %d\n", canvas_w, canvas_h);
-  getchar();
+  // 128 * 128 screen is 300 * 400
+  //printf("canvas_w is %d, canvas_h is %d\n", canvas_w, canvas_h);
   // mid
   canvas_x=(screen_w - canvas_w) / 2;
   canvas_y=(screen_h - canvas_h) / 2;
@@ -99,12 +99,12 @@ void NDL_OpenCanvas(int *w, int *h) {
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
   // write into /dev/fb
   int index = open("/dev/fb", 0, 0);
-  lseek(index, (canvas_y * w + canvas_x) * 4, SEEK_SET);
+  lseek(index, ((canvas_y + y) * screen_w + canvas_x + x) * sizeof(uint32_t), SEEK_SET);
   for(int i = 0; i < h; i++)
   {
     // write into canvas, then write into file.
     write(index, pixels + i*w, canvas_w*4);
-    lseek(index, w*4, SEEK_CUR);
+    lseek(index, screen_w*4, SEEK_CUR);
     //printf("write at %d\n", (int)((y + i) * w + x)*4);
     //for(int j = 0; j < w; j++) printf("write %d ", (int)pixels[i*w + j]);
   }

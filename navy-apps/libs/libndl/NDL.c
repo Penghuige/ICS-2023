@@ -22,9 +22,8 @@ uint32_t NDL_GetTicks() {
 }
 
 int NDL_PollEvent(char *buf, int len) {
-  int index = open("/dev/events", 0, 0);
-  int ret = read(index, buf, len);
-  assert(close(index) == 0);
+  int ret = read(evtdev, buf, len);
+  assert(close(evtdev) == 0);
   return ret == 0 ? 0 : 1;
 }
 
@@ -82,6 +81,7 @@ void NDL_OpenCanvas(int *w, int *h) {
   canvas_x=(screen_w - canvas_w) / 2;
   canvas_y=(screen_h - canvas_h) / 2;
 
+	// a file define NWM_APP, but now it needn't
   if (getenv("NWM_APP")) {
     int fbctl = 4;
     fbdev = 5;
@@ -104,18 +104,16 @@ void NDL_OpenCanvas(int *w, int *h) {
 
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
   // write into /dev/fb
-  int index = open("/dev/fb", 0, 0);
-  lseek(index, ((canvas_y + y) * screen_w + canvas_x + x) * sizeof(uint32_t), SEEK_SET);
+  lseek(fbdev, ((canvas_y + y) * screen_w + canvas_x + x) * sizeof(uint32_t), SEEK_SET);
   for(int i = 0; i < h; i++)
   {
     //printf("locate at %d\n", (canvas_y + y + i) * screen_w + canvas_x + x);
     // write into canvas, then write into file.
-    write(index, pixels + i*w, canvas_w*4);
-    lseek(index, screen_w*4, SEEK_CUR);
+    write(fbdev, pixels + i*w, canvas_w*4);
+    lseek(fbdev, screen_w*4, SEEK_CUR);
     //printf("write at %d\n", (int)((y + i) * w + x)*4);
     //for(int j = 0; j < w; j++) printf("write %d ", (int)pixels[i*w + j]);
   }
-  assert(close(index) == 0);
 }
 
 void NDL_OpenAudio(int freq, int channels, int samples) {
@@ -137,8 +135,16 @@ int NDL_Init(uint32_t flags) {
   if (getenv("NWM_APP")) {
     evtdev = 3;
   }
+  else
+	{
+    fbdev = open("/dev/fb", 0, 0);
+    evtdev = open("/dev/events", 0, 0);
+  }
+
   return 0;
 }
 
 void NDL_Quit() {
+  assert(close(fbdev) == 0);
+  assert(close(evtdev) == 0);
 }

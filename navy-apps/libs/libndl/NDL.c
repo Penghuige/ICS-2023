@@ -78,6 +78,7 @@ void NDL_OpenCanvas(int *w, int *h) {
   canvas_w = *w, canvas_h = *h;
   // 128 * 128 screen is 300 * 400
   //printf("canvas_w is %d, canvas_h is %d\n", canvas_w, canvas_h);
+  printf("canvas_w is %d, canvas_h is %d\n", canvas_w, canvas_h);
   // mid
   canvas_x=(screen_w - canvas_w) / 2;
   canvas_y=(screen_h - canvas_h) / 2;

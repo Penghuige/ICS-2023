@@ -156,7 +156,6 @@ size_t fs_read(int fd, void *buf, size_t len) {
   // printf("offset: %d\n", offset);
   // 他的buf就是指向的Elf_Ehdr ehdr, 第二个参数是偏移量，记录在文件表中的disk_offset，第三个参数是长度
   size_t read_len = len;
-  printf("read_len is %d\n", read_len);
   // when the file size is not enough
   if (file_table[fd].size < offset + len) {
     read_len = file_table[fd].size - offset;
@@ -164,6 +163,8 @@ size_t fs_read(int fd, void *buf, size_t len) {
 
   if(file_table[index].read)
   {
+    if(index == DEV_EVENTS)
+      printf("read_len is %d\n", read_len);
     return file_table[index].read(buf, offset, len);
   }
   size_t ret = ramdisk_read(buf, file_table[fd].disk_offset + offset, read_len);

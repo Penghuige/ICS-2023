@@ -76,7 +76,7 @@ void init_fs() {
   file_table[FD_FB].size = width * height * sizeof(uint32_t);
 
   open_index = FD_FB+1;
-  for(int i = 0; i <= FD_FB; i++)
+  for(int i = 0; i < FD_FB; i++)
   {
     open_table[i] = (OFinfo){.fd = i, .open_offset = 0};
   }

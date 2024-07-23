@@ -1,4 +1,4 @@
-#include "../include/nterm.h"
+#include <nterm.h>
 #include <SDL.h>
 #include <SDL_bdf.h>
 

@@ -53,8 +53,13 @@ int SDL_PollEvent(SDL_Event *ev) {
     // keyname is different from buf[3], and it length is different;
     // if not do this, the slides will not up, only down
     for (int i = 0; i < sizeof(keyname) / sizeof(keyname[0]); i++) {
-      //
+      // when the length is bigger than 2, it maybe a bug
       if (strncmp(buf + 3, keyname[i], strlen(buf) - 4) == 0){
+        // it isn't long key such as t between tab
+        if(strlen(keyname[i]) != strlen(buf) - 4 && strlen(buf) != 7)
+        {
+          continue;
+        }
          ev->key.keysym.sym = i;
          sign = 1;
          break;

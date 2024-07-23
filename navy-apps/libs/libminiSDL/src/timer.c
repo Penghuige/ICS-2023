@@ -18,5 +18,5 @@ uint32_t SDL_GetTicks() {
 }
 
 void SDL_Delay(uint32_t ms) {
-  assert(0);
+  //sleep(ms);
 }

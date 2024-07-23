@@ -3,8 +3,47 @@
 #include <assert.h>
 #include <string.h>
 #include <stdlib.h>
-
 void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_Rect *dstrect) {
+    assert(dst && src);
+    assert(dst->format->BitsPerPixel == src->format->BitsPerPixel);
+
+    uint32_t * data = (uint32_t *)src->pixels;
+    uint32_t * base = (uint32_t *)dst->pixels;
+
+    int src_w = src->w;
+    int src_h = src->h;
+    int dst_w = dst->w;
+    int dst_h = dst->h;
+    int dstrect_x = !dstrect ? 0 : dstrect->x;
+    int dstrect_y = !dstrect ? 0 : dstrect->y;
+
+    if (srcrect == NULL) {
+        int width = src_w < (dst_w - dstrect_x) ? src_w : (dst_w - dstrect_x);
+        int height = src_h < (dst_h - dstrect_y) ? src_h : (dst_h - dstrect_y);
+
+        for (int i = 0; i < height; ++i) {
+            for (int j = 0; j < width; ++j) {
+                base[(dstrect_y + i) * dst_w + dstrect_x + j] = data[i * src_w + j];
+            }
+        }
+
+        return;
+    } else {
+        int srcrect_x = srcrect->x;
+        int srcrect_y = srcrect->y;
+        int width = srcrect->w < (dst_w - dstrect_x) ? srcrect->w : (dst_w - dstrect_x);
+        int height = srcrect->h < (dst_h - dstrect_y) ? srcrect->h : (dst_h - dstrect_y);
+
+        for (int i = 0; i < height; ++i) {
+            for (int j = 0; j < width; ++j) {
+                base[(dstrect_y + i) * dst_w + dstrect_x + j] = data[(srcrect_y + i) * src_w + srcrect_x + j];
+            }
+        }
+
+        return;
+    }
+}
+void SDL_BlitSurface1(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_Rect *dstrect) {
   assert(dst && src);
   assert(dst->format->BitsPerPixel == src->format->BitsPerPixel);
 

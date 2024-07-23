@@ -90,7 +90,9 @@ static int get_index(int fd)
   }
   if(fd <= FD_FB)
   {
+#ifdef CONFIG_STRACE
     Log("ignore open %s", file_table[fd].name);
+#endif
     return fd;
   }
   int ret = -1;

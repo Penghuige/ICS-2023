@@ -61,7 +61,7 @@ static inline void get_fsimg_path(char *newpath, const char *path) {
   if (scancode == SDL_SCANCODE_##k) name = #k;
 
 static void update_screen() {
-  SDL_UpdateTexture(texture, NULL, fb, disp_w * sizeof(Uint32));
+  SDL_UpdateTexture(texture, NULL, fb, 2* disp_w * sizeof(Uint32));
   SDL_RenderClear(renderer);
   SDL_RenderCopy(renderer, texture, NULL, NULL);
   SDL_RenderPresent(renderer);
@@ -233,6 +233,7 @@ ssize_t write(int fd, const void *buf, size_t count) {
     SDL_PauseAudio(0);
     return count;
   }
+  update_screen();
   return glibc_write(fd, buf, count);
 }
 

@@ -7,7 +7,7 @@
 int main() {
   NDL_Init(0);
   int w, h;
-  void *bmp = BMP_Load("/share/slides/slides-0.bmp", &w, &h);
+  void *bmp = BMP_Load("/share/slides/nemu.bmp", &w, &h);
   //printf("w is %d, h is %d\n", w, h);
   assert(bmp);
   NDL_OpenCanvas(&w, &h);

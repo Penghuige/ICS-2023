@@ -59,6 +59,12 @@ void NDL_OpenCanvas(int *w, int *h) {
   }
   screen_h = hi;
   screen_w = wi;
+
+  if(*w > screen_w || *h > screen_h)
+  {
+    fprintf(stderr, "Canvas size too large\n");
+    exit(1);
+  }
   // if not set, initialize.
   if(*w == 0)
   {

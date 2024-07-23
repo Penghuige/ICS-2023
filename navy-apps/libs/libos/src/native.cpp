@@ -61,7 +61,7 @@ static inline void get_fsimg_path(char *newpath, const char *path) {
   if (scancode == SDL_SCANCODE_##k) name = #k;
 
 static void update_screen() {
-  SDL_UpdateTexture(texture, NULL, fb, 2* disp_w * sizeof(Uint32));
+  SDL_UpdateTexture(texture, NULL, fb, 2 * disp_w * sizeof(Uint32));
   SDL_RenderClear(renderer);
   SDL_RenderCopy(renderer, texture, NULL, NULL);
   SDL_RenderPresent(renderer);
@@ -79,7 +79,7 @@ static int event_thread(void *args) {
 
     switch (event.type) {
       case SDL_QUIT: exit(0); break;
-      case SDL_USEREVENT: update_screen(); break;
+      case SDL_USEREVENT: break;
       case SDL_KEYDOWN:
       case SDL_KEYUP:
         SDL_LockMutex(key_queue_lock);

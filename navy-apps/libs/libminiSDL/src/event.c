@@ -27,35 +27,53 @@ uint8_t* SDL_GetKeyState(int *numkeys) {
   assert(0);
   return NULL;
 }
-int SDL_WaitEvent(SDL_Event *event) {
-  SDL_PollEvent(event);
+
+int SDL_WaitEvent(SDL_Event *ev) {
+  while(SDL_PollEvent(ev) == 0); 
   return 1;
 }
 
+
+#define MIN(a, b) (a < b ? a : b)
 int SDL_PollEvent(SDL_Event *ev) {
-  unsigned buf_size = 32;
-  char *buf = (char *)malloc(buf_size * sizeof(char));
-  if (NDL_PollEvent(buf, buf_size) == 1) {
-      if (strncmp(buf, "kd", 2) == 0) {
-          ev->key.type = SDL_KEYDOWN;
-      } else {
-          ev->key.type = SDL_KEYUP;
+  char* buf = malloc(1024);
+  // read out the event
+  if(NDL_PollEvent(buf, sizeof(buf)))
+  {
+    int sign = 0;
+    // it has a event, judge it.
+    if(strncmp(buf, "kd", 2) == 0)
+    {
+      ev->type = SDL_KEYDOWN;
+    }
+    else
+    {
+      ev->type = SDL_KEYUP;
+    }
+    // keyname is different from buf[3], and it length is different;
+    // if not do this, the slides will not up, only down
+    for (int i = 0; i < sizeof(keyname) / sizeof(keyname[0]); i++) {
+      //
+      if (strncmp(buf + 3, keyname[i], strlen(buf) - 4) == 0){
+         ev->key.keysym.sym = i;
+         sign = 1;
+         break;
       }
-
-      for (unsigned i = 0; i < sizeof(keyname) / sizeof(keyname[0]); ++i) {
-          if (strncmp(buf + 3, keyname[i], strlen(buf) - 4) == 0) {
-              ev->key.keysym.sym = i;
-              break;
-          }
-      }
-
-      free(buf);
-      return 1;
-  } else {
-      ev->key.type = SDL_USEREVENT; // avoid too many `Redirecting file open ...`
-      ev->key.keysym.sym = 0;
+    }
+    if(!sign)
+    {
+      printf("keyname: %s\n", buf);
+      printf("strlen is %ld\n", strlen(buf));
+      assert(0);
+    }
+    free(buf);
+    return 1;
   }
-
-  free(buf);
+  else
+  {
+    // if not do this, the slides will tranfer quickly!
+    ev->key.type = SDL_USEREVENT; // avoid too many `Redirecting file open ...`
+    ev->key.keysym.sym = 0;
+  }
   return 0;
 }

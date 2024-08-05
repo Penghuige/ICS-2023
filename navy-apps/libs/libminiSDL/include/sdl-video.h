@@ -1,3 +1,4 @@
+#include <stdint.h>
 #ifndef __SDL_VIDEO_H__
 #define __SDL_VIDEO_H__
 

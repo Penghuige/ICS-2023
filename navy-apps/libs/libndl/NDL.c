@@ -61,6 +61,8 @@ void NDL_OpenCanvas(int *w, int *h) {
 
   if(*w > screen_w || *h > screen_h)
   {
+    //printf("*w is %d, *h is %d\n", *w, *h);
+    //printf("screen_w is %d, screen_h is %d\n", screen_w, screen_h);
     fprintf(stderr, "Canvas size too large\n");
     exit(1);
   }
@@ -101,16 +103,21 @@ void NDL_OpenCanvas(int *w, int *h) {
     close(fbctl);
   }
 }
-
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
+  for (int i = 0; i < h; i++) {
+    lseek(fbdev, ((canvas_y + y + i) * screen_w + x + canvas_x) * 4, SEEK_SET);
+    write(fbdev, &pixels[i * w], w * 4);
+  }
+}
+void NDL_DrawRect_false(uint32_t *pixels, int x, int y, int w, int h) {
   // write into /dev/fb
   lseek(fbdev, ((canvas_y + y) * screen_w + canvas_x + x) * sizeof(uint32_t), SEEK_SET);
   for(int i = 0; i < h; i++)
   {
     //printf("locate at %d\n", (canvas_y + y + i) * screen_w + canvas_x + x);
     // write into canvas, then write into file.
-    write(fbdev, pixels + i*w, canvas_w*4);
-    lseek(fbdev, screen_w*4, SEEK_CUR);
+    write(fbdev, pixels + i*w, w*4);
+    lseek(fbdev, canvas_w*4, SEEK_CUR);
     //printf("write at %d\n", (int)((y + i) * w + x)*4);
     //for(int j = 0; j < w; j++) printf("write %d ", (int)pixels[i*w + j]);
   }

@@ -34,7 +34,7 @@ void init_proc() {
   //const char filename3[] = "/bin/keyboard-test";
   //naive_uload(NULL, filename3);
 
-  const char filename4[] = "/bin/keyboard-test";
+  const char filename4[] = "/bin/pal";
   naive_uload(NULL, filename4);
 }
 

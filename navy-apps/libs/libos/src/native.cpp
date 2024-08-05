@@ -15,6 +15,9 @@
 #include <sys/mman.h>
 #include <sys/ioctl.h>
 
+static uint32_t timer_handler(uint32_t interval, void *param); 
+
+
 //#define MODE_800x600
 
 #define FPS 60
@@ -61,7 +64,8 @@ static inline void get_fsimg_path(char *newpath, const char *path) {
   if (scancode == SDL_SCANCODE_##k) name = #k;
 
 static void update_screen() {
-  SDL_UpdateTexture(texture, NULL, fb, 2 * disp_w * sizeof(Uint32));
+  printf("update_screen, disp_w=%d, disp_h=%d\n", disp_w, disp_h);
+  SDL_UpdateTexture(texture, NULL, fb, disp_w * sizeof(Uint32));
   SDL_RenderClear(renderer);
   SDL_RenderCopy(renderer, texture, NULL, NULL);
   SDL_RenderPresent(renderer);
@@ -74,7 +78,19 @@ static SDL_mutex *key_queue_lock = NULL;
 
 static int event_thread(void *args) {
   SDL_Event event;
+    SDL_InitSubSystem(SDL_INIT_VIDEO | SDL_INIT_TIMER);
+#ifdef MODE_800x600
+  SDL_CreateWindowAndRenderer(disp_w, disp_h, 0, &window, &renderer);
+#else
+  SDL_CreateWindowAndRenderer(disp_w * 2, disp_h * 2, 0, &window, &renderer);
+#endif
+  SDL_SetWindowTitle(window, "Simulated Nanos Application");
+    SDL_AddTimer(1000 / FPS, timer_handler, NULL);
+  texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, disp_w, disp_h);
+
+
   while (1) {
+    update_screen();
     SDL_WaitEvent(&event);
 
     switch (event.type) {
@@ -107,16 +123,7 @@ static void audio_fill(void *userdata, uint8_t *stream, int len) {
 }
 
 static void open_display() {
-  SDL_InitSubSystem(SDL_INIT_VIDEO | SDL_INIT_TIMER);
-#ifdef MODE_800x600
-  SDL_CreateWindowAndRenderer(disp_w, disp_h, 0, &window, &renderer);
-#else
-  SDL_CreateWindowAndRenderer(disp_w * 2, disp_h * 2, 0, &window, &renderer);
-#endif
-  SDL_SetWindowTitle(window, "Simulated Nanos Application");
   SDL_CreateThread(event_thread, "event thread", nullptr);
-  SDL_AddTimer(1000 / FPS, timer_handler, NULL);
-  texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, disp_w, disp_h);
 
   fb_memfd = memfd_create("fb", 0);
   assert(fb_memfd != -1);
@@ -233,7 +240,6 @@ ssize_t write(int fd, const void *buf, size_t count) {
     SDL_PauseAudio(0);
     return count;
   }
-  update_screen();
   return glibc_write(fd, buf, count);
 }
 

@@ -1,3 +1,4 @@
+#include "sdl-event.h"
 #include <NDL.h>
 #include <SDL.h>
 #include <assert.h>
@@ -34,7 +35,6 @@ int SDL_WaitEvent(SDL_Event *ev) {
 }
 
 
-#define MIN(a, b) (a < b ? a : b)
 int SDL_PollEvent(SDL_Event *ev) {
   char* buf = malloc(1024);
   // read out the event
@@ -80,5 +80,6 @@ int SDL_PollEvent(SDL_Event *ev) {
     ev->key.type = SDL_USEREVENT; // avoid too many `Redirecting file open ...`
     ev->key.keysym.sym = 0;
   }
+  free(buf);
   return 0;
 }

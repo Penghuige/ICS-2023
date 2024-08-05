@@ -17,6 +17,17 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
     int dstrect_x = !dstrect ? 0 : dstrect->x;
     int dstrect_y = !dstrect ? 0 : dstrect->y;
 
+    if(src->format->palette != NULL)
+    {
+      assert(src->format->palette->colors);
+      data = malloc(src->w * src->h * sizeof(uint32_t));
+      for(int i = 0; i < src->w * src->h; i++)
+      {
+        SDL_Color color = src->format->palette->colors[((uint8_t*)src->pixels)[i]];
+        data[i] = SDL_MapRGBA(src->format, color.r, color.g, color.b, color.a);
+      }
+    }
+
     if (srcrect == NULL) {
         int width = src_w < (dst_w - dstrect_x) ? src_w : (dst_w - dstrect_x);
         int height = src_h < (dst_h - dstrect_y) ? src_h : (dst_h - dstrect_y);
@@ -43,29 +54,19 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
         return;
     }
 }
-void SDL_BlitSurface1(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_Rect *dstrect) {
-  assert(dst && src);
-  assert(dst->format->BitsPerPixel == src->format->BitsPerPixel);
-
-  int x = (srcrect == NULL ? 0 : srcrect->x);
-  int y = (srcrect == NULL ? 0 : srcrect->y);
-  int w = (srcrect == NULL ? src->w : srcrect->w);
-  int h = (srcrect == NULL ? src->h : srcrect->h);
-
-  int dx = (dstrect == NULL ? 0 : dstrect->x);
-  int dy = (dstrect == NULL ? 0 : dstrect->y);
-
-  for(int i = 0; i < h; i++)
-  {
-    for(int j = 0; j < w; j++)
-    {
-      ((uint32_t*)dst->pixels)[(dy+i)*dst->w + dx + j] = ((uint32_t*)src->pixels)[(y+i)*src->w + x + j];
-    }
-  }
-}
 
 void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
   uint32_t *base = (uint32_t*)dst->pixels;
+  if(dst->format->palette != NULL)
+  {
+    assert(dst->format->palette->colors);
+    SDL_Color c;
+    c.r = (color & dst->format->Rmask) >> dst->format->Rshift;
+    c.g = (color & dst->format->Gmask) >> dst->format->Gshift;
+    c.b = (color & dst->format->Bmask) >> dst->format->Bshift;
+    c.a = (color & dst->format->Amask) >> dst->format->Ashift;
+    color = SDL_MapRGBA(dst->format, c.r, c.g, c.b, c.a);
+  }
   if(dstrect == NULL)
   {
     for(int i = 0; i < dst->w * dst->h; i++)
@@ -88,12 +89,41 @@ void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
 }
 
 void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
-  if(x | y | w | h == 0)
+  if(s->format->palette == NULL)
   {
-    NDL_DrawRect((uint32_t*)s->pixels, x, y, s->w, s->h);
+    if(x | y | w | h == 0)
+    {
+      NDL_DrawRect((uint32_t*)s->pixels, x, y, s->w, s->h);
+    }
+    else
+      NDL_DrawRect((uint32_t*)s->pixels, x, y, w, h);
   }
   else
-    NDL_DrawRect((uint32_t*)s->pixels, x, y, w, h);
+  {
+    // a pixel only has 8 bits
+    assert(s->format->palette->colors);
+    int W, H;
+    if(x | y | w | h == 0)
+    {
+      W = s->w;
+      H = s->h;
+    }
+    else
+    {
+      W = w;
+      H = h;
+    }
+    uint8_t *index = (uint8_t*)s->pixels;
+    uint32_t *pixels = malloc(W*H*sizeof(uint32_t));
+    // through index fill the pixels
+    for(int i = 0; i < W*H; i++)
+    {
+      SDL_Color color = s->format->palette->colors[index[i]];
+      pixels[i] = SDL_MapRGBA(s->format, color.r, color.g, color.b, color.a);
+    }
+    NDL_DrawRect(pixels, x, y, W, H);
+    free(pixels);
+  }
 }
 // APIs below are already implemented.
 

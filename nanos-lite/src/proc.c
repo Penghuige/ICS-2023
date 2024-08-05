@@ -36,9 +36,11 @@ void init_proc() {
 
   //const char filename4[] = "/games/pal";
   //naive_uload(NULL, filename4);
-
-  const char filename4[] = "/bin/bird";
+  const char filename4[] = "/bin/nterm";
   naive_uload(NULL, filename4);
+
+  //const char filename4[] = "/bin/bird";
+  //naive_uload(NULL, filename4);
 }
 
 Context* schedule(Context *prev) {

@@ -1,0 +1,26 @@
+Diagnostics:
+  Suppress:
+    [
+    ]
+
+CompileFlags:
+  Add:
+    - -I/home/penghui/ics2023/abstract-machine/am/include
+    - -I/home/penghui/ics2023/abstract-machine/klib/include
+    - -I/home/penghui/ics2023/abstract-machine/am/src/platform/nemu/include
+    - -I/home/penghui/ics2023/nanos-lite/include
+    - -I/home/penghui/ics2023/nemu/src/isa/riscv32/include
+    - -I/home/penghui/ics2023/nemu/include
+    - -I/home/penghui/ics2023/navy-apps/libs/compiler-rt/include
+    - -I/home/penghui/ics2023/navy-apps/libs/libbmp/include
+    - -I/home/penghui/ics2023/navy-apps/libs/libminiSDL/include
+    - -I/home/penghui/ics2023/navy-apps/libs/libSDL_image/include
+    - -I/home/penghui/ics2023/navy-apps/libs/libvorbis/include
+    - -I/home/penghui/ics2023/navy-apps/libs/libam/include
+    - -I/home/penghui/ics2023/navy-apps/libs/libc/include
+    - -I/home/penghui/ics2023/navy-apps/libs/libndl/include
+    - -I/home/penghui/ics2023/navy-apps/libs/libSDL_mixer/include
+    - -I/home/penghui/ics2023/navy-apps/libs/libbdf/include
+    - -I/home/penghui/ics2023/navy-apps/libs/libfixedptc/include
+    - -I/home/penghui/ics2023/navy-apps/libs/libos/src
+    - -I/home/penghui/ics2023/navy-apps/libs/libSDL_ttf/include

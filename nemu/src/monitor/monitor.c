@@ -191,7 +191,7 @@ static long load_img() {
     return 4096; // built-in image size
   }
 
-  FILE *fp = fopen(img_file, "r");
+  FILE *fp = fopen(img_file, "rb");
   Assert(fp, "Can not open '%s'", img_file);
 
   fseek(fp, 0, SEEK_END);

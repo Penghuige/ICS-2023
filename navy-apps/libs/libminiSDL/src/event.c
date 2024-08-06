@@ -35,7 +35,7 @@ int SDL_WaitEvent(SDL_Event *ev) {
 
 #define MIN(a, b) (a < b ? a : b)
 int SDL_PollEvent(SDL_Event *ev) {
-  char* buf = malloc(1024);
+  char* buf = malloc(4096);
   // read out the event
   if(NDL_PollEvent(buf, strlen(buf)))
   {

@@ -67,6 +67,7 @@ int SDL_PollEvent(SDL_Event *ev) {
     }
     if(!sign)
     {
+      printf("bad input\n");
       printf("keyname: %s\n", buf);
       printf("strlen is %ld\n", strlen(buf));
     }

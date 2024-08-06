@@ -33,7 +33,7 @@ int SDL_WaitEvent(SDL_Event *ev) {
   return 1;
 }
 
-
+#define MIN(a, b) (a < b ? a : b)
 int SDL_PollEvent(SDL_Event *ev) {
   char* buf = malloc(1024);
   // read out the event
@@ -53,7 +53,7 @@ int SDL_PollEvent(SDL_Event *ev) {
     // if not do this, the slides will not up, only down
     for (int i = 0; i < sizeof(keyname) / sizeof(keyname[0]); i++) {
       // when the length is bigger than 2, it maybe a bug
-      if (strncmp(buf + 3, keyname[i], strlen(buf) - 4) == 0){
+      if (strncmp(buf + 3, keyname[i], MIN(strlen(keyname[i]) , 4)) == 0){
         // it isn't long key such as t between tab
         if(strlen(keyname[i]) != strlen(buf) - 4 && strlen(buf) != 7)
         {

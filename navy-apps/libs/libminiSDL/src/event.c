@@ -55,7 +55,7 @@ int SDL_PollEvent(SDL_Event *ev) {
       // when the length is bigger than 2, it maybe a bug
       if (strncmp(buf + 3, keyname[i], MIN(strlen(keyname[i]) , 4)) == 0){
         // it isn't long key such as t between tab
-        if(strlen(keyname[i]) != strlen(buf) - 4 && strlen(buf) != 7)
+        if(strlen(keyname[i]) != 1)
         {
           printf("get buf is %s, while keyname is %s\n", buf+3, keyname[i]);
           continue;

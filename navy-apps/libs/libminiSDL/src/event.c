@@ -60,6 +60,8 @@ int SDL_PollEvent(SDL_Event *ev) {
           //printf("get buf is %s, while keyname is %s\n", buf+3, keyname[i]);
           continue;
         }
+      printf("keyname: %s\n", buf);
+      printf("strlen is %ld\n", strlen(buf));
          ev->key.keysym.sym = i;
          sign = 1;
          break;

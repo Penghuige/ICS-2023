@@ -199,11 +199,8 @@ static long load_img() {
   Log("The image is %s, size = %ld", img_file, size);
 
   fseek(fp, 0, SEEK_SET);
-  // this code have some bug
-  //int ret = fread(guest_to_host(RESET_VECTOR), size, 1, fp);
-  memcpy(guest_to_host(RESET_VECTOR), fp, size);
-
-  //assert(ret == 1);
+  int ret = fread(guest_to_host(RESET_VECTOR), size, 1, fp);
+  assert(ret == 1);
 
   fclose(fp);
   return size;

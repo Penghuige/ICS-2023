@@ -21,6 +21,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <elf.h>
+#include <stdio.h>
 
 void init_rand();
 void init_log(const char *log_file);

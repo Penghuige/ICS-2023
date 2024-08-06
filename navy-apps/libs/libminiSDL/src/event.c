@@ -68,7 +68,6 @@ int SDL_PollEvent(SDL_Event *ev) {
     {
       printf("keyname: %s\n", buf);
       printf("strlen is %ld\n", strlen(buf));
-      assert(0);
     }
     free(buf);
     return 1;

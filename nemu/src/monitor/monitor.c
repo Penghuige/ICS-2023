@@ -190,7 +190,6 @@ static long load_img() {
     Log("No image is given. Use the default build-in image.");
     return 4096; // built-in image size
   }
-
   FILE *fp = fopen(img_file, "rb");
   Assert(fp, "Can not open '%s'", img_file);
 
@@ -200,8 +199,11 @@ static long load_img() {
   Log("The image is %s, size = %ld", img_file, size);
 
   fseek(fp, 0, SEEK_SET);
-  int ret = fread(guest_to_host(RESET_VECTOR), size, 1, fp);
-  assert(ret == 1);
+  // this code have some bug
+  //int ret = fread(guest_to_host(RESET_VECTOR), size, 1, fp);
+  int ret = memcmp(guest_to_host(RESET_VECTOR), &size, 4);
+  assert(ret == 0);
+
 
   fclose(fp);
   return size;

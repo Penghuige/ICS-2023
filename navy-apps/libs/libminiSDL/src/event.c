@@ -26,16 +26,7 @@ int SDL_PeepEvents(SDL_Event *ev, int numevents, int action, uint32_t mask) {
 }
 
 uint8_t* SDL_GetKeyState(int *numkeys) {
-  SDL_Event ev;
-    if (SDL_PollEvent(&ev) == 1 && ev.key.type == SDL_KEYDOWN) {
-        keystate[ev.key.keysym.sym] = 1;
-    } else {
-        memset(keystate, 0, sizeof(keystate));
-    }
   return keystate;
-}
-uint8_t* SDL_GetKeyState2(int *numkeys) {
-  return NULL;
 }
 
 int SDL_WaitEvent(SDL_Event *ev) {
@@ -75,6 +66,7 @@ int SDL_PollEvent(SDL_Event *ev) {
          break;
       }
     }
+    keystate[ev->key.keysym.sym] = ev->type == SDL_KEYDOWN;
     if(!sign)
     {
       printf("bad input\n");

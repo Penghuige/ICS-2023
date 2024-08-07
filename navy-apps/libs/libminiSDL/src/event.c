@@ -12,6 +12,8 @@ static const char *keyname[] = {
   _KEYS(keyname)
 };
 
+static unsigned char keystate[sizeof(keyname) / sizeof(keyname[0])];
+
 int SDL_PushEvent(SDL_Event *ev) {
   assert(0);
   return 0;
@@ -22,9 +24,14 @@ int SDL_PeepEvents(SDL_Event *ev, int numevents, int action, uint32_t mask) {
   assert(0);
   return 0;
 }
-static unsigned char keystate[SDLK_LALT];
 
 uint8_t* SDL_GetKeyState(int *numkeys) {
+  SDL_Event ev;
+    if (SDL_PollEvent(&ev) == 1 && ev.key.type == SDL_KEYDOWN) {
+        keystate[ev.key.keysym.sym] = 1;
+    } else {
+        memset(keystate, 0, sizeof(keystate));
+    }
   return keystate;
 }
 uint8_t* SDL_GetKeyState2(int *numkeys) {

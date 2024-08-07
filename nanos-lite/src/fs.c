@@ -112,13 +112,17 @@ static int get_index(size_t fd)
 }
 
 int fs_open(const char *pathname, int flags, int mode) {
+#ifdef CONFIG_STRACE
   Log("need to open %s", pathname);
+#endif
   for(int i = 0; i < LENGTH(file_table); i++) {
     //printf("file_table[%d].name: %s\n", i, file_table[i].name);
     if(strcmp(pathname, file_table[i].name) == 0) {
       if(i <= FD_FB)
       {
+#ifdef CONFIG_STRACE
         Log("ignore open %s", pathname);
+#endif
         return i;
       }
       // record 
@@ -128,7 +132,9 @@ int fs_open(const char *pathname, int flags, int mode) {
       open_table[open_index].fd = i;
       open_table[open_index].open_offset = 0;
       open_index++;
+#ifdef CONFIG_STRACE
       Log("have read %s", pathname);
+#endif
 
       return i;
     }

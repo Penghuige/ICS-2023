@@ -103,13 +103,13 @@ static int get_index(size_t fd)
     {
       printf("allright!\n");
       ret = i;
-      return i;
       break;
     }
   }
   if(ret == -1)
   {
     printf("%d file not found! open_index is %d, all file is:\n", fd, open_index);
+    assert(0);
   }
   return ret;
 }

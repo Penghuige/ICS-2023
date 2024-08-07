@@ -105,6 +105,14 @@ static int get_index(int fd)
       break;
     }
   }
+  if(ret == -1)
+  {
+    printf("%d file not found! all file is:\n", fd);
+    for(int i = 0; i < open_index; i++)
+    {
+      printf("name: %d\n", open_table[i].fd);
+    }
+  }
   return ret;
 }
 

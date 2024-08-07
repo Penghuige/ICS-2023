@@ -104,17 +104,17 @@ static int get_index(size_t fd)
       break;
     }
   }
-  if(ret == -1)
-  {
-    printf("%d file not found! open_index is %d, all file is:\n", fd, open_index);
-  }
+  //if(ret == -1)
+  //{
+  //  printf("%d file not found! open_index is %d, all file is:\n", fd, open_index);
+  //}
   return ret;
 }
 
 int fs_open(const char *pathname, int flags, int mode) {
   Log("need to open %s", pathname);
   for(int i = 0; i < LENGTH(file_table); i++) {
-    printf("file_table[%d].name: %s\n", i, file_table[i].name);
+    //printf("file_table[%d].name: %s\n", i, file_table[i].name);
     if(strcmp(pathname, file_table[i].name) == 0) {
       if(i <= FD_FB)
       {

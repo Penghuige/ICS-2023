@@ -103,6 +103,7 @@ static int get_index(size_t fd)
     {
       printf("allright!\n");
       ret = i;
+      return i;
       break;
     }
   }

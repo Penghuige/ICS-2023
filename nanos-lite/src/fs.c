@@ -98,7 +98,7 @@ static int get_index(int fd)
   int ret = -1;
   for(int i = 0; i < open_index; i++)
   {
-    //printf("name: %d\n", open_table[i].fd);
+    printf("name: %d\n", open_table[i].fd);
     if(fd == open_table[i].fd)
     {
       ret = i;
@@ -108,10 +108,6 @@ static int get_index(int fd)
   if(ret == -1)
   {
     printf("%d file not found! open_index is %d, all file is:\n", fd, open_index);
-    for(int i = 0; i < open_index; i++)
-    {
-      printf("name: %d\n", open_table[i].fd);
-    }
   }
   return ret;
 }
@@ -132,10 +128,8 @@ int fs_open(const char *pathname, int flags, int mode) {
       assert(open_index < LENGTH(open_table));
       open_table[open_index].fd = i;
       open_table[open_index].open_offset = 0;
-      printf("open_index is %d\n", open_index);
       open_index++;
       Log("have read %s", pathname);
-      printf("open_index is %d\n", open_index);
 
       return i;
     }

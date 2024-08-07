@@ -125,6 +125,7 @@ int fs_open(const char *pathname, int flags, int mode) {
       open_table[open_index].fd = i;
       open_table[open_index].open_offset = 0;
       open_index++;
+      Log("have read %s", pathname);
 
       return i;
     }

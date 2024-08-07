@@ -135,6 +135,7 @@ int fs_open(const char *pathname, int flags, int mode) {
       printf("open_index is %d\n", open_index);
       open_index++;
       Log("have read %s", pathname);
+      printf("open_index is %d\n", open_index);
 
       return i;
     }

@@ -62,7 +62,7 @@ static Finfo file_table[] __attribute__((used)) = {
 };
 
 // it is not need to use in other files
-static int open_index;
+static size_t open_index;
 static OFinfo open_table[LENGTH(file_table)];
 
 void init_fs() {

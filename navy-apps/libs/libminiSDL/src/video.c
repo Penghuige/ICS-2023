@@ -4,59 +4,155 @@
 #include <string.h>
 #include <stdlib.h>
 
-void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_Rect *dstrect) {
-    assert(dst && src);
-    assert(dst->format->BitsPerPixel == src->format->BitsPerPixel);
 
-    uint32_t * data = (uint32_t *)src->pixels;
-    uint32_t * base = (uint32_t *)dst->pixels;
+#define MIN(x, y) ((x) < (y) ? (x) : (y))
+#define MAX(x, y) ((x) > (y) ? (x) : (y))
 
-    int src_w = src->w;
-    int src_h = src->h;
-    int dst_w = dst->w;
-    int dst_h = dst->h;
-    int dstrect_x = !dstrect ? 0 : dstrect->x;
-    int dstrect_y = !dstrect ? 0 : dstrect->y;
+#define SDL_CreateRectFromSurface(suf, rect)                                   \
+  SDL_Rect rect = {.x = 0, .y = 0, .w = suf->w, .h = suf->h}
 
-    if(src->format->palette != NULL)
-    {
-      assert(src->format->palette->colors);
-      data = malloc(src->w * src->h * sizeof(uint32_t));
-      for(int i = 0; i < src->w * src->h; i++)
-      {
-        SDL_Color color = src->format->palette->colors[((uint8_t*)src->pixels)[i]];
-        data[i] = SDL_MapRGBA(src->format, color.r, color.g, color.b, color.a);
-      }
-    }
+uint32_t *gbPixels = NULL;
 
-    if (srcrect == NULL) {
-        int width = src_w < (dst_w - dstrect_x) ? src_w : (dst_w - dstrect_x);
-        int height = src_h < (dst_h - dstrect_y) ? src_h : (dst_h - dstrect_y);
-
-        for (int i = 0; i < height; ++i) {
-            for (int j = 0; j < width; ++j) {
-                base[(dstrect_y + i) * dst_w + dstrect_x + j] = data[i * src_w + j];
-            }
-        }
-
-        return;
-    } else {
-        int srcrect_x = srcrect->x;
-        int srcrect_y = srcrect->y;
-        int width = srcrect->w < (dst_w - dstrect_x) ? srcrect->w : (dst_w - dstrect_x);
-        int height = srcrect->h < (dst_h - dstrect_y) ? srcrect->h : (dst_h - dstrect_y);
-
-        for (int i = 0; i < height; ++i) {
-            for (int j = 0; j < width; ++j) {
-                base[(dstrect_y + i) * dst_w + dstrect_x + j] = data[(srcrect_y + i) * src_w + srcrect_x + j];
-            }
-        }
-
-        return;
-    }
+static inline SDL_Rect *SDL_RectIntersect(SDL_Rect *dst, SDL_Rect *src) {
+  if (dst == NULL) return src;
+  if (src == NULL) return dst;
+  int x = MAX(dst->x, src->x);
+  int y = MAX(dst->y, src->y);
+  int xt = MIN(src->x + src->w, dst->x + dst->w);
+  int yt = MIN(src->y + src->h, dst->y + dst->h);
+  dst->x = x;
+  dst->y = y;
+  dst->w = xt - x;
+  dst->h = yt - y;
+  return dst;
 }
 
-void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
+void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_Rect *dstrect) {
+  assert(dst && src);
+  assert(dst->format->BitsPerPixel == src->format->BitsPerPixel);
+  if (dst->format->BitsPerPixel == 8) {
+    assert(src->format->palette->ncolors == 256);
+    assert(dst->format->palette->ncolors == 256);
+    memcpy(dst->format->palette->colors, dst->format->palette->colors, 256);
+  }
+  // sx dx w
+  // w: I(dr''. sr')
+  // sx: sr ? srx : 0
+  // dx: dr ? drx : 0
+  
+  // srect
+  SDL_CreateRectFromSurface(src, srect);
+  SDL_RectIntersect(&srect, srcrect);
+  // dr
+  SDL_CreateRectFromSurface(dst, drect);
+  dstrect = SDL_RectIntersect(dstrect, &drect);
+  dstrect->w = dst->w - dstrect->x;
+  dstrect->h = dst->h - dstrect->y;
+  SDL_Rect r = {.x = dstrect->x, .y = dstrect->y, .w = srect.w, .h = srect.h};
+  SDL_RectIntersect(dstrect, &r);
+  int dw = dst->w, sw = src->w;
+  if (dst->format->BitsPerPixel == 8) {
+    int off_dst = dstrect->y * dw + dstrect->x;
+    int off_src = srect.y * sw + srect.x;
+    for (int i = 0; i < dstrect->h; i++, off_dst += dw, off_src += sw)
+      memcpy(&((uint8_t *)dst->pixels)[off_dst], &((uint8_t *)src->pixels)[off_src], dstrect->w);
+  } else {
+    for (int i = 0; i < dstrect->h; i++)
+      for (int j = 0; j < dstrect->w; j++)
+          ((uint32_t *)dst->pixels)[dw * (dstrect->y + i) + dstrect->x + j] =
+            ((uint32_t *)src->pixels)[sw * (srect.y + i) + srect.x + j];
+  }
+}void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
+  assert(dst->format->BitsPerPixel == 8 || dst->format->BitsPerPixel == 32);
+  int w = dst->w;
+  SDL_CreateRectFromSurface(dst, rect);
+  SDL_Rect *r = SDL_RectIntersect(dstrect, &rect);
+  for (int i = 0; i < r->h; i++)
+    for (int j = 0; j < r->w; j++) {
+      if (dst->format->BitsPerPixel == 32)
+        ((uint32_t *)dst->pixels)[w * (r->y + i) + r->x + j] = color;
+      else
+        ((uint8_t *)dst->pixels)[w * (r->y + i) + r->x + j] = color;
+    }
+        
+}
+void SDL_BlitSurface2(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_Rect *dstrect) {
+  assert(dst && src);
+  assert(dst->format->BitsPerPixel == src->format->BitsPerPixel);
+
+  uint32_t * data = (uint32_t *)src->pixels;
+  uint32_t * base = (uint32_t *)dst->pixels;
+  uint32_t * temp;
+  temp = malloc(src->w * src->h * sizeof(uint32_t));
+
+  int src_w = src->w;
+  int src_h = src->h;
+  int srcrect_x = !srcrect ? 0 : srcrect->x;
+  int srcrect_y = !srcrect ? 0 : srcrect->y;
+  int dst_w = dst->w;
+  int dst_h = dst->h;
+  int dstrect_x = !dstrect ? 0 : dstrect->x;
+  int dstrect_y = !dstrect ? 0 : dstrect->y;
+
+
+  if (srcrect == NULL) {
+    int width = src_w < (dst_w - dstrect_x) ? src_w : (dst_w - dstrect_x);
+    int height = src_h < (dst_h - dstrect_y) ? src_h : (dst_h - dstrect_y);
+
+    if(dst->format->BitsPerPixel == 8)
+    {
+      assert(src->format->palette->colors);
+      for (int i = 0; i < height; ++i) {
+        for (int j = 0; j < width; ++j) {
+          SDL_Color color = src->format->palette->colors[src->pixels[(srcrect_y + i) * src_w + srcrect_x + j]];
+          //temp[i] = SDL_MapRGBA(src->format, c.r, c.g, c.b, c.a);
+          temp[i] = color.a << 24 | color.r << 16 | color.g << 8 | color.b;
+        }
+      }
+      data = temp;
+    }
+    for (int i = 0; i < height; ++i) {
+      for (int j = 0; j < width; ++j) {
+        if(dst->format->BitsPerPixel == 8)
+        {
+          base[(dstrect_y + i) * dst_w + dstrect_x + j] = data[i * src_w + j];
+        }
+        else
+          base[(dstrect_y + i) * dst_w + dstrect_x + j] = data[i * src_w + j];
+      }
+    }
+  }else{
+    int width = srcrect->w < (dst_w - dstrect_x) ? srcrect->w : (dst_w - dstrect_x);
+    int height = srcrect->h < (dst_h - dstrect_y) ? srcrect->h : (dst_h - dstrect_y);
+
+    if(dst->format->BitsPerPixel == 8)
+    {
+      assert(src->format->palette->colors);
+      for (int i = 0; i < height; ++i) {
+        for (int j = 0; j < width; ++j) {
+          SDL_Color color = src->format->palette->colors[src->pixels[(srcrect_y + i) * src_w + srcrect_x + j]];
+          //temp[i] = SDL_MapRGBA(src->format, c.r, c.g, c.b, c.a);
+          temp[i] = color.a << 24 | color.r << 16 | color.g << 8 | color.b;
+        }
+      }
+      data = temp;
+    }
+    for (int i = 0; i < height; ++i) {
+      for (int j = 0; j < width; ++j) {
+        if(dst->format->BitsPerPixel == 8)
+        {
+          base[(dstrect_y + i) * dst_w + dstrect_x + j] = data[i * src_w + j];
+        }
+        else
+          base[(dstrect_y + i) * dst_w + dstrect_x + j] = data[(srcrect_y + i) * src_w + srcrect_x + j];
+      }
+    }
+  }
+  free(temp);
+  return;
+}
+
+void SDL_FillRect2(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
   uint32_t *base = (uint32_t*)dst->pixels;
   if(dst->format->palette != NULL)
   {
@@ -89,7 +185,32 @@ void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
   }
 }
 
+
 void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
+  assert(s->format->BitsPerPixel == 8 || s->format->BitsPerPixel == 32);
+  if ((x | y | w | h) == 0) {
+    w = s->w;
+    h = s->h;
+  }
+  if (s->format->BitsPerPixel == 8) {
+    assert(s->format->palette->ncolors == 256);
+    uint32_t colorARGB[256];
+    for (int i = 0; i < 256; i++) {
+      uint8_t r = s->format->palette->colors[i].r;
+      uint8_t g = s->format->palette->colors[i].g;
+      uint8_t b = s->format->palette->colors[i].b;
+      uint8_t a = s->format->palette->colors[i].a;
+      colorARGB[i] = (a << 24) | (r << 16) | (g << 8) | b;
+    }
+    for (int i = 0; i < h; i++)
+      for (int j = 0; j < w; j++)
+        gbPixels[i * w + j] = colorARGB[((uint8_t *)s->pixels)[(y + i) * s->w + x + j]];
+    NDL_DrawRect(gbPixels, x, y, w, h);
+  } else {
+    NDL_DrawRect((uint32_t *)s->pixels, x, y, w, h);
+  }
+}
+void SDL_UpdateRect2(SDL_Surface *s, int x, int y, int w, int h) {
   if(s->format->palette == NULL)
   {
     if(x | y | w | h == 0)
@@ -297,7 +418,6 @@ SDL_Surface *SDL_ConvertSurface(SDL_Surface *src, SDL_PixelFormat *fmt, uint32_t
 }
 
 uint32_t SDL_MapRGBA(SDL_PixelFormat *fmt, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
-  assert(fmt->BytesPerPixel == 4);
   uint32_t p = (r << fmt->Rshift) | (g << fmt->Gshift) | (b << fmt->Bshift);
   if (fmt->Amask) p |= (a << fmt->Ashift);
   return p;

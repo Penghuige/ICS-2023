@@ -84,7 +84,7 @@ void init_fs() {
 
 static int get_index(int fd)
 {
-  if (fd < 0 || fd >= LENGTH(open_table))
+  if (fd < 0 || fd > LENGTH(open_table))
   {
     return -1;
   }

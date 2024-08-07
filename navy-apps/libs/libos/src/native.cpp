@@ -64,7 +64,7 @@ static inline void get_fsimg_path(char *newpath, const char *path) {
   if (scancode == SDL_SCANCODE_##k) name = #k;
 
 static void update_screen() {
-  printf("update_screen, disp_w=%d, disp_h=%d\n", disp_w, disp_h);
+  //printf("update_screen, disp_w=%d, disp_h=%d\n", disp_w, disp_h);
   SDL_UpdateTexture(texture, NULL, fb, disp_w * sizeof(Uint32));
   SDL_RenderClear(renderer);
   SDL_RenderCopy(renderer, texture, NULL, NULL);

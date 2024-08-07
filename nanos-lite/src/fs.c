@@ -107,7 +107,7 @@ static int get_index(int fd)
   }
   if(ret == -1)
   {
-    printf("%d file not found! all file is:\n", fd);
+    printf("%d file not found! open_index is %d, all file is:\n", fd, open_index);
     for(int i = 0; i < open_index; i++)
     {
       printf("name: %d\n", open_table[i].fd);

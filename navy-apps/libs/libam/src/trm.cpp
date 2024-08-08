@@ -1,12 +1,17 @@
 #include <am.h>
 #include <assert.h>
 
+# define nemu_trap(code) asm volatile("mv a0, %0; ebreak" : :"r"(code))
+
 Area heap;
 
 void putch(char ch) {
-  assert(0);
+  putchar(ch);
 }
 
 void halt(int code) {
-  assert(0);
+  nemu_trap(code);
+
+  // should not reach here
+  while(1);
 }

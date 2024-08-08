@@ -74,12 +74,15 @@ void ioe_read (int reg, void *buf) {
   }
 }
 void ioe_write(int reg, void *buf) {
-  //printf("ioe_write reg is %d\n", reg);
   switch (reg) {
     case AM_GPU_FBDRAW:
       NDL_DrawRect(((AM_GPU_FBDRAW_T *)buf)->pixels, ((AM_GPU_FBDRAW_T *)buf)->x, ((AM_GPU_FBDRAW_T *)buf)->y, ((AM_GPU_FBDRAW_T *)buf)->w, ((AM_GPU_FBDRAW_T *)buf)->h);
+    case AM_AUDIO_CTRL:
+      break;
+    case AM_AUDIO_PLAY:
       break;
     default:
+      printf("bad ioe_write reg is %d\n", reg);
       assert(0);
   }
 }

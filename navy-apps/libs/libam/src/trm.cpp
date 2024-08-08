@@ -1,5 +1,6 @@
 #include <am.h>
 #include <assert.h>
+#include <stdlib.h>
 
 # define nemu_trap(code) asm volatile("mv a0, %0; ebreak" : :"r"(code))
 
@@ -10,7 +11,7 @@ void putch(char ch) {
 }
 
 void halt(int code) {
-  nemu_trap(code);
+  exit(code);
 
   // should not reach here
   while(1);

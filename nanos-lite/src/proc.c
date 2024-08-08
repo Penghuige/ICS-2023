@@ -34,7 +34,7 @@ void init_proc() {
   //const char filename3[] = "/bin/keyboard-test";
   //naive_uload(NULL, filename3);
 
-  const char filename4[] = "/bin/coremark";
+  const char filename4[] = "/bin/bad-apple";
   //naive_uload(NULL, filename4);
   //const char filename4[] = "/bin/nterm";
   naive_uload(NULL, filename4);

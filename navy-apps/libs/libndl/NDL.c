@@ -9,6 +9,8 @@
 
 static int evtdev = -1;
 static int fbdev = -1;
+static int sbdev = -1;
+static int sbtdev = -1;
 static int screen_w = 0, screen_h = 0;
 
 static int canvas_w = 0, canvas_h = 0;
@@ -147,6 +149,8 @@ int NDL_Init(uint32_t flags) {
 	{
     fbdev = open("/dev/fb", 0, 0);
     evtdev = open("/dev/events", 0, 0);
+    sbdev = open("/dev/sb", 0, 0);
+    sbtdev = open("/dev/sbtcl", 0, 0);
   }
 
   return 0;

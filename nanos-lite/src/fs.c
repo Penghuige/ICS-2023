@@ -116,7 +116,7 @@ int fs_open(const char *pathname, int flags, int mode) {
   Log("need to open %s", pathname);
 #endif
   for(int i = 0; i < LENGTH(file_table); i++) {
-    printf("file_table[%d].name: %s\n", i, file_table[i].name);
+    //printf("file_table[%d].name: %s\n", i, file_table[i].name);
     if(strcmp(pathname, file_table[i].name) == 0) {
       if(i <= FD_FB)
       {

@@ -29,11 +29,16 @@ void ioe_read (int reg, void *buf) {
       ((AM_GPU_CONFIG_T *)buf)->height = h;
       break;
     case AM_TIMER_UPTIME:
+      // us and NDL return ms
       ((AM_TIMER_UPTIME_T *)buf)->us = NDL_GetTicks() * 1000;
       break;
     case AM_TIMER_CONFIG: 
       ((AM_TIMER_CONFIG_T *)buf)->present = true;
       ((AM_TIMER_CONFIG_T *)buf)->has_rtc = true;
+      break;
+    case AM_AUDIO_CONFIG:
+      ((AM_AUDIO_CONFIG_T *)buf)->present = false;
+      ((AM_AUDIO_CONFIG_T *)buf)->bufsize = 0;
       break;
     case AM_INPUT_CONFIG:
       ((AM_INPUT_CONFIG_T *)buf)->present = true;

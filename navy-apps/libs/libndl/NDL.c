@@ -1,99 +1,51 @@
+#include <sys/time.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <sys/time.h>
+#include <fcntl.h>
 #include <assert.h>
-#include <sys/fcntl.h>
+#include <errno.h>
 
 static int evtdev = -1;
 static int fbdev = -1;
-static int sbdev = -1;
-static int sbtdev = -1;
+static int fdsbctl = -1;
+static int fdsb = -1;
 static int screen_w = 0, screen_h = 0;
-
-static int canvas_w = 0, canvas_h = 0;
 static int canvas_x = 0, canvas_y = 0;
+
+static uint32_t time_start = 0;
 
 uint32_t NDL_GetTicks() {
   struct timeval tv;
-  assert(gettimeofday(&tv, NULL) == 0);
-  // ms
-  return tv.tv_sec * 1000 + tv.tv_usec / 1000;
+  gettimeofday(&tv, NULL);
+  return ((uint32_t)tv.tv_sec) * 1000 + tv.tv_usec / 1000 - time_start;
 }
 
 int NDL_PollEvent(char *buf, int len) {
-	memset(buf, 0, len);
+  if (buf == NULL) return 0;
   int ret = read(evtdev, buf, len);
-  //printf("NDL_PollEvent, buf is %s, len is %d\n", buf, len);
-  return ret == 0 ? 0 : 1;
+  // to make it easy, panic when buffer is not enough
+  // this mean a event is lost
+  if (ret < 0) {
+    assert(errno == EAGAIN || errno == EWOULDBLOCK);
+    return 0;
+  }
+  assert(ret < len);
+  return ret;
 }
 
 void NDL_OpenCanvas(int *w, int *h) {
-  // open a canvas with w*h
-  int index = open("/proc/dispinfo", 0, 0);
-  // canvas is a frame buffer
-  char buf[64];
-  int nread = read(index, buf, sizeof(buf) - 1);
-  assert(nread < sizeof(buf) - 1);
-  assert(close(index) == 0);
-  assert(strncmp(buf, "WIDTH:", 6) == 0);
-
-  int wi = 0, hi = 0;
-  int i = 6;
-  for(; buf[i] != '\n'; i++)
-  {
-    if(buf[i] >= '0' && buf[i] <= '9')
-    {
-      wi = wi * 10 + buf[i] - '0';
-    }
-  }
-  assert(strncmp(buf+i+1, "HEIGHT:", 7) == 0);
-
-  i += 7;
-  for(; buf[i] != '\n'; i++)
-  {
-    if(buf[i] >= '0' && buf[i] <= '9')
-    {
-      hi = hi * 10 + buf[i] - '0';
-    }
-  }
-  screen_h = hi;
-  screen_w = wi;
-
-  if(*w > screen_w || *h > screen_h)
-  {
-    //printf("*w is %d, *h is %d\n", *w, *h);
-    //printf("screen_w is %d, screen_h is %d\n", screen_w, screen_h);
-    fprintf(stderr, "Canvas size too large\n");
-    exit(1);
-  }
-  // if not set, initialize.
-  if(*w == 0)
-  {
-    *w = screen_w;
-  }
-  if(*h == 0)
-  {
-    *h = screen_h;
-  }
-  // not right
-  canvas_w = *w, canvas_h = *h;
-  // 128 * 128 screen is 300 * 400
-  //printf("canvas_w is %d, canvas_h is %d\n", canvas_w, canvas_h);
-  // mid
-  canvas_x=(screen_w - canvas_w) / 2;
-  canvas_y=(screen_h - canvas_h) / 2;
-
-	// a file define NWM_APP, but now it needn't
+  if (*w == 0 || *w > screen_w) *w = screen_w;
+  if (*h == 0 || *h > screen_h) *h = screen_h;
   if (getenv("NWM_APP")) {
     int fbctl = 4;
     fbdev = 5;
     screen_w = *w; screen_h = *h;
-    //printf("screen_w is %d, screen_h is %d\n", screen_h, screen_w);
     char buf[64];
     int len = sprintf(buf, "%d %d", screen_w, screen_h);
+    printf("NDL_OpenCanvas: %d %d\n", screen_w, screen_h);
     // let NWM resize the window and create the frame buffer
     write(fbctl, buf, len);
     while (1) {
@@ -104,75 +56,100 @@ void NDL_OpenCanvas(int *w, int *h) {
       if (strcmp(buf, "mmap ok") == 0) break;
     }
     close(fbctl);
+  } else {
+    canvas_x = (screen_w - *w) / 2;
+    canvas_y = (screen_h - *h) / 2;
   }
 }
+
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
   for (int i = 0; i < h; i++) {
-    lseek(fbdev, ((canvas_y + y + i) * screen_w + x + canvas_x) * sizeof(uint32_t), SEEK_SET);
-    write(fbdev, &pixels[i * w], w * sizeof(uint32_t));
-  }
-}
-void NDL_DrawRect_false(uint32_t *pixels, int x, int y, int w, int h) {
-  // write into /dev/fb
-  lseek(fbdev, ((canvas_y + y) * screen_w + canvas_x + x) * sizeof(uint32_t), SEEK_SET);
-  for(int i = 0; i < h; i++)
-  {
-    //printf("locate at %d\n", (canvas_y + y + i) * screen_w + canvas_x + x);
-    // write into canvas, then write into file.
-    write(fbdev, pixels + i*w, w*4);
-    lseek(fbdev, canvas_w*4, SEEK_CUR);
-    //printf("write at %d\n", (int)((y + i) * w + x)*4);
-    //for(int j = 0; j < w; j++) printf("write %d ", (int)pixels[i*w + j]);
+    lseek(fbdev, ((canvas_y + y + i) * screen_w + x + canvas_x) * 4, SEEK_SET);
+    write(fbdev, &pixels[i * w], w * 4);
   }
 }
 
 void NDL_OpenAudio(int freq, int channels, int samples) {
-  int buf[3] = {freq, channels, samples};
-  write(sbtdev, buf, sizeof(buf));
+  int spec[3] = {freq, channels, samples};
+  write(fdsbctl, spec, sizeof(spec));
 }
 
 void NDL_CloseAudio() {
 }
 
 int NDL_PlayAudio(void *buf, int len) {
-  return write(sbdev, buf, len);
+  return write(fdsb, buf, len);
 }
 
 int NDL_QueryAudio() {
   char buf[16];
-  read(sbdev, buf, sizeof(buf));
+  read(fdsbctl, buf, sizeof(buf));
   int temp = 0;
   for(int i = 0 ; buf[i] != '\0'; i++)
   {
     temp *= 10;
     temp += buf[i] - '0';
   }
-  printf("temp is %d\n", temp);
-  // the ret is 0!!
-  //int ret = atoi(buf);
-  //printf("ret is %d\n", ret);
   return temp;
+  //return atoi(buf);
 }
 
+static void init_event() {
+  evtdev = open("/dev/events", 0);
+  assert(evtdev != -1);
+}
+
+static void init_fb() {
+  fbdev = open("/dev/fb", 0);
+  assert(fbdev != -1);
+}
+
+static void init_display() {
+  int dispinfo = open("/proc/dispinfo", 0);
+  assert(dispinfo != -1);
+  char buf[64];
+  char *tmp;
+  int nread = read(dispinfo, buf, sizeof(buf));
+  assert(nread > 0 && nread < sizeof(buf));
+  for (tmp = strtok(buf, "\n"); tmp; tmp = strtok(NULL, "\n")) {
+    if (1 == sscanf(tmp, " WIDTH : %d", &screen_w)) continue;
+    if (1 == sscanf(tmp, " HEIGHT : %d", &screen_h)) continue;
+    tmp += strspn(tmp, " \t");
+    if (tmp[0] == '#' || tmp[0] == '\0') continue;
+    fprintf(stderr, "/proc/dispinfo: syntax error near '%s'\n", tmp);
+    assert(0);
+  }
+}
+
+static void init_audio() {
+  printf("init_audio\n");
+  fdsbctl = open("/dev/sbctl", 0);
+  assert(fdsbctl != -1);
+  fdsb = open("/dev/sb", 0);
+  assert(fdsb != -1);
+}
 
 int NDL_Init(uint32_t flags) {
+  init_display();
+  init_audio();
   if (getenv("NWM_APP")) {
     evtdev = 3;
+  } else {
+    init_fb();
+    init_event();
   }
-  else
-	{
-    fbdev = open("/dev/fb", 0, 0);
-    evtdev = open("/dev/events", 0, 0);
-    sbdev = open("/dev/sb", 0, 0);
-    sbtdev = open("/dev/sbctl", 0, 0);
-  }
-
+  struct timeval tv;
+  gettimeofday(&tv, NULL);
+  time_start =  ((uint32_t) tv.tv_sec) * 1000 + tv.tv_usec / 1000;
   return 0;
 }
 
 void NDL_Quit() {
-  assert(close(fbdev) == 0);
-  assert(close(evtdev) == 0);
-  assert(close(sbdev) == 0);
-  assert(close(sbtdev) == 0);
+  if (getenv("NWM_APP")) {
+  } else {
+    close(evtdev);
+    close(fbdev);
+    close(fdsbctl);
+    close(fdsb);
+  }
 }

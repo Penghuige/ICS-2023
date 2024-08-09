@@ -135,6 +135,7 @@ void NDL_CloseAudio() {
 }
 
 int NDL_PlayAudio(void *buf, int len) {
+  printf("buf is %s, len is %d\n", (char *)buf, len);
   return write(sbdev, buf, len);
 }
 
@@ -147,7 +148,7 @@ int NDL_QueryAudio() {
     temp *= 10;
     temp += buf[i] - '0';
   }
-  printf("buf is   %s\n", buf);
+  printf("buf is %s\n", buf);
   printf("temp is %d\n", temp);
   // the ret is 0!!
   int ret = atoi(buf);

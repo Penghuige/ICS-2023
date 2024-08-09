@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <assert.h>
+#include <stdint.h>
 #include <sys/time.h>
 
 extern int _gettimeofday(struct timeval *tv, struct timezone *tz);

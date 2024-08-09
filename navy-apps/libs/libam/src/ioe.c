@@ -1,5 +1,6 @@
 #include <am.h>
 #include <NDL.h>
+#include <stdio.h>
 #include "amdev.h"
 #include <assert.h>
 #include <string.h>
@@ -79,8 +80,10 @@ void ioe_write(int reg, void *buf) {
     case AM_GPU_FBDRAW:
       NDL_DrawRect(((AM_GPU_FBDRAW_T *)buf)->pixels, ((AM_GPU_FBDRAW_T *)buf)->x, ((AM_GPU_FBDRAW_T *)buf)->y, ((AM_GPU_FBDRAW_T *)buf)->w, ((AM_GPU_FBDRAW_T *)buf)->h);
     case AM_AUDIO_CTRL:
+      NDL_OpenAudio(((AM_AUDIO_CTRL_T *)buf)->freq, ((AM_AUDIO_CTRL_T *)buf)->channels, ((AM_AUDIO_CTRL_T *)buf)->samples);
       break;
     case AM_AUDIO_PLAY:
+
       break;
     default:
       printf("bad ioe_write reg is %d\n", reg);

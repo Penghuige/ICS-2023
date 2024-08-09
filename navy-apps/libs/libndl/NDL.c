@@ -81,7 +81,7 @@ void NDL_OpenCanvas(int *w, int *h) {
   // not right
   canvas_w = *w, canvas_h = *h;
   // 128 * 128 screen is 300 * 400
-  printf("canvas_w is %d, canvas_h is %d\n", canvas_w, canvas_h);
+  //printf("canvas_w is %d, canvas_h is %d\n", canvas_w, canvas_h);
   // mid
   canvas_x=(screen_w - canvas_w) / 2;
   canvas_y=(screen_h - canvas_h) / 2;
@@ -127,17 +127,22 @@ void NDL_DrawRect_false(uint32_t *pixels, int x, int y, int w, int h) {
 }
 
 void NDL_OpenAudio(int freq, int channels, int samples) {
+  int buf[3] = {freq, channels, samples};
+  write(sbtdev, buf, sizeof(buf));
 }
 
 void NDL_CloseAudio() {
 }
 
 int NDL_PlayAudio(void *buf, int len) {
-  return 0;
+  return write(sbdev, buf, len);
 }
 
 int NDL_QueryAudio() {
-  return 0;
+  char buf[16];
+  read(sbdev, buf, sizeof(buf));
+  printf("buf is %s\n", buf);
+  return atoi(buf);
 }
 
 
@@ -159,4 +164,6 @@ int NDL_Init(uint32_t flags) {
 void NDL_Quit() {
   assert(close(fbdev) == 0);
   assert(close(evtdev) == 0);
+  assert(close(sbdev) == 0);
+  assert(close(sbtdev) == 0);
 }

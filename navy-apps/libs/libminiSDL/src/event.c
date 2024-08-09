@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 
+extern void CallbackHelper(); 
 
 #define keyname(k) #k,
 
@@ -36,6 +37,7 @@ int SDL_WaitEvent(SDL_Event *ev) {
 
 #define MIN(a, b) (a < b ? a : b)
 int SDL_PollEvent(SDL_Event *ev) {
+  CallbackHelper();
   char* buf = malloc(4096);
   // read out the event
   if(NDL_PollEvent(buf, 20))

@@ -30,7 +30,7 @@ size_t fs_write(int fd, const void *buf, size_t len);
 size_t fs_lseek(int fd, size_t offset, int whence);
 int fs_close(int fd);
 
-enum {FD_STDIN, FD_STDOUT, FD_STDERR, DEV_EVENTS, DEV_DISPLAY, FD_FB};
+enum {FD_STDIN, FD_STDOUT, FD_STDERR, DEV_EVENTS, DEV_DISPLAY, FD_FB, FD_SB, FD_SBCTL};
 
 extern size_t ramdisk_read(void *buf, size_t offset, size_t len);
 extern size_t ramdisk_write(const void *buf, size_t offset, size_t len);
@@ -38,6 +38,8 @@ extern size_t ramdisk_write(const void *buf, size_t offset, size_t len);
 extern size_t events_read(void *buf, size_t offset, size_t len);
 extern size_t dispinfo_read(void *buf, size_t offset, size_t len);
 extern size_t fb_write(const void *buf, size_t offset, size_t len);
+extern size_t sb_write(const void *buf, size_t offset, size_t len);
+extern size_t sbctl_write(const void *buf, size_t offset, size_t len);
 
 
 size_t invalid_read(void *buf, size_t offset, size_t len) {
@@ -58,6 +60,8 @@ static Finfo file_table[] __attribute__((used)) = {
   [DEV_EVENTS] = {"/dev/events", 0, 0, events_read, NULL},
   [DEV_DISPLAY] = {"/proc/dispinfo", 0, 0, dispinfo_read, NULL},
   [FD_FB] = {"/dev/fb", 0, 0, NULL, fb_write},
+  [FD_SB] = {"/dev/sb", 0, 0, NULL, sb_write},
+  [FD_SBCTL] = {"/dev/sbctl", 0, 0, NULL, sbctl_write},
 #include "files.h"
 };
 

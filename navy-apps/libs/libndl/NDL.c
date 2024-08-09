@@ -139,7 +139,7 @@ int NDL_PlayAudio(void *buf, int len) {
 }
 
 int NDL_QueryAudio() {
-  char buf[16];
+  char buf[16] = {0};
   read(sbdev, buf, sizeof(buf));
   int temp = 0;
   for(int i = 0 ; buf[i] != '\0'; i++)

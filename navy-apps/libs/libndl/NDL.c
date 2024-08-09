@@ -141,11 +141,17 @@ int NDL_PlayAudio(void *buf, int len) {
 int NDL_QueryAudio() {
   char buf[16];
   read(sbdev, buf, sizeof(buf));
-  printf("buf is %s\n", buf);
+  int temp = 0;
+  for(int i = 0 ; buf[i] != '\0'; i++)
+  {
+    temp *= 10;
+    temp += buf[i] - '0';
+  }
+  printf("temp is %d\n", temp);
   // the ret is 0!!
-  int ret = atoi(buf);
-  printf("ret is %d\n", ret);
-  return 4;
+  //int ret = atoi(buf);
+  //printf("ret is %d\n", ret);
+  return temp;
 }
 
 

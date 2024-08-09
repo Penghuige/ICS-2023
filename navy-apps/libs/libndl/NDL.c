@@ -155,7 +155,7 @@ int NDL_Init(uint32_t flags) {
     fbdev = open("/dev/fb", 0, 0);
     evtdev = open("/dev/events", 0, 0);
     sbdev = open("/dev/sb", 0, 0);
-    sbtdev = open("/dev/sbtcl", 0, 0);
+    sbtdev = open("/dev/sbctl", 0, 0);
   }
 
   return 0;

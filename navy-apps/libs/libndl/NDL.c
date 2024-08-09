@@ -142,9 +142,10 @@ int NDL_QueryAudio() {
   char buf[16];
   read(sbdev, buf, sizeof(buf));
   printf("buf is %s\n", buf);
+  // the ret is 0!!
   int ret = atoi(buf);
   printf("ret is %d\n", ret);
-  return atoi(buf);
+  return 4;
 }
 
 

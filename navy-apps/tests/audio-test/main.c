@@ -25,6 +25,5 @@ int main() {
   while ((rest = NDL_QueryAudio()) > 0) {
     printf("rest = %d\n", rest);
   }
-  while(1);
   free(buf);
 }

@@ -130,7 +130,7 @@ static void init_audio() {
 }
 
 int NDL_Init(uint32_t flags) {
-  init_display();
+  //init_display();
   init_audio();
   if (getenv("NWM_APP")) {
     evtdev = 3;

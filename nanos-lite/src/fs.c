@@ -39,6 +39,7 @@ extern size_t events_read(void *buf, size_t offset, size_t len);
 extern size_t dispinfo_read(void *buf, size_t offset, size_t len);
 extern size_t fb_write(const void *buf, size_t offset, size_t len);
 extern size_t sb_write(const void *buf, size_t offset, size_t len);
+extern size_t sbctl_read(void *buf, size_t offset, size_t len);
 extern size_t sbctl_write(const void *buf, size_t offset, size_t len);
 
 
@@ -61,7 +62,7 @@ static Finfo file_table[] __attribute__((used)) = {
   [DEV_DISPLAY] = {"/proc/dispinfo", 0, 0, dispinfo_read, NULL},
   [FD_FB] = {"/dev/fb", 0, 0, NULL, fb_write},
   [FD_SB] = {"/dev/sb", 0, 0, NULL, sb_write},
-  [FD_SBCTL] = {"/dev/sbctl", 0, 0, NULL, sbctl_write},
+  [FD_SBCTL] = {"/dev/sbctl", 0, 0, sbctl_read, sbctl_write},
 #include "files.h"
 };
 

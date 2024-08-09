@@ -135,7 +135,7 @@ void NDL_CloseAudio() {
 }
 
 int NDL_PlayAudio(void *buf, int len) {
-  printf("buf is %s, len is %d\n", (char *)buf, len);
+  printf("buf is %p, len is %d\n", (char *)buf, len);
   return write(sbdev, buf, len);
 }
 

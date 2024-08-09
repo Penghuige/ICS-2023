@@ -42,7 +42,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   Elf_Phdr phdr[ehdr.e_phnum];
 
   assert(fs_lseek(fd, ehdr.e_ehsize, SEEK_SET) == ehdr.e_ehsize);
-  fs_read(fd, phdr, ehdr.e_phnum * sizeof(Elf_Phdr));
+  assert(fs_read(fd, phdr, ehdr.e_phnum * sizeof(Elf_Phdr)) == ehdr.e_phnum * sizeof(Elf_Phdr));
 
   // ramdisk_read(phdr, ehdr.e_ehsize, ehdr.e_phnum * sizeof(Elf_Phdr));
 

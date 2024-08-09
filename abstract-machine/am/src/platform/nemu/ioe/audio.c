@@ -1,5 +1,6 @@
 #include <am.h>
 #include <nemu.h>
+#include <stdio.h>
 
 #define AUDIO_FREQ_ADDR      (AUDIO_ADDR + 0x00)
 #define AUDIO_CHANNELS_ADDR  (AUDIO_ADDR + 0x04)
@@ -23,6 +24,7 @@ void __am_audio_config(AM_AUDIO_CONFIG_T *cfg) {
 
 
 void __am_audio_ctrl(AM_AUDIO_CTRL_T *ctrl) {
+  printf("ctrl freq: %d\n", ctrl->freq);
   // here is out, not in.
   outl(AUDIO_FREQ_ADDR, ctrl->freq);
   outl(AUDIO_SAMPLES_ADDR, ctrl->samples);

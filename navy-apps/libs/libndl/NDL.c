@@ -151,7 +151,7 @@ int NDL_QueryAudio() {
   // the ret is 0!!
   //int ret = atoi(buf);
   //printf("ret is %d\n", ret);
-  return temp;
+  return atoi(buf);
 }
 
 

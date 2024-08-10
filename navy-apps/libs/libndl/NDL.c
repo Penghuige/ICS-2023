@@ -138,11 +138,18 @@ void NDL_CloseAudio() {
 int NDL_PlayAudio(void *buf, int len) {
   assert(buf != NULL);
   printf("buf is %p, len is %d\n", (char *)buf, len);
+  printf("the buf data:\n");
+  for(int i = 0; i < len; i++)
+  {
+    printf("%d ", (int)((char *)buf)[i]);
+  }
+  printf("\n");
   return write(sbdev, buf, len);
 }
 
 int NDL_QueryAudio() {
   // read from the file and play the music
+  // empty!
   printf("the file data:\n");
   char buf[1024];
   int nread = read(sbdev, buf, sizeof(buf));

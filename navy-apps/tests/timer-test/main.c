@@ -1,29 +1,20 @@
 #include <stdio.h>
-#include <assert.h>
-#include <stdint.h>
 #include <sys/time.h>
-
-extern int _gettimeofday(struct timeval *tv, struct timezone *tz);
-extern uint32_t NDL_GetTicks();
+#include <unistd.h>
+#include <NDL.h>
 
 int main() {
-  struct timeval tv;
-  struct timeval pre;
-  _gettimeofday(&tv, NULL);
-  while(1)
-  {
-    pre = tv;
-    _gettimeofday(&tv, NULL);
-    __uint64_t ms = 500;
-    if(tv.tv_usec - pre.tv_usec > ms*1000)
-    {
-      printf("hello! now is %ld not %ld\n", tv.tv_usec, pre.tv_usec);
+  NDL_Init(0);
+  const int period = 500;
+  uint32_t timeus = NDL_GetTicks();
+  int cnt = 0;
+  while (1) {
+    uint32_t timeus_cur = NDL_GetTicks();
+    if ((timeus_cur - timeus) / period > cnt) {
+      printf("Hello World!\n");
+      cnt = (timeus_cur - timeus) / period;
     }
-    printf("now is %ld not %ld\n", tv.tv_usec, pre.tv_usec);
-
-    printf("tv.tv_sec = %ld\n", tv.tv_sec);
   }
-
+  NDL_Quit();
   return 0;
 }
-

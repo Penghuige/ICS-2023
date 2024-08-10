@@ -225,6 +225,8 @@ size_t fs_lseek(int fd, size_t offset, int whence) {
   {
     case SEEK_SET:
       printf("offset is %d\n", offset);
+      printf("file size is %d\n", file_table[fd].size);
+      printf("file info is %s\n", file_table[fd].name);
       open_table[index].open_offset = offset;
       break;
     case SEEK_CUR:

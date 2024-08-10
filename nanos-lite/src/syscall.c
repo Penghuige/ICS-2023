@@ -1,5 +1,4 @@
 #include <common.h>
-#include "syscall.h"
 #include "am.h"
 #include <sys/time.h>
 

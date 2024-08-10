@@ -142,20 +142,10 @@ int NDL_PlayAudio(void *buf, int len) {
 }
 
 int NDL_QueryAudio() {
-  char buf[16] = {0};
-  read(sbdev, buf, sizeof(buf));
-  int temp = 0;
-  for(int i = 0 ; buf[i] != '\0'; i++)
-  {
-    temp *= 10;
-    temp += buf[i] - '0';
-  }
-  printf("buf is %s\n", buf);
-  printf("temp is %d\n", temp);
-  // the ret is 0!!
-  int ret = atoi(buf);
-  printf("ret is %d\n", ret);
-  return atoi(buf);
+  // read from the file and play the music
+  int ret = 0;
+  read(sbdev, &ret, sizeof(ret));
+  return ret;
 }
 
 
@@ -171,6 +161,10 @@ int NDL_Init(uint32_t flags) {
     sbtdev = open("/dev/sbctl", 0, 0);
   }
 
+  if (fbdev == -1 || evtdev == -1 || sbdev == -1 || sbtdev == -1) {
+      perror("Error initializing devices");
+      return -1;
+  }
   return 0;
 }
 

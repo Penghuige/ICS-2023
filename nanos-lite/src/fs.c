@@ -153,7 +153,7 @@ int fs_close(int fd) {
   int index = get_index(fd);
   if(index != -1)
   {
-    open_table[fd].fd = -1;
+    open_table[index].fd = -1;
   }
   return 0;
 }
@@ -178,7 +178,7 @@ size_t fs_read(int fd, void *buf, size_t len) {
 
   if(file_table[fd].read)
   {
-    return file_table[index].read(buf, file_table[fd].disk_offset + offset, len);
+    return file_table[fd].read(buf, file_table[fd].disk_offset + offset, len);
   }
   Log("[fs_read] file %s, offset %d, len %d", file_table[fd].name, file_table[fd].disk_offset, read_len);
   size_t ret = ramdisk_read(buf, file_table[fd].disk_offset + offset, read_len);
@@ -204,7 +204,7 @@ size_t fs_write(int fd, const void *buf, size_t len) {
   }
   if(file_table[fd].write)
   {
-    return file_table[index].write(buf, file_table[fd].disk_offset + offset, len);
+    return file_table[fd].write(buf, file_table[fd].disk_offset + offset, len);
   }
   size_t ret = ramdisk_write(buf, file_table[fd].disk_offset + offset, read_len);
 

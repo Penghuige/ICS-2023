@@ -128,7 +128,7 @@ void NDL_DrawRect_false(uint32_t *pixels, int x, int y, int w, int h) {
 
 void NDL_OpenAudio(int freq, int channels, int samples) {
   int buf[3] = {freq, channels, samples};
-  printf("freq is %d, channels is %d, samples is %d\n", freq, channels, samples);
+  //printf("freq is %d, channels is %d, samples is %d\n", freq, channels, samples);
   write(sbtdev, buf, sizeof(buf));
 }
 
@@ -139,12 +139,12 @@ int NDL_PlayAudio(void *buf, int len) {
   assert(buf != NULL);
   printf("buf is %p, len is %d\n", (char *)buf, len);
   // empty
-  printf("the buf data:\n");
-  for(int i = 0; i < len; i++)
-  {
-    printf("%d ", (int)((char *)buf)[i]);
-  }
-  printf("\n");
+  //printf("the buf data:\n");
+  //for(int i = 0; i < len; i++)
+  //{
+  //  printf("%d ", (int)((char *)buf)[i]);
+  //}
+  //printf("\n");
   return write(sbdev, buf, len);
 }
 

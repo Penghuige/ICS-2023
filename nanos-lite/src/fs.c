@@ -224,6 +224,7 @@ size_t fs_lseek(int fd, size_t offset, int whence) {
   switch(whence)
   {
     case SEEK_SET:
+      printf("offset is %d\n", offset);
       open_table[index].open_offset = offset;
       break;
     case SEEK_CUR:

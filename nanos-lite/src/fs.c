@@ -204,7 +204,7 @@ size_t fs_write(int fd, const void *buf, size_t len) {
   }
   if(file_table[index].write)
   {
-    return file_table[index].write(buf, offset, len);
+    return file_table[index].write(buf, file_table[fd].disk_offset + offset, len);
   }
   size_t ret = ramdisk_write(buf, file_table[fd].disk_offset + offset, read_len);
 

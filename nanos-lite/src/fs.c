@@ -176,7 +176,7 @@ size_t fs_read(int fd, void *buf, size_t len) {
     read_len = file_table[fd].size - offset;
   }
 
-  if(file_table[index].read)
+  if(file_table[fd].read)
   {
     return file_table[index].read(buf, file_table[fd].disk_offset + offset, len);
   }
@@ -202,7 +202,7 @@ size_t fs_write(int fd, const void *buf, size_t len) {
   {
     read_len = file_table[fd].size - offset;
   }
-  if(file_table[index].write)
+  if(file_table[fd].write)
   {
     return file_table[index].write(buf, file_table[fd].disk_offset + offset, len);
   }

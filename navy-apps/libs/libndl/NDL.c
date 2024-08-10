@@ -129,7 +129,7 @@ void NDL_DrawRect_false(uint32_t *pixels, int x, int y, int w, int h) {
 void NDL_OpenAudio(int freq, int channels, int samples) {
   int buf[3] = {freq, channels, samples};
   //printf("freq is %d, channels is %d, samples is %d\n", freq, channels, samples);
-  write(sbtdev, buf, 4*sizeof(buf));
+  write(sbtdev, buf, sizeof(buf));
 }
 
 void NDL_CloseAudio() {

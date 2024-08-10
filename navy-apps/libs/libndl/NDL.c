@@ -143,6 +143,14 @@ int NDL_PlayAudio(void *buf, int len) {
 
 int NDL_QueryAudio() {
   // read from the file and play the music
+  printf("the file data:\n");
+  char buf[1024];
+  int nread = read(sbdev, buf, sizeof(buf));
+  for(int i = 0; i < nread; i++)
+  {
+    printf("%d ", (int)buf[i]);
+  }
+  printf("\n");
   int ret = 0;
   read(sbdev, &ret, sizeof(ret));
   return ret;

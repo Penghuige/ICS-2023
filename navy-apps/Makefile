@@ -170,7 +170,7 @@ APPS = nplayer
 # TESTS = dummy hello file-test timer-test keyboard-test
 # TESTS =
 # TESTS = keyboard-test
-TESTS = audio-test
+TESTS = audio-test file-test
 
 fsimg: $(addprefix apps/, $(APPS)) $(addprefix tests/, $(TESTS))
 	-for t in $^; do $(MAKE) -s -C $(NAVY_HOME)/$$t install; done

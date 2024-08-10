@@ -15,7 +15,7 @@ int main() {
     pre = tv;
     _gettimeofday(&tv, NULL);
     __uint64_t ms = 500;
-    if(tv.tv_usec - pre.tv_usec > ms)
+    if(tv.tv_usec - pre.tv_usec > ms*1000)
     {
       printf("hello! now is %ld not %ld\n", tv.tv_usec, pre.tv_usec);
     }

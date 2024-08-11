@@ -160,6 +160,7 @@ int NDL_PlayAudio(void *buf, int len) {
     write(sbdev, buf, MIN(len, spare));
     len -= spare;
     spare = NDL_QueryAudio();
+    break;
   }
   return ret - len;
 }

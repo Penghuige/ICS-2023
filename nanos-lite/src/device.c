@@ -61,6 +61,7 @@ size_t sb_write(const void *buf, size_t offset, size_t len) {
 }
 
 size_t sbctl_read(void *buf, size_t offset, size_t len) {
+  printf("[sbctl_read] read from AM_AUDIO_STATUS\n");
   return snprintf(buf, len, "%d", sbsize - io_read(AM_AUDIO_STATUS).count);
 }
 

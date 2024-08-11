@@ -137,7 +137,7 @@ void NDL_CloseAudio() {
 
 int NDL_PlayAudio(void *buf, int len) {
   assert(buf != NULL);
-  assert(0);
+  //assert(0);
   printf("NDL_PlayAudio len is %d\n", len);
   // empty
   //printf("the buf data:\n");

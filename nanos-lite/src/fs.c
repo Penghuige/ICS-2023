@@ -206,7 +206,7 @@ size_t fs_write(int fd, const void *buf, size_t len) {
   if(file_table[fd].write)
   {
     printf("the file %s have write %d\n", file_table[fd].name, len);
-    return file_table[fd].write(buf, file_table[fd].disk_offset + offset, read_len);
+    return file_table[fd].write(buf, file_table[fd].disk_offset + offset, len);
   }
   size_t ret = ramdisk_write(buf, file_table[fd].disk_offset + offset, read_len);
 

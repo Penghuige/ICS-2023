@@ -180,7 +180,7 @@ size_t fs_read(int fd, void *buf, size_t len) {
   {
     return file_table[fd].read(buf, file_table[fd].disk_offset + offset, read_len);
   }
-  Log("[fs_read] file %s, offset %d, len %d", file_table[fd].name, file_table[fd].disk_offset, read_len);
+  Log("[fs_read] fd is %d, file %s, offset %d, len %d", fd, file_table[fd].name, file_table[fd].disk_offset, read_len);
   size_t ret = ramdisk_read(buf, file_table[fd].disk_offset + offset, read_len);
   open_table[index].open_offset += ret;
   return ret;

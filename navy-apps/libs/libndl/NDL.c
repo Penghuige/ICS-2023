@@ -139,30 +139,26 @@ void NDL_CloseAudio() {
 int NDL_QueryAudio() {
   // read from the file and play the music
   // empty!
+  // need to return the length of the unused buffer
   char buf[16];
   read(sbtdev, buf, sizeof(buf));
-  // when the music is over, the sbtdev a.k.a {freq, channels, samples}is zero.
-  //for(int i = 0; i < nread; i++)
-  //{
-  //  printf("%d ", (int)buf[i]);
-  //}
-  //printf("\n");
-  //int ret = 0;
-  //read(sbdev, &ret, sizeof(ret));
   return atoi(buf);
 }
 
 int NDL_PlayAudio(void *buf, int len) {
   assert(buf != NULL);
+  int ret = len;
   //assert(0);
   printf("NDL_PlayAudio len is %d\n", len);
   int spare = NDL_QueryAudio();
-  while(NDL_QueryAudio() < len)
+  while(len > 0)
   {
     //printf("NDL_QueryAudio() is %d\n", NDL_QueryAudio());
+    len -= spare;
     write(sbdev, buf, spare);
+    spare = NDL_QueryAudio();
   }
-  return len;
+  return ret - len;
 }
 
 int NDL_Init(uint32_t flags) {

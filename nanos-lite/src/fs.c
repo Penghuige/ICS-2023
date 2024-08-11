@@ -206,7 +206,7 @@ size_t fs_write(int fd, const void *buf, size_t len) {
   {
     read_len = file_table[fd].size - offset;
   }
-  Log("[fs_write] fd is %d, file %s, offset %d, len %d", fd, file_table[fd].name, file_table[fd].disk_offset, read_len);
+  Log("[fs_write] fd is %d, file %s, offset %d, len %d", fd, file_table[fd].name, file_table[fd].disk_offset, len);
   size_t ret;
   if(file_table[fd].write)
   {

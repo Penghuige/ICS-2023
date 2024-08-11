@@ -21,6 +21,7 @@ int main() {
   NDL_Init(0);
   printf("buf is %p, len is %d\n", buf, len);
   NDL_OpenAudio(8000, 1, 1024);
+  assert(0);
   NDL_PlayAudio(buf, len);
   int rest = 0;
   while ((rest = NDL_QueryAudio()) > 0) {

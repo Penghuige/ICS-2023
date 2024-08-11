@@ -14,69 +14,114 @@ static const char *keyname[256] __attribute__((used)) = {
   AM_KEYS(NAME)
 };
 
+static bool has_uart = 0;
+static bool has_key = 0;
+
+static int screen_w, screen_h;
+static size_t screen_size;
+
 static int sbsize = 0;
 
 size_t serial_write(const void *buf, size_t offset, size_t len) {
-  char *p = (char *)buf;
-  for (size_t i = 0; i < len; i++) {
-    putch(p[i]);
+  // yield();
+  size_t i;
+  for (i = 0; i < len; i++)
+    putch(((char *)buf)[i]);
+  return i;
+}
+
+AM_INPUT_KEYBRD_T keybrd_queue[256];
+int keybrd_head = 0, keybrd_tail = 0;
+
+void update_keybrd() {
+  if (has_key) {
+    while (1) {
+      AM_INPUT_KEYBRD_T ev = io_read(AM_INPUT_KEYBRD);
+      if (ev.keycode != AM_KEY_NONE) {
+        if (ev.keydown) {
+          extern void switch_fg(int);
+          switch(ev.keycode) {
+            case AM_KEY_F1:
+              switch_fg(1);
+              break;
+            case AM_KEY_F2:
+              switch_fg(2);
+              break;
+            case AM_KEY_F3:
+              switch_fg(3);
+              break;
+          }
+        }
+        keybrd_queue[keybrd_tail++] = ev;
+        keybrd_tail %= 256;
+        if (keybrd_tail == keybrd_head)
+          keybrd_head = (keybrd_head + 1) % 256;
+      } else {
+        break;
+      }
+    }
   }
-  return len;
 }
 
 size_t events_read(void *buf, size_t offset, size_t len) {
-  AM_INPUT_KEYBRD_T ev = io_read(AM_INPUT_KEYBRD);
-  if(ev.keycode == AM_KEY_NONE)
-  {
-    *(char*)buf = '\0';
-    return 0;
+  // yield();
+  if (has_uart)
+    ; /* not implemented */
+  if (has_key) {
+    if (keybrd_head != keybrd_tail) {
+      AM_INPUT_KEYBRD_T ev = keybrd_queue[keybrd_head++];
+      keybrd_head %= 256;
+      return snprintf(buf, len, "k%c %s\n", ev.keydown ? 'd' : 'u', keyname[ev.keycode]);
+    }
   }
-  return snprintf((char*)buf, len, "%s %s\n", ev.keydown ? "kd" : "ku", keyname[ev.keycode]);
+  return 0;
 }
 
 size_t dispinfo_read(void *buf, size_t offset, size_t len) {
-  // print into buf
-  AM_GPU_CONFIG_T cfg = io_read(AM_GPU_CONFIG);
-  // printf("cfg.width is %d, cfg.height is %d\n", cfg.width, cfg.height);
-  return snprintf(buf, len, "WIDTH: %d\nHEIGHT: %d\n", cfg.width, cfg.height);
+  return snprintf(buf, len, "WIDTH :%d\nHEIGHT:%d\n", screen_w, screen_h);
 }
 
 size_t fb_write(const void *buf, size_t offset, size_t len) {
-  AM_GPU_CONFIG_T ev = io_read(AM_GPU_CONFIG);
-  // 0 and 512
-  offset /= 4;
-  len /= 4;
-
-  int x = offset % ev.width;
-  int y = offset / ev.width;
-  io_write(AM_GPU_FBDRAW, x, y, (char*)buf, len, 1, true);
+  assert((offset & 3) == 0 && (len & 3) == 0);
+  // yield();
+  int x = offset / 4 % screen_w;
+  int y = offset / 4 / screen_w;
+  io_write(AM_GPU_FBDRAW, x, y, (void *)buf, len / 4, 1, 1);
   return len;
 }
 
 size_t sb_write(const void *buf, size_t offset, size_t len) {
-  printf("buf = %d, offset = %d, len = %d\n", buf, offset, len);
-  printf("[sb_write] write to AM_AUDIO_PLAY, offset = %d, len = %d\n", offset, len);
-  io_write(AM_AUDIO_PLAY, (Area){.start = (void *)buf, .end = (void *)buf + len});
+  io_write(AM_AUDIO_PLAY,
+           (Area){.start = (void *)buf, .end = (void *)buf + len});
 
+  return len;
+}
+
+size_t sbctl_write(const void *buf, size_t offset, size_t len) {
+  assert(len == 12);
+  io_write(AM_AUDIO_CTRL, .freq = *(int *)buf, .channels = *(int *)(buf + 4), .samples = *(int *)(buf + 8));
   return len;
 }
 
 size_t sbctl_read(void *buf, size_t offset, size_t len) {
-  int ret = snprintf(buf, len, "%d", sbsize - io_read(AM_AUDIO_STATUS).count);
-  printf("[sbctl_read] read from AM_AUDIO_STATUS, the spare len is %d\n", atoi(buf));
-  return ret;
+  return snprintf(buf, len, "%d", sbsize - io_read(AM_AUDIO_STATUS).count);
 }
 
-size_t sbctl_write(const void *buf, size_t offset, size_t len) {
-  printf("[sbctl_write] write to AM_AUDIO_CTRL, len = %d\n", len);
-  AM_AUDIO_CTRL_T ctrl = *(AM_AUDIO_CTRL_T *)buf;
-  io_write(AM_AUDIO_CTRL, ctrl.freq, ctrl.channels, ctrl.samples);
-  return len;
+int get_fbsize() {
+  return screen_size;
 }
 
 void init_device() {
   Log("Initializing devices...");
   ioe_init();
+  has_key = io_read(AM_INPUT_CONFIG).present;
+  if (has_key)
+    Log("Input device has been detected!");
+  AM_GPU_CONFIG_T info = io_read(AM_GPU_CONFIG);
+  screen_w = info.width;
+  screen_h = info.height;
+  screen_size = screen_w * screen_h * sizeof(uint32_t);
+  Log("Initializing Screen, size: %d x %d\n", screen_w, screen_h);
   sbsize = io_read(AM_AUDIO_CONFIG).bufsize;
   Log("Initializing Audio, buffer size: %d\n", sbsize);
 }

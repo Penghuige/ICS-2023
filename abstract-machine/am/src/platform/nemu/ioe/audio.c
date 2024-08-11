@@ -36,7 +36,7 @@ void __am_audio_status(AM_AUDIO_STATUS_T *stat) {
 }
 
 
-void __am_audio_play2(AM_AUDIO_PLAY_T *ctl) {
+void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
   uint8_t* audio_data = ctl->buf.start;
   uint32_t len = ctl->buf.end - ctl->buf.start;
 
@@ -49,7 +49,7 @@ void __am_audio_play2(AM_AUDIO_PLAY_T *ctl) {
   }
   outl(AUDIO_COUNT_ADDR, inl(AUDIO_COUNT_ADDR) + len); //更新reg_count
 }
-void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
+void __am_audio_play2(AM_AUDIO_PLAY_T *ctl) {
   uintptr_t start = (uintptr_t)ctl->buf.start;
   uintptr_t end = (uintptr_t)ctl->buf.end;
   outl(AUDIO_SBUF_ADDR, start & 0xffffffff);

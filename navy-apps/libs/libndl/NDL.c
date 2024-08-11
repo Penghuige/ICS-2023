@@ -152,7 +152,7 @@ int NDL_PlayAudio(void *buf, int len) {
   int ret = len;
   //assert(0);
   printf("NDL_PlayAudio len is %d\n", len);
-  printf("the buf is %d\n", buf);
+  printf("the buf is %p\n", buf);
   int spare = NDL_QueryAudio();
   while(len > 0)
   {

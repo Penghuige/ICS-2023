@@ -44,6 +44,7 @@ void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
   
   uint8_t *ab = (uint8_t *)(uintptr_t)AUDIO_SBUF_ADDR;  //参考GPU部分
   for(int i = 0; i < len; i++){
+    putch(audio_data[i]);
     ab[pos] = audio_data[i];
     pos = (pos + 1) % sbuf_size;  
   }

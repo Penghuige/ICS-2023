@@ -16,6 +16,8 @@ static int screen_w = 0, screen_h = 0;
 static int canvas_w = 0, canvas_h = 0;
 static int canvas_x = 0, canvas_y = 0;
 
+#define MIN(x, y) ((x) < (y) ? (x) : (y))
+
 uint32_t NDL_GetTicks() {
   struct timeval tv;
   assert(gettimeofday(&tv, NULL) == 0);
@@ -154,8 +156,8 @@ int NDL_PlayAudio(void *buf, int len) {
   while(len > 0)
   {
     //printf("NDL_QueryAudio() is %d\n", NDL_QueryAudio());
+    write(sbdev, buf, MIN(len, spare));
     len -= spare;
-    write(sbdev, buf, spare);
     spare = NDL_QueryAudio();
   }
   return ret - len;

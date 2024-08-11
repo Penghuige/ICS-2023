@@ -175,14 +175,17 @@ size_t fs_read(int fd, void *buf, size_t len) {
   if (file_table[fd].size < offset + len) {
     read_len = file_table[fd].size - offset;
   }
-
+  size_t ret;
+  Log("[fs_read] fd is %d, file %s, offset %d, len %d", fd, file_table[fd].name, file_table[fd].disk_offset, read_len);
   if(file_table[fd].read)
   {
     printf("the file %s have read %d\n", file_table[fd].name, len);
-    return file_table[fd].read(buf, file_table[fd].disk_offset + offset, len);
+    ret = file_table[fd].read(buf, file_table[fd].disk_offset + offset, len);
   }
-  Log("[fs_read] fd is %d, file %s, offset %d, len %d", fd, file_table[fd].name, file_table[fd].disk_offset, read_len);
-  size_t ret = ramdisk_read(buf, file_table[fd].disk_offset + offset, read_len);
+  else
+  {
+    ret = ramdisk_read(buf, file_table[fd].disk_offset + offset, read_len);
+  }
   open_table[index].open_offset += ret;
   return ret;
 }
@@ -204,14 +207,17 @@ size_t fs_write(int fd, const void *buf, size_t len) {
     read_len = file_table[fd].size - offset;
   }
   Log("[fs_write] fd is %d, file %s, offset %d, len %d", fd, file_table[fd].name, file_table[fd].disk_offset, read_len);
+  size_t ret;
   if(file_table[fd].write)
   {
     printf("the file %s have write %d\n", file_table[fd].name, len);
     printf("the file %s offset is %d, buf is %d\n", file_table[fd].name, file_table[fd].disk_offset, buf);
     // the disk_offset will be proceed in the write function
-    return file_table[fd].write(buf, file_table[fd].disk_offset + offset, len);
+    ret = file_table[fd].write(buf, file_table[fd].disk_offset + offset, read_len);
   }
-  size_t ret = ramdisk_write(buf, file_table[fd].disk_offset + offset, read_len);
+  else{
+    ret = ramdisk_write(buf, file_table[fd].disk_offset + offset, read_len);
+  }
 
   open_table[index].open_offset += ret;
 

@@ -54,7 +54,8 @@ size_t fb_write(const void *buf, size_t offset, size_t len) {
 }
 
 size_t sb_write(const void *buf, size_t offset, size_t len) {
-  printf("[sb_write] write to AM_AUDIO_PLAY, offset = %d, len = %d\n", offset, len);
+  assert(0);
+  Log("[sb_write] write to AM_AUDIO_PLAY, offset = %d, len = %d\n", offset, len);
   io_write(AM_AUDIO_PLAY, (Area){.start = (void *)buf, .end = (void *)buf + len});
 
   return len;

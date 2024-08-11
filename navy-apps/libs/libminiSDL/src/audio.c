@@ -16,25 +16,21 @@ bool audio_playing = 0;
 
 void CallbackHelper()
 {
-  printf("call back helper!\n");
+  //printf("call back helper!\n");
   uint32_t cur_time = SDL_GetTicks();
   if (pre_time == 0) {
     pre_time = cur_time;
   }
   int len = cur_time - pre_time;
-  printf("the len is %d\n", len);
-  printf("the gap is %d\n", gap);
-  printf("the lock is %d\n", is_locked);
   if(len >= gap && !is_locked)
   {
     SDL_LockAudio();
     pre_time = cur_time;
-    printf("the callback size is %d\n", callback_size);
-    for(int i = 0; i < callback_size; i++)
-    {
-      printf("%d ", audio_buf[i]);
-    }
-
+    //printf("the callback size is %d\n", callback_size);
+    //for(int i = 0; i < callback_size; i++)
+    //{
+    //  printf("%d ", audio_buf[i]);
+    //}
     callback(userdata, audio_buf, callback_size);
     SDL_UnlockAudio();
   }
@@ -68,7 +64,6 @@ void SDL_CloseAudio() {
 }
 
 void SDL_PauseAudio(int pause_on) {
-  printf("pause on is %d\n", pause_on);
   audio_playing = !pause_on;
 }
 

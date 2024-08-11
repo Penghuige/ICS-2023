@@ -13,7 +13,7 @@ int main() {
   //FILE  *f = fopen("/share/music/rhythm/Do.ogg", "r");
   fseek(f, 0, SEEK_END);
   int len = ftell(f);
-  uint8_t *buf = malloc(len * sizeof(uint8_t));
+  uint8_t *buf = malloc(len );
   fseek(f, 0, SEEK_SET);
   assert(len == fread(buf, 1, len, f));
 

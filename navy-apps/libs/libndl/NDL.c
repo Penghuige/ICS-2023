@@ -135,19 +135,6 @@ void NDL_OpenAudio(int freq, int channels, int samples) {
 void NDL_CloseAudio() {
 }
 
-int NDL_PlayAudio(void *buf, int len) {
-  assert(buf != NULL);
-  //assert(0);
-  printf("NDL_PlayAudio len is %d\n", len);
-  // empty
-  //printf("the buf data:\n");
-  //for(int i = 0; i < len; i++)
-  //{
-  //  printf("%d ", (int)((char *)buf)[i]);
-  //}
-  //printf("\n");
-  return write(sbdev, buf, len);
-}
 
 int NDL_QueryAudio() {
   // read from the file and play the music
@@ -165,6 +152,18 @@ int NDL_QueryAudio() {
   return atoi(buf);
 }
 
+int NDL_PlayAudio(void *buf, int len) {
+  assert(buf != NULL);
+  //assert(0);
+  printf("NDL_PlayAudio len is %d\n", len);
+  int spare = NDL_QueryAudio();
+  while(NDL_QueryAudio() < len)
+  {
+    //printf("NDL_QueryAudio() is %d\n", NDL_QueryAudio());
+    write(sbdev, buf, spare);
+  }
+  return len;
+}
 
 int NDL_Init(uint32_t flags) {
   if (getenv("NWM_APP")) {

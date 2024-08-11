@@ -39,6 +39,7 @@ void __am_audio_status(AM_AUDIO_STATUS_T *stat) {
 void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
   uint8_t* audio_data = ctl->buf.start;
   uint32_t len = ctl->buf.end - ctl->buf.start;
+  if(len > 0x1000) len = 0x1000; //最多一次写0x1000个字节(4KB
 
   uint32_t sbuf_size = inl(AUDIO_SBUF_SIZE_ADDR);
   

@@ -49,11 +49,3 @@ void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
   }
   outl(AUDIO_COUNT_ADDR, inl(AUDIO_COUNT_ADDR) + len); //更新reg_count
 }
-void __am_audio_play2(AM_AUDIO_PLAY_T *ctl) {
-  uintptr_t start = (uintptr_t)ctl->buf.start;
-  uintptr_t end = (uintptr_t)ctl->buf.end;
-  outl(AUDIO_SBUF_ADDR, start & 0xffffffff);
-  outl(AUDIO_SBUF_ADDR + 4, ((uint64_t) start) >> 32);
-  outl(AUDIO_SBUF_ADDR + 8, end & 0xffffffff);
-  outl(AUDIO_SBUF_ADDR + 12, ((uint64_t) end) >> 32);
-}

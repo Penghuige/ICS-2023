@@ -16,9 +16,9 @@ int main() {
   fseek(f, 0, SEEK_SET);
   assert(len == fread(buf, 1, len, f));
 
-  printf("buf is %p, len is %d\n", buf, len);
   
   NDL_Init(0);
+  printf("buf is %p, len is %d\n", buf, len);
   NDL_OpenAudio(8000, 1, 1024);
   NDL_PlayAudio(buf, len);
   int rest = 0;

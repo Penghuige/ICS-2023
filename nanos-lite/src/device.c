@@ -65,6 +65,7 @@ size_t sbctl_read(void *buf, size_t offset, size_t len) {
 }
 
 size_t sbctl_write(const void *buf, size_t offset, size_t len) {
+  printf("[sbctl_write] write to AM_AUDIO_CTRL, len = %d\n", len);
   AM_AUDIO_CTRL_T ctrl = *(AM_AUDIO_CTRL_T *)buf;
   io_write(AM_AUDIO_CTRL, ctrl.freq, ctrl.channels, ctrl.samples);
   return len;

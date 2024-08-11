@@ -207,7 +207,7 @@ size_t fs_write(int fd, const void *buf, size_t len) {
   if(file_table[fd].write)
   {
     printf("the file %s have write %d\n", file_table[fd].name, len);
-    printf("the file %s offset is %d, buf is %p\n", file_table[fd].name, file_table[fd].disk_offset, buf);
+    printf("the file %s offset is %d, buf is %d\n", file_table[fd].name, file_table[fd].disk_offset, buf);
     // the disk_offset will be proceed in the write function
     return file_table[fd].write(buf, offset, len);
   }

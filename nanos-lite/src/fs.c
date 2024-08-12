@@ -106,7 +106,7 @@ static int get_index(size_t fd)
   int ret = -1;
   for(size_t i = 0; i < open_index; i++)
   {
-    printf("open_table[%d].fd is %d\n", i, open_table[i].fd);
+    //printf("open_table[%d].fd is %d\n", i, open_table[i].fd);
     if(fd == open_table[i].fd)
     {
       ret = i;

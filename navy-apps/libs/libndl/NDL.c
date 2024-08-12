@@ -143,6 +143,7 @@ int NDL_QueryAudio() {
   // empty!
   // need to return the length of the unused buffer
   char buf[16] = {0};
+  assert(atoi(buf) == 0);
   read(sbtdev, buf, sizeof(buf));
   return atoi(buf);
 }

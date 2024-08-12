@@ -177,14 +177,14 @@ size_t fs_read(int fd, void *buf, size_t len) {
   size_t read_len = len;
   // when the file size is not enough
   if (file_table[fd].size < offset + len) {
-    printf("[fs_read] file size is %d is less than offest %d + len %d\n", file_table[fd].size, offset, len);
+    //printf("[fs_read] file size is %d is less than offest %d + len %d\n", file_table[fd].size, offset, len);
     read_len = file_table[fd].size - offset;
   }
   size_t ret;
   Log("[fs_read] fd is %d, file %s, disk_offset %d, offset %d, len %d", fd, file_table[fd].name, file_table[fd].disk_offset, offset, read_len);
   if(file_table[fd].read)
   {
-    printf("the file %s have read %d\n", file_table[fd].name, read_len);
+    //printf("the file %s have read %d\n", file_table[fd].name, read_len);
     ret = file_table[fd].read(buf, file_table[fd].disk_offset + offset, len);
   }
   else
@@ -209,7 +209,7 @@ size_t fs_write(int fd, const void *buf, size_t len) {
   // when the file size is not enough
   if(file_table[fd].size < offset + len)
   {
-    printf("[fs_write] file size is %d is less than offest %d + len %d\n", file_table[fd].size, offset, len);
+    //printf("[fs_write] file size is %d is less than offest %d + len %d\n", file_table[fd].size, offset, len);
     read_len = file_table[fd].size - offset;
   }
   Log("[fs_write] fd is %d, file %s, disk_offset %d, offset %d, len %d", fd, file_table[fd].name, file_table[fd].disk_offset, offset, read_len);
@@ -239,9 +239,6 @@ size_t fs_lseek(int fd, size_t offset, int whence) {
   switch(whence)
   {
     case SEEK_SET:
-      printf("offset is %d\n", offset);
-      printf("file size is %d\n", file_table[fd].size);
-      printf("file info is %s\n", file_table[fd].name);
       open_table[index].open_offset = offset;
       break;
     case SEEK_CUR:
@@ -253,7 +250,7 @@ size_t fs_lseek(int fd, size_t offset, int whence) {
     default:
       panic("whence error");
   }
-  printf("the file %s offset is %d\n", file_table[fd].name, open_table[index].open_offset);
+  //printf("the file %s offset is %d\n", file_table[fd].name, open_table[index].open_offset);
   
   return open_table[index].open_offset;
 }

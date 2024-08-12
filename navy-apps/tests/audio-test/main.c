@@ -21,6 +21,7 @@ int main() {
     if(i % 16 == 0) printf("\n");
     printf("%02x ", buf[i]);
   }
+  while(1);
   
   NDL_Init(0);
   printf("buf is %p, len is %d\n", buf, len);

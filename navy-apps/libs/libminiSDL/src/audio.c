@@ -31,7 +31,10 @@ void CallbackHelper()
     //{
     //  printf("%d ", audio_buf[i]);
     //}
+    //printf("go to callback : %p\n", callback);
     callback(userdata, audio_buf, callback_size);
+    NDL_PlayAudio(audio_buf, callback_size);
+    
     SDL_UnlockAudio();
   }
 }
@@ -40,6 +43,7 @@ int SDL_OpenAudio(SDL_AudioSpec *desired, SDL_AudioSpec *obtained) {
   assert(desired != NULL);
 
   NDL_OpenAudio(desired->freq, desired->channels, desired->samples);
+  //printf("call back is %p\n", desired->callback);
   callback = desired->callback;
   userdata = desired->userdata;
   assert(callback != NULL);
@@ -49,7 +53,7 @@ int SDL_OpenAudio(SDL_AudioSpec *desired, SDL_AudioSpec *obtained) {
     desired = obtained;
   }
   // the size is sample number multple by channel number multple by 2
-  desired->size = callback_size = desired->samples * sizeof(uint8_t);
+  desired->size = callback_size = desired->channels * desired->samples * sizeof(uint16_t);
   audio_buf = (uint8_t*)malloc(callback_size);
   // calculate the gap between each callback
   gap = 1000 * desired->samples / desired->freq;

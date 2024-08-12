@@ -47,6 +47,7 @@ void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
   printf("audio_data: %x\n", audio_data);
   printf("ab: %x\n", ab);
   printf("len is %d\n", len);
+  printf("sbuf_size is %d\n", sbuf_size);
   for(uint32_t i = 0; i < len; i++){
     ab[pos] = audio_data[i];
     pos = (pos + 1) % sbuf_size;  

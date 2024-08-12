@@ -23,8 +23,10 @@ int main() {
   NDL_OpenAudio(8000, 1, 1024);
   NDL_PlayAudio(buf, len);
   int rest = 0;
-  while ((rest = NDL_QueryAudio()) != 0) {
+  rest = NDL_QueryAudio();
+  while (rest > 0) {
     printf("rest = %d\n", rest);
+    rest = NDL_QueryAudio();
   }
   free(buf);
 }

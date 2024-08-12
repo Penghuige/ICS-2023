@@ -93,16 +93,17 @@ static int get_index(size_t fd)
   {
     return -1;
   }
-  if(fd <= FD_FB)
-  {
-#ifdef CONFIG_STRACE
-    Log("ignore open %s", file_table[fd].name);
-#endif
-    return fd;
-  }
+//  if(fd <= FD_SBCTL)
+//  {
+//#ifdef CONFIG_STRACE
+//    Log("ignore open %s", file_table[fd].name);
+//#endif
+//    return fd;
+//  }
   int ret = -1;
   for(size_t i = 0; i < open_index; i++)
   {
+    printf("open_table[%d].fd is %d\n", i, open_table[i].fd);
     if(fd == open_table[i].fd)
     {
       ret = i;

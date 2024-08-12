@@ -34,8 +34,9 @@ void init_proc() {
   //const char filename3[] = "/bin/keyboard-test";
   //naive_uload(NULL, filename3);
 
-  const char filename4[] = "/bin/nplayer";
+  //const char filename4[] = "/bin/nplayer";
   //const char filename4[] = "/bin/audio-test";
+  const char filename4[] = "/bin/cpp-test";
   naive_uload(NULL, filename4);
 
 }

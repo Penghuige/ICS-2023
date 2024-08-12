@@ -9,6 +9,7 @@ extern void NDL_PlayAudio(uint8_t *, int);
 extern int NDL_QueryAudio();
 
 int main() {
+  // this test have some bug, dont use it
   //FILE  *f = fopen("/share/music/little-star.ogg", "r");
   FILE  *f = fopen("/share/music/rhythm/Do.ogg", "r");
   fseek(f, 0, SEEK_END);

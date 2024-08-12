@@ -142,7 +142,7 @@ int NDL_QueryAudio() {
   // read from the file and play the music
   // empty!
   // need to return the length of the unused buffer
-  char buf[16] = {0};
+  char *buf = malloc(16);
   read(sbtdev, buf, sizeof(buf));
   return atoi(buf);
 }

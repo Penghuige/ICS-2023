@@ -52,5 +52,6 @@ void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
     ab[pos] = audio_data[i];
     pos = (pos + 1) % sbuf_size;  
   }
+  printf("all right\n");
   outl(AUDIO_COUNT_ADDR, inl(AUDIO_COUNT_ADDR) + len); //更新reg_count
 }

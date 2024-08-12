@@ -174,6 +174,7 @@ size_t fs_read(int fd, void *buf, size_t len) {
   size_t read_len = len;
   // when the file size is not enough
   if (file_table[fd].size < offset + len) {
+    printf("[fs_read] file size is %d is less than offest %d + len %d\n", file_table[fd].size, offset, len);
     read_len = file_table[fd].size - offset;
   }
   size_t ret;
@@ -205,6 +206,7 @@ size_t fs_write(int fd, const void *buf, size_t len) {
   // when the file size is not enough
   if(file_table[fd].size < offset + len)
   {
+    printf("[fs_write] file size is %d is less than offest %d + len %d\n", file_table[fd].size, offset, len);
     read_len = file_table[fd].size - offset;
   }
   Log("[fs_write] fd is %d, file %s, offset %d, len %d", fd, file_table[fd].name, file_table[fd].disk_offset + offset, read_len);

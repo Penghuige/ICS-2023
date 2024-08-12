@@ -144,7 +144,6 @@ int NDL_QueryAudio() {
   // need to return the length of the unused buffer
   char buf[16] = {0};
   read(sbtdev, buf, sizeof(buf));
-  printf("atoi(buf) is %d\n", atoi(buf));
   return atoi(buf);
 }
 

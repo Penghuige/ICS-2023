@@ -12,6 +12,7 @@
 static uint32_t pos = 0;
 
 void __am_audio_init() {
+  pos = 0;
   //outl(AUDIO_FREQ_ADDR, 0);
   //outl(AUDIO_CHANNELS_ADDR, 0);
   //outl(AUDIO_SAMPLES_ADDR, 0);

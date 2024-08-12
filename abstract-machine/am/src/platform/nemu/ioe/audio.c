@@ -1,6 +1,5 @@
 #include <am.h>
 #include <nemu.h>
-#include <stdio.h>
 
 #define AUDIO_FREQ_ADDR      (AUDIO_ADDR + 0x00)
 #define AUDIO_CHANNELS_ADDR  (AUDIO_ADDR + 0x04)
@@ -45,13 +44,7 @@ void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
   uint32_t sbuf_size = inl(AUDIO_SBUF_SIZE_ADDR);
   
   uint8_t *ab = (uint8_t *)(uintptr_t)AUDIO_SBUF_ADDR;  //参考GPU部分
-  printf("audio_data: %x\n", audio_data);
-  printf("ab: %x\n", ab);
-  printf("len is %d\n", len);
-  printf("sbuf_size is %d\n", sbuf_size);
   for(uint32_t i = 0; i < len; i++){
-  printf("audio_data: %x\n", audio_data+i);
-  printf("ab: %x\n", ab+pos);
     ab[pos] = audio_data[i];
     pos = (pos + 1) % sbuf_size;  
   }

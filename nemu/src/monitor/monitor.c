@@ -129,10 +129,10 @@ static void initial_table() {
         //           &strtab[sym->st_name], sym->st_value, sym->st_size);
         //}
 
-        //free(strtab);
-        //free(symtab);
-        //free(shstrtab);
-        //free(shdrs);
+        free(strtab);
+        free(symtab);
+        free(shstrtab);
+        free(shdrs);
     } else {
         Elf32_Ehdr ehdr;
         read_section(fd, 0, sizeof(ehdr), &ehdr);
@@ -176,10 +176,10 @@ static void initial_table() {
         //           &strtab[sym->st_name], sym->st_value, sym->st_size, sym->st_info);
         //}
 
-        //free(strtab);
-        //free(symtab);
-        //free(shstrtab);
-        //free(shdrs);
+        free(strtab);
+        free(symtab);
+        free(shstrtab);
+        free(shdrs);
     }
 
     close(fd);

@@ -147,24 +147,24 @@ int NDL_QueryAudio() {
   return atoi(buf);
 }
 
-int NDL_PlayAudio2(void *buf, int len) {
+int NDL_PlayAudio(void *buf, int len) {
   return write(sbdev, buf, len);
 }
-int NDL_PlayAudio(void *buf, int len) {
-  assert(buf != NULL);
-  int ret = len;
-  //assert(0);
-  int spare = NDL_QueryAudio();
-  while(len > 0)
-  {
-    //printf("NDL_QueryAudio() is %d\n", NDL_QueryAudio());
-    write(sbdev, buf, MIN(len, spare));
-    len -= spare;
-    spare = NDL_QueryAudio();
-    break;
-  }
-  return ret - len;
-}
+//int NDL_PlayAudio(void *buf, int len) {
+//  assert(buf != NULL);
+//  int ret = len;
+//  //assert(0);
+//  int spare = NDL_QueryAudio();
+//  while(len > 0)
+//  {
+//    //printf("NDL_QueryAudio() is %d\n", NDL_QueryAudio());
+//    write(sbdev, buf, MIN(len, spare));
+//    len -= spare;
+//    spare = NDL_QueryAudio();
+//    break;
+//  }
+//  return ret - len;
+//}
 
 int NDL_Init(uint32_t flags) {
   if (getenv("NWM_APP")) {

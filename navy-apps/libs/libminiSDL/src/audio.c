@@ -1,6 +1,7 @@
 #include <NDL.h>
 #include <SDL.h>
 #include <assert.h>
+#include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
 
@@ -72,13 +73,83 @@ void SDL_PauseAudio(int pause_on) {
 }
 
 void SDL_MixAudio(uint8_t *dst, uint8_t *src, uint32_t len, int volume) {
+  // mix the audio
+  //printf("mix audio!\n");
+  int16_t *d = (int16_t*)dst;
+  int16_t *s = (int16_t*)src;
+  for(int i = 0; i < len / 2; i++)
+  {
+    int32_t tmp = d[i] + s[i] * volume / SDL_MIX_MAXVOLUME;
+    if(tmp > 32767)
+    {
+      d[i] = 32767;
+    }
+    else if(tmp < -32768)
+    {
+      d[i] = -32768;
+    }
+    else
+    {
+      d[i] = tmp;
+    }
+  }
 }
 
 SDL_AudioSpec *SDL_LoadWAV(const char *file, SDL_AudioSpec *spec, uint8_t **audio_buf, uint32_t *audio_len) {
-  return NULL;
+  // load a wav file.
+  if (file == NULL || spec == NULL || audio_buf == NULL || audio_len == NULL)
+    return NULL;
+  FILE *f = fopen(file, "r");
+  if (!f)
+    return NULL;
+  struct WAVEHeader {
+    char ChunkID[4];
+    uint32_t ChunkSize;
+    char Format[4];
+    char Subchunk1ID[4];
+    uint32_t Subchunk1Size;
+    uint16_t AudioFormat;
+    uint16_t NumChannels;
+    uint32_t SampleRate;
+    uint32_t ByteRate;
+    uint16_t BlockAlign;
+    uint16_t BitsPerSample;
+    char Subchunk2ID[4];
+    uint32_t Subchunk2Size;
+  } header;
+  if(fread(&header, sizeof(header), 1, f) != 1)
+  {
+    fclose(f);
+    return NULL;
+  }
+  if (strncmp(header.ChunkID, "RIFF", 4) != 0 ||
+      strncmp(header.Format, "WAVE", 4) != 0 ||
+      strncmp(header.Subchunk1ID, "fmt ", 4) != 0 ||
+      header.AudioFormat != 1 ||
+      strncmp(header.Subchunk2ID, "data", 4) != 0)
+  {
+    fclose(f);
+    return NULL;
+  }
+  // alloc memory for audio_buf and
+  // read the audio data.
+  *audio_len = header.Subchunk2Size;
+  *audio_buf = (uint8_t*)malloc(*audio_len);
+  if(fread(*audio_buf, *audio_len, 1, f) != 1)
+  {
+    fclose(f);
+    return NULL;
+  }
+  fclose(f);
+  spec->freq = header.SampleRate;
+  spec->format = AUDIO_S16SYS;
+  spec->channels = header.NumChannels;
+  spec->samples = 1024;
+  return spec;
 }
 
 void SDL_FreeWAV(uint8_t *audio_buf) {
+  free(audio_buf);
 }
 
 void SDL_LockAudio() {

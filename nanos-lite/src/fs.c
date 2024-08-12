@@ -181,7 +181,7 @@ size_t fs_read(int fd, void *buf, size_t len) {
     read_len = file_table[fd].size - offset;
   }
   size_t ret;
-  Log("[fs_read] fd is %d, file %s, offset %d, len %d", fd, file_table[fd].name, file_table[fd].disk_offset + offset, read_len);
+  Log("[fs_read] fd is %d, file %s, disk_offset %p, offset %d, len %d", fd, file_table[fd].name, file_table[fd].disk_offset, offset, read_len);
   if(file_table[fd].read)
   {
     printf("the file %s have read %d\n", file_table[fd].name, read_len);
@@ -212,7 +212,7 @@ size_t fs_write(int fd, const void *buf, size_t len) {
     printf("[fs_write] file size is %d is less than offest %d + len %d\n", file_table[fd].size, offset, len);
     read_len = file_table[fd].size - offset;
   }
-  Log("[fs_write] fd is %d, file %s, offset %d, len %d", fd, file_table[fd].name, file_table[fd].disk_offset + offset, read_len);
+  Log("[fs_write] fd is %d, file %s, disk_offset %d, offset %d, len %d", fd, file_table[fd].name, file_table[fd].disk_offset, offset, read_len);
   size_t ret;
   if(file_table[fd].write)
   {

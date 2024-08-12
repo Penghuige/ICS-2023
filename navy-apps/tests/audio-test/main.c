@@ -17,6 +17,10 @@ int main() {
   fseek(f, 0, SEEK_SET);
   assert(len == fread(buf, 1, len, f));
 
+  for(int i = 0; i < len; i++) {
+    if(i % 16 == 0) printf("\n");
+    printf("%02x ", buf[i]);
+  }
   
   NDL_Init(0);
   printf("buf is %p, len is %d\n", buf, len);

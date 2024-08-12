@@ -147,15 +147,13 @@ int NDL_QueryAudio() {
   return atoi(buf);
 }
 
-int NDL_PlayAudio(void *buf, int len) {
+int NDL_PlayAudio2(void *buf, int len) {
   return write(sbdev, buf, len);
 }
-int NDL_PlayAudio2(void *buf, int len) {
+int NDL_PlayAudio(void *buf, int len) {
   assert(buf != NULL);
   int ret = len;
   //assert(0);
-  printf("NDL_PlayAudio len is %d\n", len);
-  printf("the buf is %p\n", buf);
   int spare = NDL_QueryAudio();
   while(len > 0)
   {

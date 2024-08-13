@@ -80,7 +80,7 @@ void init_fs() {
   // pixel size is uint32_t
   file_table[FD_FB].size = width * height * sizeof(uint32_t);
 
-  printf("open_index is locate %p", &open_index);
+  printf("open_index is locate %p\n", &open_index);
   printf("open_index is %d\n", open_index);
   assert(open_index == 0);
   open_index = FD_FB+1;

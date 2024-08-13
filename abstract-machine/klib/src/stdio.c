@@ -118,6 +118,8 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
         case 'p':
           d = va_arg(ap, int);
           itoa(d, buff, 16);
+          out[j++] = '0';
+          out[j++] = 'x';
           for(t = 0; buff[t] != '\0'; t++)
           {
             out[j++] = buff[t];
@@ -203,6 +205,8 @@ int sprintf(char *out, const char *fmt, ...) {
         case 'p':
           d = va_arg(ap, int);
           // Convert to hex
+          out[j++] = '0';
+          out[j++] = 'x';
           itoa(d, buff, 16);
           for(int t = 0; buff[t] != '\0'; t++)
           {
@@ -303,6 +307,8 @@ int snprintf(char *out, size_t n, const char *fmt, ...) {
         case 'p':
           d = va_arg(ap, int);
           itoa(d, buff, 16);
+          out[j++] = '0';
+          out[j++] = 'x';
           for(t = 0; buff[t] != '\0'; t++)
           {
             out[j++] = buff[t];
@@ -390,6 +396,8 @@ int vsnprintf(char *out, size_t n, const char *fmt, va_list ap) {
         case 'p':
           d = va_arg(ap, int);
           itoa(d, buff, 16);
+          out[j++] = '0';
+          out[j++] = 'x';
           for(t = 0; buff[t] != '\0'; t++)
           {
             out[j++] = buff[t];

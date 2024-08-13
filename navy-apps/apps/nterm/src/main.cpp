@@ -15,8 +15,12 @@ int main(int argc, char *argv[]) {
   font = new BDF_Font(font_fname);
 
   // setup display
+  // W 48 H 16
   int win_w = font->w * W;
   int win_h = font->h * H;
+
+  // win_w = -48, H = -16..?
+  // 应该是336 * 208 的窗口
 
   printf("Window size: %d x %d\n", win_w, win_h);
   screen = SDL_SetVideoMode(win_w, win_h, 32, SDL_HWSURFACE);

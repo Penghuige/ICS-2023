@@ -80,6 +80,7 @@ void init_fs() {
   // pixel size is uint32_t
   file_table[FD_FB].size = width * height * sizeof(uint32_t);
 
+  assert(open_index == 0);
   open_index = FD_FB+1;
   for(int i = 0; i <= FD_FB; i++)
   {

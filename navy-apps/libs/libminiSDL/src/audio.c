@@ -33,7 +33,7 @@ void CallbackHelper()
     //  printf("%d ", audio_buf[i]);
     //}
     //printf("go to callback : %p\n", callback);
-    callback(userdata, audio_buf, callback_size);
+    if(callback) callback(userdata, audio_buf, callback_size);
     NDL_PlayAudio(audio_buf, callback_size);
     
     SDL_UnlockAudio();

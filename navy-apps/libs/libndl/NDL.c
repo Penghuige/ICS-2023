@@ -38,6 +38,7 @@ void NDL_OpenCanvas(int *w, int *h) {
   // canvas is a frame buffer
   char buf[64];
   int nread = read(index, buf, sizeof(buf) - 1);
+  //printf("[NDL_OpenCanvas] buf is %s\n", buf);
   assert(nread < sizeof(buf) - 1);
   assert(close(index) == 0);
   assert(strncmp(buf, "WIDTH:", 6) == 0);
@@ -130,7 +131,7 @@ void NDL_DrawRect_false(uint32_t *pixels, int x, int y, int w, int h) {
 
 void NDL_OpenAudio(int freq, int channels, int samples) {
   int buf[3] = {freq, channels, samples};
-  printf("freq is %d, channels is %d, samples is %d\n", freq, channels, samples);
+  //printf("freq is %d, channels is %d, samples is %d\n", freq, channels, samples);
   write(sbtdev, buf, sizeof(buf));
 }
 

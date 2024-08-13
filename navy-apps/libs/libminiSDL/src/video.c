@@ -4,55 +4,44 @@
 #include <string.h>
 #include <stdlib.h>
 
-void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_Rect *dstrect) {
+void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_Rect *dstrect)
+{
+
   assert(dst && src);
   assert(dst->format->BitsPerPixel == src->format->BitsPerPixel);
 
-  void * index;
-  void * target;
+  uint32_t base = 0;
+  uint32_t src_h = src->h, src_w = src->w;
 
-  int src_w = !srcrect ? src->w : srcrect->w;
-  int src_h = !srcrect ? src->h : srcrect->h;
-  int srcrect_x = !srcrect ? 0 : srcrect->x;
-  int srcrect_y = !srcrect ? 0 : srcrect->y;
-
-  int dst_w = !dstrect ? dst->w : dstrect->w;
-  int dst_h = !dstrect ? dst->h : dstrect->h;
-  int dstrect_x = !dstrect ? 0 : dstrect->x;
-  int dstrect_y = !dstrect ? 0 : dstrect->y;
-
-  int width = src_w < dst_w ? src_w : dst_w;
-  int height = src_h < dst_h ? src_h : dst_h;
-
-  // this place is used to change from if, it may be bug.
-  if(dst->format->BitsPerPixel == 8)
+  if (srcrect != NULL)
   {
-    index = (uint8_t *)src->pixels;
-    index += srcrect_y * src->w + srcrect_x;
-    target = (uint8_t *)dst->pixels;
-    target += dstrect_y * dst->w + dstrect_x;
+    base = srcrect->x + srcrect->y * src->w;
+    src_h = srcrect->h;
+    src_w = srcrect->w;
+  }
 
-    // change the range to the src_h, it can run correctly, but in logic, it may be a bug
-    for(int i = 0; i < height; i++)
+  uint32_t target = 0;
+  uint32_t dst_h = dst->h, dst_w = dst->w;
+
+  if (dstrect != NULL)
+  {
+    target = dstrect->x + dstrect->y * dst->w;
+  }
+
+  if (dst->format->BitsPerPixel == 32)
+  {
+    for (int row = 0; row < src_h; ++row)
     {
-      memcpy(target + i * dst->w, index + i * src->w, width * sizeof(uint8_t));
+      memcpy((uint32_t *)dst->pixels + target + row * dst_w, (uint32_t *)src->pixels + base + row * src->w, src_w * sizeof(uint32_t));
     }
   }
-  else if(dst->format->BitsPerPixel == 32)
+  else if (dst->format->BitsPerPixel == 8)
   {
-    index = (uint32_t *)src->pixels;
-    index += srcrect_y * src->w + srcrect_x;
-    target = (uint32_t *)dst->pixels;
-    target += dstrect_y * dst->w + dstrect_x;
-
-    for (int i = 0; i < height; i++) {
-      memcpy(target + i * dst->w, index + i * src->w, width * sizeof(uint32_t));
-      //for (int j = 0; j < width; ++j) {
-      //  base[(dstrect_y + i) * dst_w + dstrect_x + j] = data[(srcrect_y + i) * src_w + srcrect_x + j];
-      //}
+    for (int row = 0; row < src_h; ++row)
+    {
+      memcpy((uint8_t *)dst->pixels + target + row * dst_w, (uint8_t *)src->pixels + base + row * src->w, src_w * sizeof(uint8_t));
     }
   }
-  return;
 }
 
 void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
@@ -98,13 +87,14 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
   }
 
   void * index;
-  uint32_t * pixels = (uint32_t *)malloc(W * H * sizeof(uint32_t *));
-
+  uint32_t * pixels = (uint32_t *)malloc(W * H * sizeof(uint32_t));
 
   if(s->format->BitsPerPixel == 32)
   {
     // it may cause a bug!!!
     index = (uint32_t *)s->pixels;
+    // here the *index is already 1
+    //printf("index point to size of %d, it must to be 32\n", sizeof(*index));
     index += y * s->w + x;
   }
   else if(s->format->BitsPerPixel == 8)
@@ -113,11 +103,7 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
     assert(s->format->palette->colors);
     index = (uint8_t *)s->pixels;
     index += y * s->w + x;
-    //for (int i = 0; i < W * H; ++i) {
-    //    SDL_Color colors = s->format->palette->colors[index[i]];
-    //    uint32_t p = (colors.a << 24) | (colors.r << 16) | (colors.g << 8) | (colors.b << 0);
-    //    pixels[i] = p;
-    //}
+    //printf("index point to size of %d, it must to be 8\n", sizeof(*index));
   }
 
   // through index fill the pixels
@@ -127,7 +113,8 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
     {
       if(s->format->BitsPerPixel == 32)
       {
-        pixels[i*W+j] = s->pixels[i*s->w+j];
+        // it shoule be index rather than s->pixels
+        pixels[i*W+j] = ((uint32_t*)index)[i*s->w+j];
       }
       else if(s->format->BitsPerPixel == 8)
       {

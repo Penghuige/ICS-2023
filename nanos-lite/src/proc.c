@@ -26,18 +26,8 @@ void init_proc() {
 
   Log("Initializing processes...");
 
-  // load program here
-  //const char filename[] = "/bin/file-test";
-  //naive_uload(NULL, filename);
-  //const char filename2[] = "/bin/timer-test";
-  // naive_uload(NULL, filename2);
-  //const char filename3[] = "/bin/keyboard-test";
-  //naive_uload(NULL, filename3);
-
-  //const char filename4[] = "/bin/nplayer";
-  //const char filename4[] = "/bin/audio-test";
-  const char filename4[] = "/bin/menu";
-  naive_uload(NULL, filename4);
+  const char filename[] = "/bin/menu";
+  naive_uload(NULL, filename);
 
 }
 

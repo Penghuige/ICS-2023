@@ -6,7 +6,6 @@
 
 void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_Rect *dstrect)
 {
-
   assert(dst && src);
   assert(dst->format->BitsPerPixel == src->format->BitsPerPixel);
 
@@ -46,26 +45,28 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
 
 void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
   void *base;
-  int x = (dstrect == NULL ? 0 : dstrect->x);
-  int y = (dstrect == NULL ? 0 : dstrect->y);
-  int w = (dstrect == NULL ? dst->w : dstrect->w);
-  int h = (dstrect == NULL ? dst->h : dstrect->h);
+  int x = (!dstrect ? 0 : dstrect->x);
+  int y = (!dstrect ? 0 : dstrect->y);
+  int w = (!dstrect ? dst->w : dstrect->w);
+  int h = (!dstrect ? dst->h : dstrect->h);
 
   // set base to the beginning of the pixels
   if(dst->format->BitsPerPixel == 8)
   {
-    base = (uint8_t*)dst->pixels;
     // move to the beginning
+    base = (uint8_t*)(dst->pixels + y * dst->w + x);
+    for(int i = 0; i < h; i++)
+    {
+      memset((uint8_t*)base + i * dst->w, color, w * sizeof(uint8_t));
+    }
   }
   else
   {
-    base = (uint32_t*)dst->pixels;
-  }
-
-  base += y * dst->w + x;
-  for(int i = 0; i < h; i++)
-  {
-    memset(base + i * dst->w, color, w);
+    base = (uint32_t*)(dst->pixels + y * dst->w + x);
+    for(int i = 0; i < h; i++)
+    {
+      memset((uint32_t*)base + i * dst->w, color, w * sizeof(uint32_t));
+    }
   }
 }
 

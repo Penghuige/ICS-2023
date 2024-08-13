@@ -154,11 +154,11 @@ int fs_open(const char *pathname, int flags, int mode) {
 }
 
 int fs_close(int fd) {
-  int index = get_index(fd);
-  if(index != -1)
-  {
-    open_table[index].fd = -1;
-  }
+  //int index = get_index(fd);
+  //if(index != -1)
+  //{
+  //  open_table[index].fd = -1;
+  //}
   return 0;
 }
 

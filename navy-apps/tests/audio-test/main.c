@@ -2,34 +2,25 @@
 #include <stdio.h>
 #include <assert.h>
 #include <stdlib.h>
-
-extern void NDL_Init(int);
-extern void NDL_OpenAudio(int, int, int);
-extern void NDL_PlayAudio(uint8_t *, int);
-extern int NDL_QueryAudio();
+#include <NDL.h>
 
 int main() {
   // this test have some bug, dont use it
-  //FILE  *f = fopen("/share/music/little-star.ogg", "r");
-  FILE  *f = fopen("/share/music/rhythm/Do.ogg", "r");
+  FILE  *f = fopen("/share/music/little-star.ogg", "r");
+  //FILE  *f = fopen("/share/music/rhythm/Do.ogg", "r");
   fseek(f, 0, SEEK_END);
   int len = ftell(f);
   uint8_t *buf = malloc(len);
   fseek(f, 0, SEEK_SET);
   assert(len == fread(buf, 1, len, f));
 
-  for(int i = 0; i < len; i++) {
-    if(i % 16 == 0) printf("\n");
-    printf("%02x ", buf[i]);
-  }
-  while(1);
-  
   NDL_Init(0);
   printf("buf is %p, len is %d\n", buf, len);
   NDL_OpenAudio(8000, 1, 1024);
   NDL_PlayAudio(buf, len);
   int rest = 0;
   rest = NDL_QueryAudio();
+  while(1);
   while (rest > 0) {
     printf("rest = %d\n", rest);
     rest = NDL_QueryAudio();

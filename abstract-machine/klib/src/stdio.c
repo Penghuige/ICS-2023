@@ -115,6 +115,14 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
           c = va_arg(ap, int);
           out[j++] = c; 
           break;
+        case 'p':
+          d = va_arg(ap, int);
+          itoa(d, buff, 16);
+          for(t = 0; buff[t] != '\0'; t++)
+          {
+            out[j++] = buff[t];
+          }
+          break;
         default:
           break;
       }
@@ -191,6 +199,15 @@ int sprintf(char *out, const char *fmt, ...) {
         case 'c':
           c = va_arg(ap, int);
           putch(c);
+          break;
+        case 'p':
+          d = va_arg(ap, int);
+          // Convert to hex
+          itoa(d, buff, 16);
+          for(int t = 0; buff[t] != '\0'; t++)
+          {
+            out[j++] = buff[t];
+          }
           break;
         default:
           // Unsupported format specifier
@@ -283,6 +300,14 @@ int snprintf(char *out, size_t n, const char *fmt, ...) {
             out[j++] = buff[t];
           }
           break;
+        case 'p':
+          d = va_arg(ap, int);
+          itoa(d, buff, 16);
+          for(t = 0; buff[t] != '\0'; t++)
+          {
+            out[j++] = buff[t];
+          }
+          break;
       }
     }
     else
@@ -357,6 +382,14 @@ int vsnprintf(char *out, size_t n, const char *fmt, va_list ap) {
           }
           buff[t] = '\0';
 
+          for(t = 0; buff[t] != '\0'; t++)
+          {
+            out[j++] = buff[t];
+          }
+          break;
+        case 'p':
+          d = va_arg(ap, int);
+          itoa(d, buff, 16);
           for(t = 0; buff[t] != '\0'; t++)
           {
             out[j++] = buff[t];

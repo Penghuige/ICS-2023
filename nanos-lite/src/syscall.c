@@ -113,6 +113,7 @@ int sys_gettimeofday(uintptr_t *a) {
 int sys_execve(const char *fname, char * const argv[], char *const envp[]) {
   // need to clear the now status?
   naive_uload(NULL, fname);
+  yield();
   
   return -1;
 }

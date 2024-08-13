@@ -75,7 +75,7 @@ void do_syscall(Context *c) {
 }
 
 void sys_exit(int code) {
-  halt(0);
+  naive_uload(current, "/bin/menu");
 }
 
 int sys_yield() {

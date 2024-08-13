@@ -67,7 +67,9 @@ static Finfo file_table[] __attribute__((used)) = {
 };
 
 // it is not need to use in other files
-size_t open_index;
+// it should be zero, but some thing make it not zero
+// am_native is right. so it is am or nanos problem
+static size_t open_index;
 static OFinfo open_table[5*LENGTH(file_table)];
 
 void init_fs() {

@@ -34,6 +34,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   assert(fs_read(fd, &ehdr, sizeof(ehdr)) == sizeof(ehdr));
   // replace the ramdisk_read with fs_read, it used to be zero while ramdisk_read.
   //ramdisk_read(&ehdr, 0, sizeof(Elf_Ehdr));
+  printf("[loader] file %d ehdr.e_ident: %x\n", fd, *(uint32_t *)ehdr.e_ident);
 
   assert(*(uint32_t *)ehdr.e_ident == 0x464c457f);
 

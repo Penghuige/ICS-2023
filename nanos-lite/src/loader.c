@@ -19,7 +19,7 @@ extern size_t fs_read(int fd, void *buf, size_t len);
 extern size_t fs_write(int fd, void *buf, size_t len);
 extern size_t fs_lseek(int fd, size_t offset, int whence);
 
-static uintptr_t loader(PCB *pcb, const char *filename) {
+ uintptr_t loader2(PCB *pcb, const char *filename) {
   Elf_Ehdr ehdr;
   ramdisk_read(&ehdr, 0, sizeof(Elf_Ehdr));
   // check valid elf
@@ -37,7 +37,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   return ehdr.e_entry;
 }
 
- uintptr_t loader2(PCB *pcb, const char *filename) {
+ uintptr_t loader(PCB *pcb, const char *filename) {
   int fd = fs_open(filename, 0, 0);
   if (fd < 0) {
     Log("File not found: %s", filename);

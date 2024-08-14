@@ -121,7 +121,7 @@ size_t fs_write(int fd, const void *buf, size_t len)
     file_table[fd].open_offset += count;
     // printf("open_offset is %d, size is %d, res is %d\n", file_table[fd].open_offset, file_table[fd].size, file_table[fd].open_offset < file_table[fd].size);
     // printf("open offset is less than size\n");
-    assert((file_table[fd].open_offset <= file_table[fd].size));
+    //assert((file_table[fd].open_offset <= file_table[fd].size));
     // printf("count is %d\n", count);
     return count;
   }

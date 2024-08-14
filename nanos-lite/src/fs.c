@@ -2,6 +2,7 @@
 #include <fs.h>
 
 //#define CONFIG_STRACE 1
+#define ARRLEN(arr) (sizeof(arr) / sizeof(arr[0]))
 
 typedef size_t (*ReadFn) (void *buf, size_t offset, size_t len);
 typedef size_t (*WriteFn) (const void *buf, size_t offset, size_t len);
@@ -132,13 +133,13 @@ int fs_open(const char *pathname, int flags, int mode) {
   for(int i = 0; i < LENGTH(file_table); i++) {
     //printf("file_table[%d].name: %s\n", i, file_table[i].name);
     if(strcmp(pathname, file_table[i].name) == 0) {
-//      if(i <= FD_FB)
-//      {
-//#ifdef CONFIG_STRACE
-//        Log("ignore open %s", pathname);
-//#endif
-//        return i;
-//      }
+      if(i <= FD_FB)
+      {
+#ifdef CONFIG_STRACE
+        Log("ignore open %s", pathname);
+#endif
+        return i;
+      }
       // record 
       //printf("file fd is %d\n", i);
       //printf("open_index is %d\n", open_index);
@@ -168,6 +169,22 @@ int fs_close(int fd) {
 }
 
 size_t fs_read(int fd, void *buf, size_t len) {
+  int index = get_index(fd);
+  if(fd < 0 || fd >= ARRLEN(file_table)) {
+    panic("fd %d not exist", fd);
+  }
+  if (file_table[fd].read)
+    return file_table[fd].read(buf, file_table[fd].disk_offset + open_table[index].open_offset, len);
+  size_t t = len;
+  if (open_table[index].open_offset + len > file_table[fd].size) {
+    t = file_table[fd].size - open_table[index].open_offset;
+  }
+  size_t ret = ramdisk_read(buf, file_table[fd].disk_offset + open_table[index].open_offset, t);
+  assert(ret == t);
+  open_table[index].open_offset += ret;
+  return ret;
+}
+size_t fs_read2(int fd, void *buf, size_t len) {
   size_t index = get_index(fd);
 #ifdef CONFIG_STRACE
   Log("READ index: %d, name: %s, offset: %d", index, file_table[fd].name, open_table[index].open_offset);

@@ -18,45 +18,90 @@ extern int fs_close(int fd);
 extern size_t fs_read(int fd, void *buf, size_t len);
 extern size_t fs_write(int fd, void *buf, size_t len);
 extern size_t fs_lseek(int fd, size_t offset, int whence);
-static uintptr_t loader(PCB *pcb, const char *filename) {
-  
+
+static uintptr_t loader(PCB *pcb, const char *filename)
+{
+  Elf_Ehdr ehdr;
+
+  // ramdisk_read(&ehdr, 0, sizeof(ehdr));
   int fd = fs_open(filename, 0, 0);
-  if (fd < 0) {
-    panic("should not reach here");
-  }
-  Elf_Ehdr elf;
+  assert(fd != -1);
 
-  assert(fs_read(fd, &elf, sizeof(elf)) == sizeof(elf));
+  fs_read(fd, &ehdr, sizeof(ehdr));
 
-  // 检查魔数
-  assert(*(uint32_t *)elf.e_ident == 0x464c457f);
-  // 检查ISA
+  char riscv32_magic_num[] = {0x7f, 0x45, 0x4c, 0x46, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+  // printf("magic number is %s\n", (char *)(ehdr.e_ident));
+  assert(strcmp((char *)(ehdr.e_ident), riscv32_magic_num) == 0);
+
+  uint32_t entry = ehdr.e_entry;
+  uint32_t ph_offset = ehdr.e_phoff;
+  uint32_t ph_num = ehdr.e_phnum;
 
   Elf_Phdr phdr;
-  for (int i = 0; i < elf.e_phnum; i++) {
-    uint32_t base = elf.e_phoff + i * elf.e_phentsize;
+  for (int i = 0; i < ph_num; ++i)
+  {
+    // ramdisk_read(&phdr, ph_offset + i * sizeof(phdr), sizeof(phdr));
+    fs_lseek(fd, ph_offset + i * sizeof(phdr), SEEK_SET);
+    fs_read(fd, &phdr, sizeof(phdr));
+    if (phdr.p_type != PT_LOAD)
+      continue;
 
-    fs_lseek(fd, base, SEEK_SET);
-    assert(fs_read(fd, &phdr, elf.e_phentsize) == elf.e_phentsize);
-    
-    // 需要装载的段
-    if (phdr.p_type == PT_LOAD) {
+    // printf("load program header %d", i);
 
-      char * buf_malloc = (char *)malloc(phdr.p_filesz);
+    uint32_t offset = phdr.p_offset;
+    uint32_t file_size = phdr.p_filesz;
+    uint32_t p_vaddr = phdr.p_vaddr;
+    uint32_t mem_size = phdr.p_memsz;
 
-      fs_lseek(fd, phdr.p_offset, SEEK_SET);
-      assert(fs_read(fd, buf_malloc, phdr.p_filesz) == phdr.p_filesz);
-      
-      memcpy((void*)phdr.p_vaddr, buf_malloc, phdr.p_filesz);
-      memset((void*)phdr.p_vaddr + phdr.p_filesz, 0, phdr.p_memsz - phdr.p_filesz);
-      
-      free(buf_malloc);
+    printf("load program from [%p, %p] to [%p, %p]\n", offset, file_size, p_vaddr, mem_size);
+#ifdef USR_SPACE_ENABLE
+    int left_size = file_size;
+    fs_lseek(fd, offset, SEEK_SET);
+    // printf("vaddr is %p\n", p_vaddr);
+    if (!ISALIGN(p_vaddr))
+    {
+      void *pg_p = new_page(1);
+      int read_len = min(PGSIZE - OFFSET(p_vaddr), left_size);
+      left_size -= read_len;
+      assert(fs_read(fd, pg_p + OFFSET(p_vaddr), read_len) >= 0);
+      map(&pcb->as, (void *)p_vaddr, pg_p, PTE_R | PTE_W | PTE_X);
+      p_vaddr += read_len;
     }
+
+    for (; p_vaddr < phdr.p_vaddr + file_size; p_vaddr += PGSIZE)
+    {
+      assert(ISALIGN(p_vaddr));
+      void *pg_p = new_page(1);
+      memset(pg_p, 0, PGSIZE);
+      // int len = min(PGSIZE, file_size - fs_lseek(fd, 0, SEEK_CUR));
+      int read_len = min(PGSIZE, left_size);
+      left_size -= read_len;
+      assert(fs_read(fd, pg_p, read_len) >= 0);
+      map(&pcb->as, (void *)p_vaddr, pg_p, PTE_R | PTE_W | PTE_X);
+    }
+    // printf("p_vaddr is %p\n", (void *)p_vaddr);
+    p_vaddr = NEXT_PAGE(p_vaddr);
+    printf("p_vaddr is %p next page, end of uninitialized space is %p\n", (void *)p_vaddr, (void *)(phdr.p_vaddr + mem_size));
+    for (; p_vaddr < phdr.p_vaddr + mem_size; p_vaddr += PGSIZE)
+    {
+      assert(ISALIGN(p_vaddr));
+      void *pg_p = new_page(1);
+      memset(pg_p, 0, PGSIZE);
+      map(&pcb->as, (void *)p_vaddr, pg_p, PTE_R | PTE_W | PTE_X);
+    }
+#else
+    // ramdisk_read((void *)vaddr, offset, file_size);
+    fs_lseek(fd, offset, SEEK_SET);
+    fs_read(fd, (void *)p_vaddr, file_size);
+    memset((void *)(p_vaddr + file_size), 0, mem_size - file_size);
+#endif
+    assert(mem_size >= file_size);
   }
 
-  assert(fs_close(fd) == 0);
-  
-  return elf.e_entry;
+  // printf("max brk is at %p when load\n", pcb->max_brk);
+  assert(fs_close(fd) != -1);
+
+  return entry;
 }
  uintptr_t loader2(PCB *pcb, const char *filename) {
   int fd = fs_open(filename, 0, 0);

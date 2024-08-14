@@ -1,28 +1,11 @@
-#include "klib-macros.h"
 #include <fs.h>
+#include <klib.h>
 
-//#define CONFIG_STRACE 1
+#define NR_FILE (sizeof(file_table) / sizeof(file_table[0]))
+#define min(x, y) ((x < y) ? x : y)
 
-typedef size_t (*ReadFn) (void *buf, size_t offset, size_t len);
-typedef size_t (*WriteFn) (const void *buf, size_t offset, size_t len);
-
-extern size_t serial_write(const void *buf, size_t offset, size_t len);
-
-typedef struct {
-  char *name;
-  size_t size;
-  size_t disk_offset;
-  ReadFn read;
-  WriteFn write;
-} Finfo;
-
-// record open-file table, it need to store file name and offset
-typedef struct {
-  size_t fd;
-  // where it must to write
-  size_t open_offset;
-}OFinfo;
-
+typedef size_t (*ReadFn)(void *buf, size_t offset, size_t len);
+typedef size_t (*WriteFn)(const void *buf, size_t offset, size_t len);
 // File system
 int fs_open(const char *pathname, int flags, int mode);
 size_t fs_read(int fd, void *buf, size_t len);
@@ -43,225 +26,163 @@ extern size_t sbctl_read(void *buf, size_t offset, size_t len);
 extern size_t sbctl_write(const void *buf, size_t offset, size_t len);
 
 
-size_t invalid_read(void *buf, size_t offset, size_t len) {
+typedef struct
+{
+  char *name;
+  size_t size;
+  size_t disk_offset;
+  size_t open_offset;
+  ReadFn read;
+  WriteFn write;
+} Finfo;
+
+static size_t invalid_read(void *buf, size_t offset, size_t len)
+{
   panic("should not reach here");
   return 0;
 }
 
-size_t invalid_write(const void *buf, size_t offset, size_t len) {
+static size_t invalid_write(const void *buf, size_t offset, size_t len)
+{
   panic("should not reach here");
   return 0;
+}
+extern size_t serial_write(const void *buf, size_t offset, size_t len);
+
+static size_t file_read(void *buf, size_t offset, size_t len)
+{
+  return ramdisk_read(buf, offset, len);
+}
+
+static size_t file_write(const void *buf, size_t offset, size_t len)
+{
+  return ramdisk_write(buf, offset, len);
 }
 
 /* This is the information about all files in disk. */
 static Finfo file_table[] __attribute__((used)) = {
-  [FD_STDIN]  = {"stdin", 0, 0, invalid_read, invalid_write},
-  [FD_STDOUT] = {"stdout", 0, 0, invalid_read, serial_write},
-  [FD_STDERR] = {"stderr", 0, 0, invalid_read, serial_write},
-  [DEV_EVENTS] = {"/dev/events", 0, 0, events_read, NULL},
-  [DEV_DISPLAY] = {"/proc/dispinfo", 0, 0, dispinfo_read, NULL},
-  [FD_FB] = {"/dev/fb", 0, 0, NULL, fb_write},
-  [FD_SB] = {"/dev/sb", 0, 0, NULL, sb_write},
-  [FD_SBCTL] = {"/dev/sbctl", 0, 0, sbctl_read, sbctl_write},
+    [FD_STDIN] = {"stdin", 0, 0, 0, invalid_read, invalid_write},
+    [FD_STDOUT] = {"stdout", 0, 0, 0, invalid_read, serial_write},
+    [FD_STDERR] = {"stderr", 0, 0, 0, invalid_read, serial_write},
+    {"/dev/events", 0, 0, 0, events_read, invalid_write},
+    {"/proc/dispinfo", 50, 0, 0, dispinfo_read, invalid_write},
+    {"/dev/fb", 0, 0, 0, invalid_read, fb_write},
 #include "files.h"
 };
 
-// it is not need to use in other files
-// it should be zero, but some thing make it not zero
-// am_native is right. so it is am or nanos problem
-static size_t open_index;
-static OFinfo open_table[5*LENGTH(file_table)];
-
-void init_fs() {
-  // TODO: initialize the size of /dev/fb
-  // make the special file here
-  // size is the screen size * pixel size
-  AM_GPU_CONFIG_T ev = io_read(AM_GPU_CONFIG);
-  int width = ev.width;
-  int height = ev.height;
-  // pixel size is uint32_t
-  file_table[FD_FB].size = width * height * sizeof(uint32_t);
-
-  printf("open_index is locate %p\n", &open_index);
-  printf("open_index is %d\n", open_index);
-  assert(open_index == 0);
-  open_index = FD_FB+1;
-  for(int i = 0; i <= FD_FB; i++)
-  {
-    open_table[i] = (OFinfo){.fd = i, .open_offset = 0};
-  }
-
-  file_table[FD_SB].size = io_read(AM_AUDIO_CONFIG).bufsize;
-  file_table[FD_SBCTL].size = 3 * sizeof(int);
-}
-
-static int get_index(size_t fd)
+void init_fs()
 {
-  if (fd < 0 || fd > LENGTH(open_table))
+  for (size_t fd = 6; fd < NR_FILE; ++fd)
   {
-    return -1;
+    if (file_table[fd].write == NULL)
+      file_table[fd].write = file_write;
+    if (file_table[fd].read == NULL)
+      file_table[fd].read = file_read;
   }
-//  if(fd <= FD_SBCTL)
-//  {
-//#ifdef CONFIG_STRACE
-//    Log("ignore open %s", file_table[fd].name);
-//#endif
-//    return fd;
-//  }
-  int ret = -1;
-  for(size_t i = 0; i < open_index; i++)
-  {
-    //printf("open_table[%d].fd is %d\n", i, open_table[i].fd);
-    if(fd == open_table[i].fd)
-    {
-      ret = i;
-      break;
-    }
-  }
-  //if(ret == -1)
-  //{
-  //  printf("%d file not found! open_index is %d, all file is:\n", fd, open_index);
-  //}
-  return ret;
+  // TODO: initialize the size of /dev/fb
+
+  AM_GPU_CONFIG_T gpu_config;
+  ioe_read(AM_GPU_CONFIG, &gpu_config);
+  int width = gpu_config.width, height = gpu_config.height;
+  int fb_fd = fs_open("/dev/fb", 0, 0);
+  file_table[fb_fd].size = width * height;
 }
 
-int fs_open(const char *pathname, int flags, int mode) {
-#ifdef CONFIG_STRACE
-  Log("need to open %s", pathname);
-#endif
-  for(int i = 0; i < LENGTH(file_table); i++) {
-    //printf("file_table[%d].name: %s\n", i, file_table[i].name);
-    if(strcmp(pathname, file_table[i].name) == 0) {
-      if(i <= FD_FB)
-      {
-#ifdef CONFIG_STRACE
-        Log("ignore open %s", pathname);
-#endif
-        return i;
-      }
-      // record 
-      //printf("file fd is %d\n", i);
-      //printf("open_index is %d\n", open_index);
-      assert(open_index < LENGTH(open_table));
-      open_table[open_index].fd = i;
-      open_table[open_index].open_offset = 0;
-      open_index++;
-#ifdef CONFIG_STRACE
-      Log("have read %s", pathname);
-#endif
-
-      return i;
+int fs_open(const char *pathname, int flags, int mode)
+{
+  // printf("===============");
+  for (size_t fd = 0; fd < NR_FILE; ++fd)
+  {
+    // printf("compare is %s with %s\n", file_table[fd].name, pathname);
+    if (strcmp(file_table[fd].name, pathname) == 0)
+    {
+      file_table[fd].open_offset = 0;
+      return fd;
     }
   }
-  panic("file %s not found", pathname);
-  while(1);
   return -1;
 }
 
-int fs_close(int fd) {
-  //int index = get_index(fd);
-  //if(index != -1)
-  //{
-  //  open_table[index].fd = -1;
-  //}
-  return 0;
-}
-
-size_t fs_read(int fd, void *buf, size_t len) {
-  size_t index = get_index(fd);
-#ifdef CONFIG_STRACE
-  Log("READ index: %d, name: %s, offset: %d", index, file_table[fd].name, open_table[index].open_offset);
-#endif
-  if(index == -1)
+size_t fs_write(int fd, const void *buf, size_t len)
+{
+  // printf("write fd is %d, size is %d, to write len is %d\n", fd, file_table[fd].size, len);
+  if (fd == 0)
+    panic("should never write to stdin");
+  // assert(fd >= 0 && fd < NR_FILE);
+  if (fd > 0 && fd < 5)
+    return file_table[fd].write(buf, 0, len);
+  if (fd >= 5 && fd < NR_FILE)
   {
-    panic("file %d not found", fd);
-  }
-  size_t offset = open_table[index].open_offset;
-  // printf("offset: %d\n", offset);
-  // 他的buf就是指向的Elf_Ehdr ehdr, 第二个参数是偏移量，记录在文件表中的disk_offset，第三个参数是长度
-  size_t read_len = len;
-  // when the file size is not enough
-  if (file_table[fd].size < offset + len) {
-#ifdef CONFIG_STRACE
-    printf("[fs_read] file size is %d is less than offest %d + len %d\n", file_table[fd].size, offset, len);
-#endif
-    read_len = file_table[fd].size - offset;
-  }
-  size_t ret;
-  //Log("[fs_read] fd is %d, file %s, disk_offset %d, offset %d, len %d", fd, file_table[fd].name, file_table[fd].disk_offset, offset, read_len);
-  if(file_table[fd].read)
-  {
-    //printf("the file %s have read %d\n", file_table[fd].name, read_len);
-    ret = file_table[fd].read(buf, file_table[fd].disk_offset + offset, len);
+    len = min(len, file_table[fd].size - file_table[fd].open_offset);
+    // if (len == 0)
+    //   return 0;
+    size_t count = file_table[fd].write(buf, file_table[fd].disk_offset + file_table[fd].open_offset, len);
+    // printf("count is %d, len is %d\n", count, len);
+    file_table[fd].open_offset += count;
+    // printf("open_offset is %d, size is %d, res is %d\n", file_table[fd].open_offset, file_table[fd].size, file_table[fd].open_offset < file_table[fd].size);
+    // printf("open offset is less than size\n");
+    assert((file_table[fd].open_offset <= file_table[fd].size));
+    // printf("count is %d\n", count);
+    return count;
   }
   else
-  {
-    ret = ramdisk_read(buf, file_table[fd].disk_offset + offset, read_len);
-    open_table[index].open_offset += ret;
-  }
-  return ret;
+    return -1;
 }
 
-size_t fs_write(int fd, const void *buf, size_t len) {
-  int index = get_index(fd);
-#ifdef CONFIG_STRACE
-  Log("WRITE index: %d, name: %s, offset: %d, len: %d", index, file_table[fd].name, open_table[index].open_offset, len);
-#endif
-  if(index == -1)
+size_t fs_read(int fd, void *buf, size_t len)
+{
+  // printf("read fd is %d, size is %d, offset is %d, to read len is %d\n", fd, file_table[fd].size, file_table[fd].open_offset, len);
+  assert(fd > 0 && fd < NR_FILE);
+  if (fd > 0 && fd < 5)
+    return file_table[fd].read(buf, 0, len);
+  if (fd >= 5 && fd < NR_FILE)
   {
-    panic("file %d not found", fd);
+    len = min(len, file_table[fd].size - file_table[fd].open_offset);
+    // if (len == 0)
+    //   return 0;
+    // printf("read some thing from %d with size %d\n", file_table[fd].disk_offset + file_table[fd].open_offset, len);
+    size_t count = file_table[fd].read(buf, file_table[fd].disk_offset + file_table[fd].open_offset, len);
+    // printf("len is %d\n", count);
+    // printf("read open_offset is %d, size is %d, res is %d\n", file_table[fd].open_offset, file_table[fd].size, file_table[fd].open_offset < file_table[fd].size);
+    file_table[fd].open_offset += count;
+    // printf("read open_offset is %d, size is %d, res is %d\n", file_table[fd].open_offset, file_table[fd].size, file_table[fd].open_offset < file_table[fd].size);
+    assert((file_table[fd].open_offset <= file_table[fd].size));
+    // printf("count is %d\n", count);
+    return count;
   }
-  size_t offset = open_table[index].open_offset;
-  size_t read_len = len;
-  // when the file size is not enough
-  if(file_table[fd].size < offset + len)
-  {
-#ifdef CONFIG_STRACE
-    printf("[fs_write] file size is %d is less than offest %d + len %d\n", file_table[fd].size, offset, len);
-#endif
-    read_len = file_table[fd].size - offset;
-  }
-#ifdef CONFIG_STRACE
-  Log("[fs_write] fd is %d, file %s, disk_offset %d, offset %d, len %d", fd, file_table[fd].name, file_table[fd].disk_offset, offset, read_len);
-#endif
-  size_t ret;
-  if(file_table[fd].write)
-  {
-    // the disk_offset will be proceed in the write function
-    ret = file_table[fd].write(buf, file_table[fd].disk_offset + offset, len);
-  }
-  else{
-    ret = ramdisk_write(buf, file_table[fd].disk_offset + offset, read_len);
-    open_table[index].open_offset += ret;
-  }
-
-  return ret;
+  else
+    return -1;
 }
 
-size_t fs_lseek(int fd, size_t offset, int whence) {
-#ifdef CONFIG_STRACE
-  Log("LSEEK offset: %d, whence: %d", offset, whence);
-#endif
-  int index = get_index(fd);
-  if(index == -1)
+size_t fs_lseek(int fd, size_t offset, int whence)
+{
+  // printf("change seek of fd %d\n", fd);
+  assert(fd > 3 && fd < NR_FILE);
+  switch (whence)
   {
-    panic("file %d not found", fd);
+  case SEEK_SET:
+    file_table[fd].open_offset = offset;
+    break;
+  case SEEK_CUR:
+    file_table[fd].open_offset += offset;
+    break;
+  case SEEK_END:
+    file_table[fd].open_offset = file_table[fd].size + offset;
+    break;
+  default:
+    return -1;
   }
-  switch(whence)
+  // printf("offset is %d\n", file_table[fd].open_offset);
+  return file_table[fd].open_offset;
+}
+
+int fs_close(int fd)
+{
+  if (fd >= 3 && fd < NR_FILE)
   {
-    case SEEK_SET:
-      open_table[index].open_offset = offset;
-      break;
-    case SEEK_CUR:
-      open_table[index].open_offset += offset;
-      break;
-    case SEEK_END:
-      open_table[index].open_offset = file_table[fd].size + offset;
-      break;
-    default:
-      panic("whence error");
+    file_table[fd].open_offset = 0;
+    return 0;
   }
-  //printf("the file %s offset is %d\n", file_table[fd].name, open_table[index].open_offset);
-  
-  return open_table[index].open_offset;
+  else
+    return -1;
 }

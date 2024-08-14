@@ -5,104 +5,100 @@
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
 size_t strlen(const char *s) {
-  const char *pend = s;
-  while (*pend != '\0') {
-    pend++;
-  }
-  return pend - s;
-}
-
-char *strcpy(char *dst, const char *src) {
-  char *tmp = dst;
-  while (*src != '\0') *tmp++ = *src++;
-  *tmp = '\0';
-  return dst;
-}
-
-char *strncpy(char *dst, const char *src, size_t n) {
-  char *tmp = dst;
-  while (n-- && *src != '\0') *tmp++ = *src++;
-  while (n--) *tmp++ = '\0';
-  return dst;
-}
-
-char *strcat(char *dst, const char *src) {
-  char *tmp = dst;
-  while (*tmp != '\0') tmp++;
-  while (*src != '\0') *tmp++ = *src++;
-  *tmp = '\0';
-  return dst;
-}
-
-int strcmp(const char *s1, const char *s2) {
-// linux/lib/string.c
-  unsigned char c1, c2;
-  while (1) {
-    c1 = *s1++;
-    c2 = *s2++;
-    if (c1 != c2) {
-      return c1 < c2 ? -1 : 1;
-    }
-    if (!c1) {
-      break;
-    }
-  }
-  return 0;
-}
-
-int strncmp(const char *s1, const char *s2, size_t n) {
-  unsigned char c1, c2;
-  while (n--) {
-    c1 = *s1++;
-    c2 = *s2++;
-    if (c1 != c2) {
-      return c1 < c2 ? -1 : 1;
-    }
-    if (!c1) {
-      break;
-    }
-  }
-  return 0;
-}
-
-void *memset(void *s, int c, size_t n) {
-  for (size_t i = 0; i < n; i++) {
-    *((uint8_t*) s + i) = c;
-  }
-  return s;
-}
-
-void *memmove(void *dst, const void *src, size_t n) {
-  uintptr_t d = (uintptr_t) dst;
-  uintptr_t s = (uintptr_t) src;
-  if (d < s) {
-    while (n--)
-      *(uint8_t *)dst++ = *(uint8_t *)src++;
-  } else if (d > s) {
-    while (n--)
-      *((uint8_t *)dst + n) = *((uint8_t *)src + n);
-  }
-  return (void *) d;
-}
-
-void *memcpy(void *out, const void *in, size_t n) {
-  void *ret = out;
-  while (n--) {
-    *(uint8_t *) out++ = *(uint8_t *) in++;
+  size_t ret = 0;
+  while(s[ret] != '\0')
+  {
+    ret++;
+    assert(ret < 10000000);
   }
   return ret;
 }
 
-int memcmp(const void *s1, const void *s2, size_t n) {
-  uint8_t v1, v2;
-  while (n--) {
-    v1 = *(uint8_t *) s1++;
-    v2 = *(uint8_t *) s2++;
-    if (v1 != v2) {
-      return v1 < v2 ? -1 : 1;
+char *strcpy(char *dst, const char *src) {
+  size_t i = 0;
+  while(src[i] != '\0')
+  {
+    dst[i] = src[i];
+    i++;
+  }
+  dst[i] = '\0';
+  return dst;
+}
+
+char *strncpy(char *dst, const char *src, size_t n) {
+  size_t i;
+  for(i = 0; i < n && src[i] != '\0'; i++)
+    dst[i] = src[i];
+  for( ; i < n; i++)
+    dst[i] = '\0';
+  return dst;
+}
+
+char *strcat(char *dst, const char *src) {
+  size_t dest_len = strlen((const char*)dst);
+  size_t i;
+  for(i = 0; src[i] != '\0'; i++)
+    dst[dest_len + i] = src[i];
+  dst[dest_len + i] = '\0';
+  return dst;
+}
+
+int strcmp(const char *s1, const char *s2) {
+  size_t i;
+  for(i = 0; s1[i] != '\0' || s2[i] != '\0'; i++)
+    if(s1[i] != s2[i]) return s1[i] - s2[i];
+  if(s1[i] == '\0' && s2[i] == '\0') return 0;
+  else if(s1[i] == '\0') return ' ' - s2[i];
+  else return s1[i] - ' ';
+}
+
+int strncmp(const char *s1, const char *s2, size_t n) {
+  size_t i;
+  for(i = 0; (s1[i] != '\0' || s2[i] != '\0') && i < n; i++)
+    if(s1[i] != s2[i]) return s1[i] - s2[i];
+  if(i == n || (s1[i] == '\0' && s2[i] == '\0')) return 0;
+  else if(s1[i] == '\0') return ' ' - s2[i];
+  else return s1[i] - ' ';
+}
+
+void *memset(void *s, int c, size_t n) {
+  size_t i; char* s1 = (char*) s;
+  for(i = 0; i < n; i++)
+    s1[i] = c;
+  return s;
+}
+
+void *memmove(void *dst, const void *src, size_t n) {
+  unsigned char *d = (unsigned char *)dst;
+  const unsigned char *s = (unsigned char *)src;
+  if (d < s) {
+    for (size_t i = 0; i < n; i++) {
+      d[i] = s[i];
+    }
+  } else {
+    for (size_t i = n; i != 0; i--) {
+      d[i-1] = s[i-1];
     }
   }
-  return 0;
+  return dst;
+}
+
+void *memcpy(void *out, const void *in, size_t n) {
+  char* d1 = (char*) out; const char* s1 = (const char*) in;
+  size_t i;
+  for(i = 0; i < n; i++)
+    d1[i] = s1[i];
+  return out;
+}
+
+int memcmp(const void *st1, const void *st2, size_t n) {
+  const char* s1 = (const char*)st1; const char* s2 = (const char*)st2;
+  size_t i;
+  for(i = 0; (s1[i] != '\0' || s2[i] != '\0') && i < n; i++)
+    if(s1[i] != s2[i]) return s1[i] - s2[i];
+  if(i == n || (s1[i] == '\0' && s2[i] == '\0')) return 0;
+  else if(s1[i] == '\0') return ' ' - s2[i];
+  else return s1[i] - ' ';
 }
 
 #endif

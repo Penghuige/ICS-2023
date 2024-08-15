@@ -1,7 +1,7 @@
 #include "klib-macros.h"
 #include <fs.h>
 
-//#define CONFIG_STRACE 1
+#define CONFIG_STRACE 1
 #define ARRLEN(arr) (sizeof(arr) / sizeof(arr[0]))
 
 typedef size_t (*ReadFn) (void *buf, size_t offset, size_t len);
@@ -176,7 +176,7 @@ int fs_close(int fd) {
 size_t fs_read(int fd, void *buf, size_t len) {
   size_t index = get_index(fd);
 #ifdef CONFIG_STRACE
-  Log("READ index: %d, name: %s, offset: %d", index, file_table[fd].name, open_table[index].open_offset);
+  Log("READ index: %d, name: %s, offset: %d, len: %d", index, file_table[fd].name, open_table[index].open_offset, len);
 #endif
   if(index == -1)
   {
@@ -255,7 +255,7 @@ size_t fs_write(int fd, const void *buf, size_t len) {
 
 size_t fs_lseek(int fd, size_t offset, int whence) {
 #ifdef CONFIG_STRACE
-  Log("LSEEK offset: %d, whence: %d", offset, whence);
+  Log("[fs_lseek] offset: %d, whence: %d", offset, whence);
 #endif
   int index = get_index(fd);
   if(index == -1)

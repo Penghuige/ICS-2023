@@ -170,22 +170,6 @@ int fs_close(int fd) {
 }
 
 size_t fs_read(int fd, void *buf, size_t len) {
-  int index = get_index(fd);
-  if(fd < 0 || fd >= ARRLEN(file_table)) {
-    panic("fd %d not exist", fd);
-  }
-  if (file_table[fd].read)
-    return file_table[fd].read(buf, file_table[fd].disk_offset + open_table[index].open_offset, len);
-  size_t t = len;
-  if (open_table[index].open_offset + len > file_table[fd].size) {
-    t = file_table[fd].size - open_table[index].open_offset;
-  }
-  size_t ret = ramdisk_read(buf, file_table[fd].disk_offset + open_table[index].open_offset, t);
-  assert(ret == t);
-  open_table[index].open_offset += ret;
-  return ret;
-}
-size_t fs_read2(int fd, void *buf, size_t len) {
   size_t index = get_index(fd);
 #ifdef CONFIG_STRACE
   Log("READ index: %d, name: %s, offset: %d", index, file_table[fd].name, open_table[index].open_offset);
@@ -220,36 +204,7 @@ size_t fs_read2(int fd, void *buf, size_t len) {
   return ret;
 }
 
-static size_t seekable_write(int fd, const void *buf, size_t len) {
-  int index = get_index(fd);
-  size_t t = len;
-  if (open_table[index].open_offset + len > file_table[fd].size) {
-    t = file_table[fd].size - open_table[index].open_offset;
-  }
-  size_t ret;
-  switch (fd) {
-    case FD_FB:
-      ret = fb_write(buf, file_table[fd].disk_offset + open_table[index].open_offset, t);
-      break;
-    default:
-      ret = ramdisk_write(
-          buf, file_table[fd].disk_offset + open_table[index].open_offset, t);
-  }
-  assert(ret == t);
-  open_table[index].open_offset+= ret;
-  return ret;
-}
-
 size_t fs_write(int fd, const void *buf, size_t len) {
-  if(fd < 0 || fd >= ARRLEN(file_table)) {
-    panic("fd %d not exist", fd);
-  }
-  if (file_table[fd].write)
-    return file_table[fd].write(buf, file_table[fd].disk_offset + open_table[fd].open_offset, len);
-  return seekable_write(fd, buf, len);
-}
-
-size_t fs_write2(int fd, const void *buf, size_t len) {
   int index = get_index(fd);
 #ifdef CONFIG_STRACE
   Log("WRITE index: %d, name: %s, offset: %d, len: %d", index, file_table[fd].name, open_table[index].open_offset, len);

@@ -12,6 +12,7 @@ void extern_app_run(const char *app_path);
 
 int main(int argc, char *argv[]) {
   SDL_Init(0);
+  printf("font_name = %s\n", font_fname);
   font = new BDF_Font(font_fname);
   printf("font size: %d x %d\n", font->w, font->h);
 

@@ -31,22 +31,6 @@ extern size_t fs_lseek(int fd, size_t offset, int whence);
   Elf_Ehdr ehdr;
 
   assert(fs_read(fd, &ehdr, sizeof(ehdr)) == sizeof(ehdr));
-  // display all value in Elf_Ehdr
-  printf("ehdr.e_ident: %x\n", *(uint32_t *)ehdr.e_ident);
-  printf("ehdr.e_type: %x\n", ehdr.e_type);
-  printf("ehdr.e_machine: %x\n", ehdr.e_machine);
-  printf("ehdr.e_version: %x\n", ehdr.e_version);
-  printf("ehdr.e_entry: %x\n", ehdr.e_entry);
-  printf("ehdr.e_phoff: %x\n", ehdr.e_phoff);
-  printf("ehdr.e_shoff: %x\n", ehdr.e_shoff);
-  printf("ehdr.e_flags: %x\n", ehdr.e_flags);
-  printf("ehdr.e_ehsize: %x\n", ehdr.e_ehsize);
-  printf("ehdr.e_phentsize: %x\n", ehdr.e_phentsize);
-  printf("ehdr.e_phnum: %x\n", ehdr.e_phnum);
-  printf("ehdr.e_shentsize: %x\n", ehdr.e_shentsize);
-  printf("ehdr.e_shnum: %x\n", ehdr.e_shnum);
-  printf("ehdr.e_shstrndx: %x\n", ehdr.e_shstrndx);
-
   // replace the ramdisk_read with fs_read, it used to be zero while ramdisk_read.
   //ramdisk_read(&ehdr, 0, sizeof(Elf_Ehdr));
   Log("[loader] file %d ehdr.e_ident: %x\n", fd, *(uint32_t *)ehdr.e_ident);

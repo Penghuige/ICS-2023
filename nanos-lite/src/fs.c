@@ -1,8 +1,8 @@
 #include "klib-macros.h"
 #include <fs.h>
 
-#define CONFIG_STRACE 1
-#define ARRLEN(arr) (sizeof(arr) / sizeof(arr[0]))
+//#define CONFIG_STRACE 1
+//#define ARRLEN(arr) (sizeof(arr) / sizeof(arr[0]))
 
 typedef size_t (*ReadFn) (void *buf, size_t offset, size_t len);
 typedef size_t (*WriteFn) (const void *buf, size_t offset, size_t len);

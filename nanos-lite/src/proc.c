@@ -26,7 +26,7 @@ void init_proc() {
 
   Log("Initializing processes...");
 
-  const char filename[] = "/bin/nslider";
+  const char filename[] = "/bin/menu";
   naive_uload(NULL, filename);
 
 }

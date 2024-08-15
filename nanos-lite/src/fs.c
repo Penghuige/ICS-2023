@@ -86,8 +86,9 @@ void init_fs() {
   printf("open_index is locate %p\n", &open_index);
   printf("open_index is %d\n", open_index);
   assert(open_index == 0);
-  open_index = FD_FB+1;
-  for(int i = 0; i <= FD_FB; i++)
+  // always open the stream file.
+  open_index = FD_SBCTL+1;
+  for(int i = 0; i <= FD_SBCTL; i++)
   {
     open_table[i] = (OFinfo){.fd = i, .open_offset = 0};
   }
@@ -133,7 +134,7 @@ int fs_open(const char *pathname, int flags, int mode) {
   for(int i = 0; i < LENGTH(file_table); i++) {
     //printf("file_table[%d].name: %s\n", i, file_table[i].name);
     if(strcmp(pathname, file_table[i].name) == 0) {
-      if(i <= FD_FB)
+      if(i <= FD_SBCTL)
       {
 #ifdef CONFIG_STRACE
         Log("ignore open %s", pathname);

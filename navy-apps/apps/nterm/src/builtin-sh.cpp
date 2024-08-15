@@ -25,8 +25,20 @@ static void sh_prompt() {
 }
 
 static void sh_handle_cmd(const char *cmd) {
-	if(strncmp(cmd, "echo", 4) == 0) {
+  if(strncmp(cmd, "echo", 4) == 0) {
     sh_printf("%s", cmd + 5);
+  }
+  else if(strncmp(cmd, "ls", 2) == 0) {
+    sh_printf("ls: not implemented");
+  }
+  else if(strncmp(cmd, "cat", 3) == 0) {
+    sh_printf("cat: not implemented");
+  }
+  else if(strncmp(cmd, "exit", 4) == 0) {
+    exit(0);
+  }
+  else {
+    sh_printf("Unknown command: %s", cmd);
   }
 }
 

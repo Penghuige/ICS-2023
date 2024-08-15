@@ -18,6 +18,7 @@ bool audio_playing = 0;
 void CallbackHelper()
 {
   //printf("call back helper!\n");
+  if(!callback) return;
   uint32_t cur_time = SDL_GetTicks();
   if (pre_time == 0) {
     pre_time = cur_time;

@@ -1,6 +1,7 @@
 #ifndef ARCH_H__
 #define ARCH_H__
 
+#include <stdint.h>
 #ifdef __riscv_e
 #define NR_REGS 16
 #else
@@ -9,9 +10,26 @@
 
 struct Context {
   // TODO: fix the order of these members to match trap.S
-  uintptr_t mepc, mcause, gpr[NR_REGS], mstatus;
+  uintptr_t gpr[NR_REGS];
+  uintptr_t mcause, mstatus, mepc;
   void *pdir;
+  uintptr_t np;
 };
+
+/*
+
+// An event of type @event, caused by @cause of pointer @ref
+typedef struct {
+  enum {
+    EVENT_NULL = 0,
+    EVENT_YIELD, EVENT_SYSCALL, EVENT_PAGEFAULT, EVENT_ERROR,
+    EVENT_IRQ_TIMER, EVENT_IRQ_IODEV,
+  } event;
+  uintptr_t cause, ref;
+  const char *msg;
+} Event;
+
+*/
 
 #ifdef __riscv_e
 #define GPR1 gpr[15] // a5

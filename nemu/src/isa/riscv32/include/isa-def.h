@@ -18,10 +18,19 @@
 
 #include <common.h>
 
+typedef struct {
+  word_t mtvec; // 它保存发生异常时处理器需要跳转到的地址。
+  vaddr_t mepc; // 它指向发生异常的指令。
+  word_t mcause; // （Machine Exception Cause）它指示发生异常的种类。
+  word_t mstatus; //（Machine Status）它保存全局中断使能，以及许多其他的状态，如
+//} MUXDEF(CONFIG_RV64, riscv64_CSRs, riscv32_CSRs);
+} riscv32_CSRs;
+
 // register value located here
 typedef struct {
   word_t gpr[MUXDEF(CONFIG_RVE, 16, 32)];
   vaddr_t pc;
+  riscv32_CSRs csr;
 } MUXDEF(CONFIG_RV64, riscv64_CPU_state, riscv32_CPU_state);
 
 // decode

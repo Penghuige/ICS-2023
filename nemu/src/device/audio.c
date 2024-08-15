@@ -23,6 +23,7 @@ enum {
   reg_freq,
   reg_channels,
   reg_samples,
+  // 
   reg_sbuf_size,
   reg_init,
   reg_count,

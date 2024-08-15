@@ -28,6 +28,18 @@ enum {
   TYPE_N, // none
 };
 
+static vaddr_t *csr_register(word_t imm)
+{
+  switch(imm)
+  {
+    case 0x300: return &(cpu.csr.mstatus);
+    case 0x305: return &(cpu.csr.mtvec);
+    case 0x341: return &(cpu.csr.mepc);
+    case 0x342: return &(cpu.csr.mcause);
+    default: panic("Bad csr!");
+  }
+}
+
 #define src1R() do { *src1 = R(rs1); } while(0)
 #define src2R() do { *src2 = R(rs2); } while(0)
 #define immI() do { *imm = SEXT(BITS(i, 31, 20), 12); } while(0)
@@ -36,6 +48,8 @@ enum {
 #define immB() do { *imm = SEXT((BITS(i, 31, 31) << 12) | (BITS(i, 7, 7) << 11) | (BITS(i, 30, 25) << 5) | (BITS(i, 11, 8) << 1), 13); } while(0)
 #define immJ() do { *imm = SEXT((BITS(i, 31, 31) << 20) | (BITS(i, 19, 12) << 12) | (BITS(i, 20, 20) << 11) | (BITS(i, 30, 21) << 1), 21); } while(0)
 #define immR() do { /* No immediate value for R-type instructions */ } while(0)
+#define ECALL(dnpc) do { bool success; dnpc = isa_raise_intr(isa_reg_str2val("a7", &success), s->pc); } while(0)
+#define CSR(i) *csr_register(i)
 
 static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_t *imm, int type) {
   uint32_t i = s->isa.inst.val;
@@ -51,6 +65,15 @@ static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_
 	  case TYPE_B: src1R(); src2R(); immB(); break;
   }
 }
+#ifdef CONFIG_ETRACE
+static void etrace_record(Decode *s)
+{
+  Log("exception occur at pc:%08x, exception NO:%d", s->pc, R(17));
+}
+#else
+static void etrace_record(Decode *s) {}
+#endif
+
 
 #ifdef CONFIG_FTRACE
 extern char* strtab;
@@ -182,6 +205,11 @@ INSTPAT_START();
   INSTPAT("0000001 ????? ????? 101 ????? 01100 11", divu   , R, R(rd) = ((uint32_t)src1 / (uint32_t)src2));
   INSTPAT("0000001 ????? ????? 110 ????? 01100 11", rem    , R, R(rd) = ((int32_t)src1 % (int32_t)src2));
   INSTPAT("0000001 ????? ????? 111 ????? 01100 11", remu   , R, R(rd) = ((uint32_t)src1 % (uint32_t)src2));
+
+  INSTPAT("??????? ????? ????? 010 ????? 11100 11", csrrs  , I, R(rd) = CSR(imm); CSR(imm) |= src1);
+  INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw  , I, R(rd) = CSR(imm); CSR(imm) = src1);
+  INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , I, etrace_record(s); ECALL(s->dnpc));
+  INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , R, s->dnpc = CSR(0x341));
 
   INSTPAT("??????? ????? ????? ??? ????? ????? ??", inv    , N, INV(s->pc));
   INSTPAT_END();

@@ -29,7 +29,7 @@ BDF_Font::BDF_Font(const char *fname) {
   bool valid_file = false, in_bitmap = false;
   uint32_t bm[32], ch = '\0';
   int bm_idx, bm_bbx[4];
-  w = 1; h = 1;
+  // 没有成功获取到字体文件
 
   while (fgets(buf, 256, fp)) {
     //printf("fgets buf %s\n", buf);

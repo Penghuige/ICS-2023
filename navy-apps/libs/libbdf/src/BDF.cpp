@@ -22,6 +22,7 @@ void BDF_Font::create(uint32_t ch, int *bbx, uint32_t *bitmap, int count) {
 
 BDF_Font::BDF_Font(const char *fname) {
   memset(font, 0, sizeof(font));
+  printf("initalize BDF_Font, fname is %s\n", fname);
   FILE *fp = fopen(fname, "r");
   if (!fp) return;
 

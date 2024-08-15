@@ -27,6 +27,9 @@ BDF_Font::BDF_Font(const char *fname) {
   if (!fp) return;
   //printf("open file success\n");
 
+  // reset the pos of font to the file beginning
+  fseek(fp, 0, SEEK_SET);
+  
   char buf[256], cmd[32];
   bool valid_file = false, in_bitmap = false;
   uint32_t bm[32], ch = '\0';

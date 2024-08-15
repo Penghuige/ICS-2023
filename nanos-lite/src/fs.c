@@ -200,10 +200,11 @@ size_t fs_read(int fd, void *buf, size_t len) {
   {
     ret = ramdisk_read(buf, file_table[fd].disk_offset + offset, read_len);
     open_table[index].open_offset += ret;
-    if(read_len != len)
-    {
-      open_table[index].open_offset = 0;
-    }
+    // if the file read end, reset it.
+    //if(read_len != len)
+    //{
+    //  open_table[index].open_offset = 0;
+    //}
   }
   return ret;
 }
@@ -239,10 +240,10 @@ size_t fs_write(int fd, const void *buf, size_t len) {
   else{
     ret = ramdisk_write(buf, file_table[fd].disk_offset + offset, read_len);
     open_table[index].open_offset += ret;
-    if(read_len != len)
-    {
-      open_table[index].open_offset = 0;
-    }
+    //if(read_len != len)
+    //{
+    //  open_table[index].open_offset = 0;
+    //}
   }
 
   return ret;

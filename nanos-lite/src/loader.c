@@ -59,7 +59,7 @@ extern size_t fs_lseek(int fd, size_t offset, int whence);
 
   assert(fs_lseek(fd, ehdr.e_ehsize, SEEK_SET) == ehdr.e_ehsize);
   printf("ehdr.e_phnum is %d, size of elf_pjdr is %d\n", ehdr.e_phnum , sizeof(Elf_Phdr));
-  assert(0);
+  //assert(0);
   // get all the phdr
   assert(fs_read(fd, phdr, ehdr.e_phnum * sizeof(Elf_Phdr)) == ehdr.e_phnum * sizeof(Elf_Phdr));
 

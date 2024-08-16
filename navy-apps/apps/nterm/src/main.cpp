@@ -12,11 +12,19 @@ void extern_app_run(const char *app_path);
 
 int main(int argc, char *argv[]) {
   SDL_Init(0);
+  //printf("SDL initialized\n");
   font = new BDF_Font(font_fname);
+  //printf("font size: %d x %d\n", font->w, font->h);
 
   // setup display
+  // W 48 H 16
   int win_w = font->w * W;
   int win_h = font->h * H;
+
+  // win_w = -48, H = -16..?
+  // 应该是336 * 208 的窗口
+
+  printf("Window size: %d x %d\n", win_w, win_h);
   screen = SDL_SetVideoMode(win_w, win_h, 32, SDL_HWSURFACE);
 
   term = new Terminal(W, H);

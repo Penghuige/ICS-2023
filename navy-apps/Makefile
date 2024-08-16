@@ -47,7 +47,7 @@ ARCHIVE  = $(WORK_DIR)/build/$(NAME)-$(ISA).a
 
 ### Add default libraries for ISA != native
 ifneq ($(ISA), native)
-LIBS += libc libos
+LIBS += libc libos libndl
 CFLAGS += -U_FORTIFY_SOURCE  # fix compile error in Newlib on ubuntu
 else
 WL = -Wl,
@@ -85,7 +85,7 @@ INCFLAGS += $(addprefix -I, $(INC_PATH))
 CFLAGS   += -O2 -MMD $(INCFLAGS) -static -D__NAVY__ \
             -D__ISA__=\"$(ISA)\" -D__ISA_$(shell echo $(ISA) | tr a-z A-Z)__ \
             -fno-asynchronous-unwind-tables -fno-builtin -fno-stack-protector
-CXXFLAGS +=  $(CFLAGS) -ffreestanding -fno-rtti -fno-exceptions
+CXXFLAGS +=  $(CFLAGS) -fno-rtti -fno-exceptions
 ASFLAGS  +=  $(CFLAGS)
 
 ## 4. ISA-Specific Configurations
@@ -166,8 +166,8 @@ $(CLEAN_ALL):
 .PHONY: clean-all $(CLEAN_ALL)
 
 ### Build fsimg and ramdisk for Nanos-lite
-APPS =
-TESTS = dummy hello
+APPS =  bird menu nplayer pal nterm nslider 
+TESTS =  
 
 fsimg: $(addprefix apps/, $(APPS)) $(addprefix tests/, $(TESTS))
 	-for t in $^; do $(MAKE) -s -C $(NAVY_HOME)/$$t install; done

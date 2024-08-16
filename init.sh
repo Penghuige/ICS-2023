@@ -12,10 +12,10 @@ function addenv() {
 # usage: init repo branch directory trace [env]
 # trace = true|false
 function init() {
-  if [ -d $3 ]; then
-    echo "$3 is already initialized, skipping..."
-    return
-  fi
+  # if [ -d $3 ]; then
+  #   echo "$3 is already initialized, skipping..."
+  #   return
+  # fi
 
   while [ ! -d $3 ]; do
     git clone -b $2 git@github.com:$1.git $3

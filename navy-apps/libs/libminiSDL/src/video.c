@@ -3,18 +3,132 @@
 #include <assert.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
-void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_Rect *dstrect) {
+void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_Rect *dstrect)
+{
   assert(dst && src);
   assert(dst->format->BitsPerPixel == src->format->BitsPerPixel);
+
+  uint32_t base = 0;
+  uint32_t src_h = src->h, src_w = src->w;
+
+  if (srcrect != NULL)
+  {
+    base = srcrect->x + srcrect->y * src->w;
+    src_h = srcrect->h;
+    src_w = srcrect->w;
+  }
+
+  uint32_t target = 0;
+  uint32_t dst_h = dst->h, dst_w = dst->w;
+
+  if (dstrect != NULL)
+  {
+    target = dstrect->x + dstrect->y * dst->w;
+  }
+
+  if (dst->format->BitsPerPixel == 32)
+  {
+    for (int row = 0; row < src_h; ++row)
+    {
+      memcpy((uint32_t *)dst->pixels + target + row * dst_w, (uint32_t *)src->pixels + base + row * src->w, src_w * sizeof(uint32_t));
+    }
+  }
+  else if (dst->format->BitsPerPixel == 8)
+  {
+    for (int row = 0; row < src_h; ++row)
+    {
+      memcpy((uint8_t *)dst->pixels + target + row * dst_w, (uint8_t *)src->pixels + base + row * src->w, src_w * sizeof(uint8_t));
+    }
+  }
 }
 
 void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
+  void *base;
+  int x = (!dstrect ? 0 : dstrect->x);
+  int y = (!dstrect ? 0 : dstrect->y);
+  int w = (!dstrect ? dst->w : dstrect->w);
+  int h = (!dstrect ? dst->h : dstrect->h);
+
+  // set base to the beginning of the pixels
+  if(dst->format->BitsPerPixel == 8)
+  {
+    // move to the beginning
+    base = (uint8_t*)(dst->pixels + y * dst->w + x);
+    for(int i = 0; i < h; i++)
+    {
+      memset((uint8_t*)base + i * dst->w, color, w * sizeof(uint8_t));
+    }
+  }
+  else
+  {
+    base = (uint32_t*)(dst->pixels + y * dst->w + x);
+    for(int i = 0; i < h; i++)
+    {
+      memset((uint32_t*)base + i * dst->w, color, w * sizeof(uint32_t));
+    }
+  }
 }
 
 void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
-}
+  assert(s);
+  assert(s->format);
 
+  int W, H;
+  // if(x | y | w | h == 0)
+  if (x == 0 && y == 0 && w == 0 && h == 0)
+  {
+    W = s->w;
+    H = s->h;
+  }
+  else
+  {
+    W = w;
+    H = h;
+  }
+
+  void * index;
+  uint32_t * pixels = (uint32_t *)malloc(W * H * sizeof(uint32_t));
+
+  if(s->format->BitsPerPixel == 32)
+  {
+    // it may cause a bug!!!
+    index = (uint32_t *)s->pixels;
+    // here the *index is already 1
+    //printf("index point to size of %d, it must to be 32\n", sizeof(*index));
+    index += y * s->w + x;
+  }
+  else if(s->format->BitsPerPixel == 8)
+  {
+    // a pixel only has 8 bits
+    assert(s->format->palette->colors);
+    index = (uint8_t *)s->pixels;
+    index += y * s->w + x;
+    //printf("index point to size of %d, it must to be 8\n", sizeof(*index));
+  }
+
+  // through index fill the pixels
+  for(int i = 0; i < H; i++)
+  {
+    for(int j = 0; j < W; j++)
+    {
+      if(s->format->BitsPerPixel == 32)
+      {
+        // it shoule be index rather than s->pixels
+        pixels[i*W+j] = ((uint32_t*)index)[i*s->w+j];
+      }
+      else if(s->format->BitsPerPixel == 8)
+      {
+        SDL_Color colors = s->format->palette->colors[*((uint8_t*)(index + i*s->w+j))];
+        uint32_t p = (colors.a << 24) | (colors.r << 16) | (colors.g << 8) | (colors.b << 0);
+        pixels[i*W+j] = p;
+      }
+    }
+  }
+  NDL_DrawRect(pixels, x, y, W, H);
+  free(pixels);
+}
 // APIs below are already implemented.
 
 static inline int maskToShift(uint32_t mask) {
@@ -92,6 +206,9 @@ void SDL_FreeSurface(SDL_Surface *s) {
 
 SDL_Surface* SDL_SetVideoMode(int width, int height, int bpp, uint32_t flags) {
   if (flags & SDL_HWSURFACE) NDL_OpenCanvas(&width, &height);
+  //printf("[SDL_SetVideoMode] width is %d, height is %d\n", width, height);
+  //if (gbPixels) free(gbPixels);
+  //gbPixels = malloc(width * height * 4);
   return SDL_CreateRGBSurface(flags, width, height, bpp,
       DEFAULT_RMASK, DEFAULT_GMASK, DEFAULT_BMASK, DEFAULT_AMASK);
 }
@@ -186,15 +303,18 @@ SDL_Surface *SDL_ConvertSurface(SDL_Surface *src, SDL_PixelFormat *fmt, uint32_t
 }
 
 uint32_t SDL_MapRGBA(SDL_PixelFormat *fmt, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
-  assert(fmt->BytesPerPixel == 4);
+  // printf("the parameters are %d, %d, %d, %d\n", r, g, b, a);
+  // bug? the parameters are all zero.
   uint32_t p = (r << fmt->Rshift) | (g << fmt->Gshift) | (b << fmt->Bshift);
   if (fmt->Amask) p |= (a << fmt->Ashift);
   return p;
 }
 
 int SDL_LockSurface(SDL_Surface *s) {
+  assert(0);
   return 0;
 }
 
 void SDL_UnlockSurface(SDL_Surface *s) {
+  assert(0);
 }

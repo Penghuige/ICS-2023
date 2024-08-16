@@ -22,15 +22,23 @@ void BDF_Font::create(uint32_t ch, int *bbx, uint32_t *bitmap, int count) {
 
 BDF_Font::BDF_Font(const char *fname) {
   memset(font, 0, sizeof(font));
+  //printf("initalize BDF_Font, fname is %s\n", fname);
   FILE *fp = fopen(fname, "r");
   if (!fp) return;
+  //printf("open file success\n");
 
+  // reset the pos of font to the file beginning
+  fseek(fp, 0, SEEK_SET);
+  
   char buf[256], cmd[32];
   bool valid_file = false, in_bitmap = false;
   uint32_t bm[32], ch = '\0';
   int bm_idx, bm_bbx[4];
 
+  // 没有成功读取到文件
+
   while (fgets(buf, 256, fp)) {
+    //printf("fgets buf %s\n", buf);
     sscanf(buf, "%s ", cmd);
     if (strcmp(cmd, "STARTFONT") == 0) {
       valid_file = true;

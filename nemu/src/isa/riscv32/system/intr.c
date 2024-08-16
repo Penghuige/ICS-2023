@@ -17,13 +17,16 @@
 #include <isa.h>
 
 word_t isa_raise_intr(word_t NO, vaddr_t epc) {
-  /* TODO: Trigger an interrupt/exception with ``NO''.
-   * Then return the address of the interrupt/exception vector.
-   */
-  if(NO == 0) epc += 4;
   cpu.csr.mcause = NO;
   // false instruction
   cpu.csr.mepc = epc;
+
+  // mstatus
+  cpu.csr.mpp = cpu.csr.prv;
+  cpu.csr.prv = 3;
+
+  cpu.csr.mpie = cpu.csr.mie;
+  cpu.csr.mie = 0;
 
   return cpu.csr.mtvec;
 }

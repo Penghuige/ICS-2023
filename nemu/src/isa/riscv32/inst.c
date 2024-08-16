@@ -23,6 +23,10 @@
 #define Mr vaddr_read
 #define Mw vaddr_write
 
+#define MCAUSE_ECALL_FROM_U 8
+#define MCAUSE_ECALL_FROM_M 11
+#define PRV_M 3
+
 enum {
   TYPE_I, TYPE_U, TYPE_S, TYPE_J, TYPE_R, TYPE_B,
   TYPE_N, // none
@@ -48,7 +52,7 @@ static vaddr_t *csr_register(word_t imm)
 #define immB() do { *imm = SEXT((BITS(i, 31, 31) << 12) | (BITS(i, 7, 7) << 11) | (BITS(i, 30, 25) << 5) | (BITS(i, 11, 8) << 1), 13); } while(0)
 #define immJ() do { *imm = SEXT((BITS(i, 31, 31) << 20) | (BITS(i, 19, 12) << 12) | (BITS(i, 20, 20) << 11) | (BITS(i, 30, 21) << 1), 21); } while(0)
 #define immR() do { /* No immediate value for R-type instructions */ } while(0)
-#define ECALL(dnpc) do { bool success; dnpc = isa_raise_intr(isa_reg_str2val("a7", &success), s->pc); } while(0)
+#define ECALL(dnpc) do { /*getchar();*/ dnpc = isa_raise_intr(cpu.csr.prv == PRV_M ? MCAUSE_ECALL_FROM_M:MCAUSE_ECALL_FROM_U, s->pc); } while(0)
 #define CSR(i) *csr_register(i)
 
 static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_t *imm, int type) {
@@ -65,13 +69,18 @@ static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_
 	  case TYPE_B: src1R(); src2R(); immB(); break;
   }
 }
-#ifdef CONFIG_ETRACE
+#ifdef CONFIG_STRACE
 static void etrace_record(Decode *s)
 {
   Log("exception occur at pc:%08x, exception NO:%d", s->pc, R(17));
 }
+static void etrace_return(Decode *s)
+{
+  Log("return from exception at pc:%08x, to %08x", s->pc, s->dnpc);
+}
 #else
 static void etrace_record(Decode *s) {}
+static void etrace_return(Decode *s) {}
 #endif
 
 
@@ -209,7 +218,8 @@ INSTPAT_START();
   INSTPAT("??????? ????? ????? 010 ????? 11100 11", csrrs  , I, R(rd) = CSR(imm); CSR(imm) |= src1);
   INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw  , I, R(rd) = CSR(imm); CSR(imm) = src1);
   INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , I, etrace_record(s); ECALL(s->dnpc));
-  INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , R, s->dnpc = CSR(0x341));
+  // reset the previous prv, set the mpp to PRV_U(0), reset the previous mie to mpie, set mpie to 1
+  INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , R, s->dnpc = cpu.csr.mepc;cpu.csr.prv = cpu.csr.mpp, cpu.csr.mpp = 0, cpu.csr.mie = cpu.csr.mpie, cpu.csr.mpie = 1; etrace_return(s));
 
   INSTPAT("??????? ????? ????? ??? ????? ????? ??", inv    , N, INV(s->pc));
   INSTPAT_END();

@@ -22,7 +22,22 @@ typedef struct {
   word_t mtvec; // 它保存发生异常时处理器需要跳转到的地址。
   vaddr_t mepc; // 它指向发生异常的指令。
   word_t mcause; // （Machine Exception Cause）它指示发生异常的种类。
-  word_t mstatus; //（Machine Status）它保存全局中断使能，以及许多其他的状态，如
+  union
+  {
+    // mstatus 需要更改很多状态才能迎合difftest的实现
+    word_t mstatus; //（Machine Status）它保存全局中断使能，以及许多其他的状态，如
+    // occupy 13 bytes, only the behind 13 bytes be used
+    struct
+    {
+      word_t : 3;
+      word_t mie : 1;
+      word_t : 3;
+      word_t mpie : 1;
+      word_t : 3;
+      word_t mpp : 2;
+    };
+  };
+  int prv;
 //} MUXDEF(CONFIG_RV64, riscv64_CSRs, riscv32_CSRs);
 } riscv32_CSRs;
 

@@ -1,5 +1,6 @@
 #include <am.h>
 #include <nemu.h>
+#include <klib.h>
 
 #define AUDIO_FREQ_ADDR      (AUDIO_ADDR + 0x00)
 #define AUDIO_CHANNELS_ADDR  (AUDIO_ADDR + 0x04)
@@ -11,6 +12,7 @@
 static uint32_t pos = 0;
 
 void __am_audio_init() {
+  pos = 0;
   //outl(AUDIO_FREQ_ADDR, 0);
   //outl(AUDIO_CHANNELS_ADDR, 0);
   //outl(AUDIO_SAMPLES_ADDR, 0);
@@ -18,7 +20,7 @@ void __am_audio_init() {
 
 void __am_audio_config(AM_AUDIO_CONFIG_T *cfg) {
   cfg->present = true;
-  //cfg->bufsize = inl(AUDIO_SBUF_SIZE_ADDR);
+  cfg->bufsize = inl(AUDIO_SBUF_SIZE_ADDR);
 }
 
 
@@ -43,7 +45,9 @@ void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
   uint32_t sbuf_size = inl(AUDIO_SBUF_SIZE_ADDR);
   
   uint8_t *ab = (uint8_t *)(uintptr_t)AUDIO_SBUF_ADDR;  //参考GPU部分
-  for(int i = 0; i < len; i++){
+                                                
+  
+  for(uint32_t i = 0; i < len; i++){
     ab[pos] = audio_data[i];
     pos = (pos + 1) % sbuf_size;  
   }

@@ -1,3 +1,4 @@
+#include <stdint.h>
 #ifndef __SDL_EVENT_H__
 #define __SDL_EVENT_H__
 
